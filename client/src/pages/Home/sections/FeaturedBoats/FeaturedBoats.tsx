@@ -4,6 +4,7 @@ import sunflowerImg from '../../../../assets/sunflower.jpg'
 import missSassyLadyImg from '../../../../assets/miss sassy lady.jpg'
 import Button from '../../../../components/Button/Button'
 import BoatCard, { type Boat } from './BoatCard'
+import BoatCarousel from './BoatCarousel'
 
 const boats: Boat[] = [
   {
@@ -56,7 +57,7 @@ export default function FeaturedBoats() {
           <span className="size-2 rounded-full bg-blue-light" />
           Featured Boats
         </span>
-        <h2 className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-white capitalize sm:text-[3.375rem]">
+        <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[3.375rem] sm:leading-[1.3]">
           Find Your Perfect Boat
         </h2>
         <p className="text-base leading-[26px] text-text-muted">
@@ -65,11 +66,13 @@ export default function FeaturedBoats() {
         </p>
       </div>
 
-      <div className="grid w-full grid-cols-1 justify-center gap-16 lg:grid-cols-[repeat(2,minmax(0,clamp(20rem,45%,38rem)))]">
+      <div className="hidden w-full grid-cols-1 justify-center gap-16 lg:grid lg:grid-cols-[repeat(2,minmax(0,clamp(20rem,45%,38rem)))]">
         {boats.map((boat) => (
           <BoatCard key={boat.name} boat={boat} />
         ))}
       </div>
+
+      <BoatCarousel boats={boats} className="lg:hidden" />
 
       <Button variant="light" label="Explore All Boats" href="/boats-for-sale" />
     </section>

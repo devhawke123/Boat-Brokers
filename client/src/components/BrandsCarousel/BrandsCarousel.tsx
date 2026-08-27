@@ -1,7 +1,7 @@
-import rightboat from '../../../../assets/rightboot.svg'
-import apolloDuck from '../../../../assets/apollo duck.svg'
-import narrowboats from '../../../../assets/narrowboats.svg'
-import towpath from '../../../../assets/towpath.svg'
+import rightboat from '../../assets/rightboot.svg'
+import apolloDuck from '../../assets/apollo duck.svg'
+import narrowboats from '../../assets/narrowboats.svg'
+import towpath from '../../assets/towpath.svg'
 
 const brands = [
   { name: 'Rightboat', logo: rightboat },

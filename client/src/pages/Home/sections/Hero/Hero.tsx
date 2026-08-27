@@ -63,7 +63,7 @@ export default function Hero() {
             The Boat Breakers - Luxury Feel
           </span>
 
-          <h1 className="font-display text-[3rem] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[5rem]">
+          <h1 className="font-display text-[44px] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[5rem]">
             The Simple Way
             <br />
             To Buy &amp; Sell.

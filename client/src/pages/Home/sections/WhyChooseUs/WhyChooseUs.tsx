@@ -41,7 +41,7 @@ export default function WhyChooseUs() {
           <span className="size-2 rounded-full bg-blue" />
           Why Choose Us
         </span>
-        <h2 className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-[#1a1a1a] capitalize sm:text-[3.375rem]">
+        <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-[#1a1a1a] capitalize sm:text-[3.375rem] sm:leading-[1.3]">
           Why Choose The Boat Brokers?
         </h2>
       </div>
@@ -52,21 +52,21 @@ export default function WhyChooseUs() {
             {left.map((reason) => (
               <article
                 key={reason.title}
-                className="flex flex-1 flex-col items-center justify-center gap-3 rounded-lg bg-white p-5 text-center"
+                className="flex flex-1 flex-col items-start justify-center gap-3 rounded-lg bg-white p-5 text-left xl:items-center xl:text-center"
               >
-                <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-navy-darkest">
-                  <img src={reason.icon} alt="" aria-hidden="true" className="size-7 object-contain" />
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-navy-darkest xl:size-14">
+                  <img src={reason.icon} alt="" aria-hidden="true" className="size-[22px] object-contain xl:size-7" />
                 </span>
-                <h3 className="font-display text-[1.75rem] leading-[1.2] tracking-[-1px] text-[#020f17] capitalize">
+                <h3 className="font-display text-[24px] leading-[1.3] tracking-[-2px] text-[#020f17] capitalize xl:text-[1.75rem] xl:leading-[1.2] xl:tracking-[-1px]">
                   {reason.title}
                 </h3>
-                <p className="text-sm leading-[1.5] text-text-body">{reason.description}</p>
+                <p className="text-sm leading-[26px] text-text-body xl:leading-[1.5]">{reason.description}</p>
               </article>
             ))}
           </div>
         </div>
 
-        <div className="order-first w-[85%] shrink-0 overflow-hidden rounded-xl sm:w-[75%] xl:order-none xl:w-[clamp(26rem,24%,30rem)]">
+        <div className="w-[85%] shrink-0 overflow-hidden rounded-xl sm:w-[75%] xl:w-[clamp(26rem,24%,30rem)]">
           <img
             src={whyChooseImg}
             alt="A narrowboat moored on a calm canal at sunrise"
@@ -79,15 +79,15 @@ export default function WhyChooseUs() {
             {right.map((reason) => (
               <article
                 key={reason.title}
-                className="flex flex-1 flex-col items-center justify-center gap-3 rounded-lg bg-white p-5 text-center"
+                className="flex flex-1 flex-col items-start justify-center gap-3 rounded-lg bg-white p-5 text-left xl:items-center xl:text-center"
               >
-                <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-navy-darkest">
-                  <img src={reason.icon} alt="" aria-hidden="true" className="size-7 object-contain" />
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-navy-darkest xl:size-14">
+                  <img src={reason.icon} alt="" aria-hidden="true" className="size-[22px] object-contain xl:size-7" />
                 </span>
-                <h3 className="font-display text-[1.75rem] leading-[1.2] tracking-[-1px] text-[#020f17] capitalize">
+                <h3 className="font-display text-[24px] leading-[1.3] tracking-[-2px] text-[#020f17] capitalize xl:text-[1.75rem] xl:leading-[1.2] xl:tracking-[-1px]">
                   {reason.title}
                 </h3>
-                <p className="text-sm leading-[1.5] text-text-body">{reason.description}</p>
+                <p className="text-sm leading-[26px] text-text-body xl:leading-[1.5]">{reason.description}</p>
               </article>
             ))}
           </div>
