@@ -1,0 +1,97 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-navy-darkest: #073040;
+  --color-navy-dark: #0a4359;
+  --color-blue: #1cc0ff;
+  --color-blue-light: #6bd6ff;
+  --color-blue-lighter: #99e3ff;
+  --color-blue-active: #b9ebff;
+  --color-gold: #f4c850;
+  --color-ink: #1a1a1a;
+  --color-text-body: #6e6e6e;
+  --color-text-muted: #a7a7a7;
+  --color-border: #e5e4e7;
+
+  --font-display: 'Gideon Roman', 'Playfair Display', Georgia, serif;
+  --font-accent: 'Gilda Display', Georgia, serif;
+  --font-body: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  --shadow-btn: 0px 2px 4px 0px rgba(40, 41, 61, 0.04), 0px 8px 16px 0px rgba(96, 97, 112, 0.16);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 16px/1.5 var(--font-body);
+  color: var(--color-ink);
+  background: #ffffff;
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100svh;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
