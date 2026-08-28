@@ -32,13 +32,13 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
           <img src={logo} alt="The Boat Brokers" className="h-11 w-auto" />
         </a>
 
-        <nav className="flex flex-wrap items-center gap-2 max-[1100px]:hidden" aria-label="Primary">
+        <nav className="flex flex-wrap items-center text-white gap-2 max-[1100px]:hidden" aria-label="Primary">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
               className={`inline-flex items-center gap-1.5 rounded-xl px-2 py-1 text-base text-white transition-colors duration-150 hover:text-blue-active ${
-                link.label === 'Home' ? 'font-semibold text-blue-active' : ''
+                link.label === activeLabel ? 'font-semibold ' : ''
               }`}
             >
               {link.label}
@@ -74,15 +74,15 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
       {isMenuOpen && (
         <div
           id="mobile-nav-panel"
-          className="flex flex-col gap-4 border-t border-white/10 px-5 py-4 min-[1101px]:hidden"
+          className="flex flex-col  gap-4 border-t border-white/10 px-5 py-4 min-[1101px]:hidden"
         >
-          <nav className="flex flex-col gap-1" aria-label="Primary">
+          <nav className="flex flex-col text-white gap-1" aria-label="Primary">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 className={`inline-flex items-center gap-1.5 rounded-xl px-2 py-2 text-base text-white transition-colors duration-150 hover:text-blue-active ${
-                  link.label === activeLabel ? 'font-semibold text-blue-active' : ''
+                  link.label === activeLabel ? 'font-semibold ' : ''
                 }`}
               >
                 {link.label}
