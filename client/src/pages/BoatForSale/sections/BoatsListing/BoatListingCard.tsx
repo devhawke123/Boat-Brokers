@@ -1,12 +1,6 @@
 import { useState } from 'react'
-import type { BoatListing, BoatStatus } from '../../../../data/boats'
+import { boatStatusStyles, type BoatListing } from '../../../../data/boats'
 import { IconBed, IconCalendar, IconFuel, IconHeart, IconMapPin, IconRuler } from './icons'
-
-const statusStyles: Record<Exclude<BoatStatus, null>, { label: string; className: string }> = {
-  featured: { label: 'Featured', className: 'bg-navy-dark' },
-  'under-offer': { label: 'Under Offer', className: 'bg-[#f59e0b]' },
-  sold: { label: 'Sold', className: 'bg-[#1e293b]' },
-}
 
 type BoatListingCardProps = {
   boat: BoatListing
@@ -14,7 +8,7 @@ type BoatListingCardProps = {
 
 export default function BoatListingCard({ boat }: BoatListingCardProps) {
   const [isFavorited, setIsFavorited] = useState(false)
-  const status = boat.status ? statusStyles[boat.status] : null
+  const status = boat.status ? boatStatusStyles[boat.status] : null
 
   return (
     <article className="flex w-full flex-col overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-1px_rgba(0,0,0,0.06)]">

@@ -30,7 +30,7 @@ const arrowByVariant: Record<ButtonVariant, string> = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   dark: 'bg-navy-dark text-white',
-  light: 'bg-white text-navy-darkest',
+  light: 'bg-white text-black',
   'outline-white': 'border-2 border-white bg-transparent text-white',
   'outline-dark': 'border-2 border-navy-dark bg-transparent text-navy-dark',
 }
