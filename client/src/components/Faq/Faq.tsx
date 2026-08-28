@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import plus from '../../../../assets/icons/plus.svg'
-import arrowRightWhite from '../../../../assets/icons/arrow-right-white.svg'
+import plus from '../../assets/icons/plus.svg'
+import arrowRightWhite from '../../assets/icons/arrow-right-dark.svg'
 
 type FaqItem = {
   question: string
