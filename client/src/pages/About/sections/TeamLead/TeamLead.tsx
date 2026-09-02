@@ -33,7 +33,7 @@ export default function TeamLead() {
           </p>
 
           <div className="flex flex-wrap items-center gap-7">
-            <Button variant="dark" label="More About Me" href="/about/noel-creary" />
+            <Button variant="dark" label="More About Me" href="/noel-creary" />
             <img
               src={britishMarine}
               alt="British Marine - Leading the Industry"
