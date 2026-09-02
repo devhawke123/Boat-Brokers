@@ -4,6 +4,7 @@ import Buying from './pages/Buying/Buying'
 import Selling from './pages/Selling/Selling'
 import BoatForSale from './pages/BoatForSale/BoatForSale'
 import BoatDetail from './pages/BoatDetail/BoatDetail'
+import NoelCreary from './pages/NoelCreary/NoelCreary'
 
 function App() {
   const { pathname } = window.location
@@ -26,6 +27,10 @@ function App() {
 
   if (pathname.startsWith('/boats/')) {
     return <BoatDetail slug={pathname.replace('/boats/', '')} />
+  }
+
+  if (pathname === '/noel-creary') {
+    return <NoelCreary />
   }
 
   return <Home />
