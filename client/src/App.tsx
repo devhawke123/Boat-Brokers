@@ -5,6 +5,7 @@ import Selling from './pages/Selling/Selling'
 import BoatForSale from './pages/BoatForSale/BoatForSale'
 import BoatDetail from './pages/BoatDetail/BoatDetail'
 import NoelCreary from './pages/NoelCreary/NoelCreary'
+import Faq from './pages/Faq/Faq'
 
 function App() {
   const { pathname } = window.location
@@ -31,6 +32,10 @@ function App() {
 
   if (pathname === '/noel-creary') {
     return <NoelCreary />
+  }
+
+  if (pathname === '/faq') {
+    return <Faq />
   }
 
   return <Home />
