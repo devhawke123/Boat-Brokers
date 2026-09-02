@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
-import arrowRightWhite from '../../assets/icons/arrow-right-white.svg'
+import arrowRightWhite from '../../assets/ArrowRight.png'
 import arrowRightDark from '../../assets/icons/arrow-right-dark.svg'
 
 export type ButtonVariant = 'dark' | 'light' | 'outline-white' | 'outline-dark'
