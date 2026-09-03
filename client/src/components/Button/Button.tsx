@@ -24,13 +24,13 @@ type ButtonProps = ButtonAsButton | ButtonAsAnchor
 const arrowByVariant: Record<ButtonVariant, string> = {
   dark: arrowRightWhite,
   light: arrowRightDark,
-  'outline-white': arrowRightWhite,
+  'outline-white': arrowRightDark,
   'outline-dark': arrowRightDark,
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  dark: 'bg-navy-dark text-white',
-  light: 'bg-white text-black',
+  dark: 'border-none bg-navy-dark text-white',
+  light: 'border-none bg-white text-black',
   'outline-white': 'border-2 border-white bg-transparent text-white',
   'outline-dark': 'border-2 border-navy-dark bg-transparent text-navy-dark',
 }
@@ -44,7 +44,7 @@ export default function Button({
   ...rest
 }: ButtonProps) {
   const classes = [
-    'inline-flex items-center justify-center gap-1.5 rounded-xl border-none px-5 py-3 whitespace-nowrap shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]',
+    'inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 whitespace-nowrap shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]',
     variantClasses[variant],
     className,
   ]
