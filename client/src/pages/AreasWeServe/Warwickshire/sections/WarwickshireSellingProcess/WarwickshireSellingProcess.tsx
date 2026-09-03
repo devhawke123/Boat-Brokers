@@ -1,6 +1,5 @@
-import arrowRightExplore from '../../../../assets/icons/arrow-right-explore.svg'
-import ellipseIcon from '../../../../assets/Ellipse 6.png'
-import Button from '../../../../components/Button/Button'
+import ellipseIcon from '../../../../../assets/Ellipse 6.png'
+import arrowRightWhite from '../../../../../assets/ArrowRight.png'
 
 type Step = {
   number: string
@@ -11,55 +10,43 @@ type Step = {
 const steps: Step[] = [
   {
     number: '01',
-    title: 'Boat Valuation',
+    title: 'Free Market Valuation',
     description:
-      "We will assess the boat's condition, specifications, and market value. We'll also take photos and gather relevant documentation to create an attractive listing.",
+      'We carry out a free, market-led valuation of your narrowboat based on real transaction data from the local canal boat market.',
   },
   {
     number: '02',
-    title: 'Marketing and Advertising',
+    title: 'Create Your Listing',
     description:
-      "We employ various marketing strategies to generate interest in your boat. We'll advertise through websites, social media, boat shows, and other relevant platforms to reach a wider audience of potential buyers.",
+      'Our team produces professional photography and compelling listing copy that presents your boat accurately and attractively to serious buyers.',
   },
   {
     number: '03',
-    title: 'Buyer Screening',
+    title: 'Wide Buyer Exposure',
     description:
-      "When potential buyers express interest in your particular boat, we'll conduct a screening process to ensure they are qualified and serious buyers.",
+      'We distribute your listing across all major inland waterways platforms to ensure it reaches the widest possible audience of active buyers.',
   },
   {
     number: '04',
-    title: 'Viewing',
+    title: 'Handle Buyer Enquiries',
     description:
-      "We'll arrange for serious buyers. Answer any questions and provide additional information and handle any negotiations.",
+      'We manage every buyer enquiry on your behalf, filtering serious interest and keeping you informed at every stage of the process.',
   },
   {
     number: '05',
-    title: 'Negotiations and Offers',
+    title: 'Professional Boat Viewings',
     description:
-      "If a buyer is interested in purchasing the boat, we will help facilitate negotiations. We'll relay offers and counteroffers, assist in price discussions, and help both parties reach an agreement.",
+      'Our team organises and attends every viewing in person, presenting your boat professionally and answering buyer questions with confidence.',
   },
   {
     number: '06',
-    title: 'Documents and Closing',
+    title: 'Finalization the Deal',
     description:
-      "Once you've agreed on a price, we'll handle the necessary paperwork and documentation. This will include sales contracts, titles, registrations, and other legal requirements. We'll ensure the transaction proceeds smoothly and guides both parties through the closing process.",
-  },
-  {
-    number: '07',
-    title: 'Commission',
-    description:
-      'We earn our commission based on the final sale price of the boat which is deducted from the sales proceeds.',
-  },
-  {
-    number: '08',
-    title: 'Payment',
-    description:
-      'Once we have received cleared funds and all parties are ready to complete, we transfer funds within 24 hours.',
+      'When offers are received, we negotiate on your behalf to achieve the best possible price while keeping the process straightforward for both parties.',
   },
 ]
 
-export default function SellingProcessSteps() {
+export default function WarwickshireSellingProcess() {
   return (
     <section className="flex flex-col items-center gap-12 px-6 py-16 sm:px-16 sm:py-24">
       <div className="flex max-w-[42rem] flex-col items-center gap-3 text-center">
@@ -68,11 +55,20 @@ export default function SellingProcessSteps() {
           Selling Process
         </span>
         <h2 className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-ink capitalize sm:text-[3.375rem]">
-          The Narrowboat Will Choose You, Rather Than The Other Way
+          Sell Your Narrowboat in Warwickshire
         </h2>
-        <p className="max-w-[33rem] text-base leading-[26px] text-[#929292]">
-          At The Boat Brokers, we specialise in narrowboat sales, blending modern technology with
-          personal service.
+        <p className="max-w-[51.5rem] text-base leading-[26px] text-[#929292]">
+          Looking to{' '}
+          <a
+            href="https://theboatbrokers.co.uk/selling/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            sell your narrowboat in Warwickshire
+          </a>
+          ? We handle the entire process from free valuation to completed sale, with no upfront
+          costs and no fees unless your boat sells.
         </p>
         <div className="mt-2 flex items-center gap-3 text-xs tracking-[0.5px] text-blue uppercase">
           <span>01</span>
@@ -87,7 +83,7 @@ export default function SellingProcessSteps() {
               fill="currentColor"
             />
           </svg>
-          <span>08</span>
+          <span>06</span>
         </div>
       </div>
 
@@ -95,7 +91,7 @@ export default function SellingProcessSteps() {
         {steps.map((step) => (
           <div
             key={step.number}
-            className="group flex flex-col justify-between gap-8 bg-white p-8 transition-colors duration-200 hover:bg-[#e8f9ff]"
+            className="group flex flex-col gap-6 bg-white p-8 transition-colors duration-200 hover:bg-[#e8f9ff]"
           >
             <div className="flex items-start justify-between gap-8">
               <div className="flex flex-col gap-6">
@@ -113,15 +109,17 @@ export default function SellingProcessSteps() {
                 {step.number}
               </span>
             </div>
-            <a href="/about" className="inline-flex items-center gap-1.5 text-base text-ink">
-              More About Us
-              <img src={arrowRightExplore} alt="" aria-hidden="true" className="size-[18px]" />
-            </a>
           </div>
         ))}
       </div>
 
-      <Button variant="dark" label="Back to Boats for Sale" href="/boats-for-sale" />
+      <a
+        href="/selling"
+        className="inline-flex items-center gap-1.5 rounded-xl bg-[#0d5673] px-5 py-3 text-base font-semibold text-white shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
+      >
+        Book a Free Valuation
+        <img src={arrowRightWhite} alt="" aria-hidden="true" className="size-[18px]" />
+      </a>
     </section>
   )
 }

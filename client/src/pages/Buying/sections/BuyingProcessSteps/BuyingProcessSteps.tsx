@@ -1,5 +1,5 @@
 import arrowRightExplore from '../../../../assets/icons/arrow-right-explore.svg'
-import ellipseIcon from '../../../../assets/icons/Ellipse 6.svg'
+import ellipseIcon from '../../../../assets/Ellipse 6.png'
 import Button from '../../../../components/Button/Button'
 
 type Step = {

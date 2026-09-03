@@ -1,10 +1,12 @@
 import rightboat from '../../assets/rightboot.svg'
+import droitwichSpaMarina from '../../assets/droitwich-spa-marina.png'
 import apolloDuck from '../../assets/apollo duck.svg'
 import narrowboats from '../../assets/narrowboats.svg'
 import towpath from '../../assets/towpath.svg'
 
 const brands = [
   { name: 'Rightboat', logo: rightboat },
+  { name: 'Droitwich Spa Marina', logo: droitwichSpaMarina },
   { name: 'Apollo Duck', logo: apolloDuck },
   { name: 'Narrowboats.uk', logo: narrowboats },
   { name: 'Towpath Talk', logo: towpath },
