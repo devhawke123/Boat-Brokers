@@ -2,7 +2,7 @@ import WarwickshireHero from './sections/WarwickshireHero/WarwickshireHero'
 import WarwickshireWhyUs from './sections/WarwickshireWhyUs/WarwickshireWhyUs'
 import WarwickshireListings from './sections/WarwickshireListings/WarwickshireListings'
 import Testimonials from '../../../components/Testimonials/Testimonials'
-import WarwickshireSellingProcess from './sections/WarwickshireSellingProcess/WarwickshireSellingProcess'
+import WarwickshireBuyingProcess from './sections/WarwickshireBuyingProcess/WarwickshireBuyingProcess'
 import WarwickshireWhyChoose from './sections/WarwickshireWhyChoose/WarwickshireWhyChoose'
 import Faq from '../../../components/Faq/Faq'
 import CtaBanner from '../../../components/CtaBanner/CtaBanner'
@@ -15,9 +15,9 @@ export default function Warwickshire() {
       <WarwickshireWhyUs />
       <WarwickshireListings />
       <Testimonials />
-      <WarwickshireSellingProcess />
+      <WarwickshireBuyingProcess />
       <WarwickshireWhyChoose />
-      <Faq />
+      <Faq ctaText="Learn More" mobileLeftAlign />
       <CtaBanner />
       <Footer />
     </main>

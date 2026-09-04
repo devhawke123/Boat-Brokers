@@ -11,10 +11,13 @@ export default function FaqHero() {
       <Navbar activeLabel="" />
 
       <div className="relative z-[5] flex max-w-[43rem] flex-col items-center gap-6">
-        <h1 className="font-accent text-[44px] leading-[1.2] tracking-[-1.6px] text-white sm:text-[5rem]">
+        <h1 className="font-display text-[44px] leading-[1.2] tracking-[-2px] text-white capitalize sm:hidden">
+          FAQ
+        </h1>
+        <h1 className="hidden font-accent text-[5rem] leading-[1.2] tracking-[-1.6px] text-white sm:block">
           Frequently Asked Question
         </h1>
-        <p className="max-w-[35rem] text-base leading-[26px] tracking-[-0.32px] text-[#ededed] sm:text-base">
+        <p className="max-w-[17.75rem] text-sm leading-[26px] text-[#ededed] sm:max-w-[35rem] sm:text-base sm:tracking-[-0.32px]">
           Have questions? Find clear, straightforward answers to the most common questions about
           buying and selling boats.
         </p>

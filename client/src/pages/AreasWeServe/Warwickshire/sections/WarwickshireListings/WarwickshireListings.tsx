@@ -1,4 +1,4 @@
-import listingsImage from '../../../../../assets/warwickshire-listings.png'
+import listingsImage from '../../../../../assets/warwickshireBoatImage.png'
 import Button from '../../../../../components/Button/Button'
 
 export default function WarwickshireListings() {
@@ -47,7 +47,7 @@ export default function WarwickshireListings() {
           </div>
         </div>
 
-        <div className="aspect-square w-full overflow-hidden rounded-2xl lg:w-[31rem]">
+        <div className="aspect-[350/502] w-full overflow-hidden rounded-2xl lg:aspect-square">
           <img
             src={listingsImage}
             alt="A narrowboat moored on a canal surrounded by trees"

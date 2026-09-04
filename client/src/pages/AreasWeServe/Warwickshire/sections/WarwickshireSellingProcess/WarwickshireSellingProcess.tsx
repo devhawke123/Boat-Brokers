@@ -1,5 +1,6 @@
 import ellipseIcon from '../../../../../assets/Ellipse 6.png'
 import arrowRightWhite from '../../../../../assets/ArrowRight.png'
+import buyingProcessArrow from '../../../../../assets/BuyingProcessWarwickshire.png'
 
 type Step = {
   number: string
@@ -72,17 +73,12 @@ export default function WarwickshireSellingProcess() {
         </p>
         <div className="mt-2 flex items-center gap-3 text-xs tracking-[0.5px] text-blue uppercase">
           <span>01</span>
-          <svg
-            viewBox="0 0 217.002 14.7279"
-            fill="none"
+          <img
+            src={buyingProcessArrow}
+            alt=""
             aria-hidden="true"
-            className="h-3.5 w-32 text-black transition-colors duration-200 hover:text-blue sm:w-54"
-          >
-            <path
-              d="M216.709 8.07107C217.1 7.68054 217.1 7.04738 216.709 6.65685L210.345 0.292893C209.955 -0.097631 209.322 -0.097631 208.931 0.292893C208.541 0.683418 208.541 1.31658 208.931 1.70711L214.588 7.36396L208.931 13.0208C208.541 13.4113 208.541 14.0445 208.931 14.435C209.322 14.8256 209.955 14.8256 210.345 14.435L216.709 8.07107ZM0 7.36396V8.36396H216.002V7.36396V6.36396H0V7.36396Z"
-              fill="currentColor"
-            />
-          </svg>
+            className="h-4 w-[30rem] object-contain"
+          />
           <span>06</span>
         </div>
       </div>

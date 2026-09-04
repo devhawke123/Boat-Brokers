@@ -17,7 +17,7 @@ export default function WestMidlands() {
       <Testimonials />
       <WestMidlandsSellingProcess />
       <WestMidlandsWhyChoose />
-      <Faq />
+      <Faq ctaText="Learn More" mobileLeftAlign />
       <CtaBanner />
       <Footer />
     </main>

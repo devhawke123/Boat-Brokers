@@ -1,7 +1,7 @@
 import image1 from '../../../../../assets/west-midlands-why-choose-1.png'
 import image2 from '../../../../../assets/west-midlands-why-choose-2.png'
 import image3 from '../../../../../assets/west-midlands-listings.png'
-import arrowRight from '../../../../../assets/icons/arrow-right-dark.svg'
+import arrowRight from '../../../../../assets/ArrowRight2.png'
 
 const rows = [
   {
@@ -51,7 +51,7 @@ export default function WestMidlandsWhyChoose() {
         <h2 className="font-display text-[2.125rem] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[2.375rem] sm:leading-[1.3] lg:text-[3.375rem]">
           Why Choose The Boat Brokers in the West Midlands?
         </h2>
-        <p className="max-w-[62rem] text-sm leading-[26px] text-[#e3e3e3] sm:text-base">
+        <p className="max-w-[62rem] text-sm leading-[26px] text-[#C0C0C0] sm:text-base">
           As a specialist narrowboat and canal boat brokerage, The Boat Brokers combines deep
           local knowledge with honest advice, professional presentation and a personal approach.
           With over 500 canal boat sales across the region, we understand the West Midlands
@@ -61,19 +61,12 @@ export default function WestMidlandsWhyChoose() {
         </p>
       </div>
 
-      <div className="flex w-full max-w-[80rem] flex-col gap-8 border-t border-white/15 pt-12 sm:gap-16">
+      <div className="flex w-full max-w-[80rem] flex-col gap-8 pt-2 sm:gap-16 sm:border-t sm:border-white/15 sm:pt-12">
         {rows.map((row, index) => (
           <div
             key={index}
             className="flex flex-col items-center gap-8 lg:flex-row lg:gap-16"
           >
-            <p
-              className={`text-sm leading-[26px] text-[#b5b5b5] sm:text-lg lg:flex-1 ${
-                row.textFirst ? 'lg:order-1' : 'lg:order-2'
-              }`}
-            >
-              {row.text}
-            </p>
             <div
               className={`aspect-[350/360] w-full overflow-hidden rounded-2xl lg:aspect-[2.89/1] lg:flex-1 ${
                 row.textFirst ? 'lg:order-2' : 'lg:order-1'
@@ -91,13 +84,20 @@ export default function WestMidlandsWhyChoose() {
                 }`}
               />
             </div>
+            <p
+              className={`text-sm leading-[26px] text-[#b5b5b5] sm:text-lg lg:flex-1 ${
+                row.textFirst ? 'lg:order-1' : 'lg:order-2'
+              }`}
+            >
+              {row.text}
+            </p>
           </div>
         ))}
       </div>
 
       <a
         href="/boats-for-sale"
-        className="inline-flex items-center gap-1.5 rounded-xl bg-white px-6 py-3 text-base font-medium tracking-[-0.32px] text-[#073040] shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
+        className="inline-flex items-center gap-1.5 self-start rounded-xl bg-white px-6 py-3 text-base font-medium tracking-[-0.32px] text-[#073040] shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98] sm:self-auto"
       >
         Explore All Boats
         <img src={arrowRight} alt="" aria-hidden="true" className="size-[18px]" />

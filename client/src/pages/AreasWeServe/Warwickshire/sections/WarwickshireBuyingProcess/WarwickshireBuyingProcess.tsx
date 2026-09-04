@@ -43,22 +43,22 @@ const steps: Step[] = [
   },
 ]
 
-export default function WestMidlandsSellingProcess() {
+export default function WarwickshireBuyingProcess() {
   const [activeMobileStep, setActiveMobileStep] = useState(0)
 
   return (
     <section className="flex flex-col items-center gap-12 px-6 py-16 sm:px-16 sm:py-24">
-      {/* Mobile version — matches Figma mobile node 610:1801 literally */}
+      {/* Mobile version — matches West Midlands mobile pattern */}
       <div className="flex w-full flex-col items-center gap-5 lg:hidden">
         <div className="flex w-full flex-col items-start gap-2">
           <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
             <span className="size-2 rounded-full bg-blue" />
-            Buying process
+            Selling Process
           </span>
-          <h2 className="font-display text-[2.125rem] leading-[1.2] tracking-[-2px] text-ink capitalize">
-            The narrowboat will choose you,
+          <h2 className="font-display text-[2.125rem] leading-[1.2] tracking-[-2px] text-[#020f17] capitalize">
+            The Narrowboat Will Choose You,
             <br />
-            rather than the other way
+            Rather Than The Other Way
           </h2>
           <p className="text-sm leading-[26px] text-[#6e6e6e]">
             At The Boat Brokers, we specialise in narrowboat sales, blending modern technology
@@ -66,8 +66,8 @@ export default function WestMidlandsSellingProcess() {
           </p>
           <div className="mt-2 flex w-full items-center gap-1.5 self-start text-xs tracking-[0.5px] text-blue uppercase">
             <span>01</span>
-            <img src={buyingProcessArrow} alt="" aria-hidden="true" className="h-3.5 w-40 shrink-0 object-contain sm:h-4 sm:w-[30rem]" />
-            <span>08</span>
+            <img src={buyingProcessArrow} alt="" aria-hidden="true" className="h-3.5 w-40 shrink-0 object-contain" />
+            <span>06</span>
           </div>
         </div>
 
@@ -131,35 +131,26 @@ export default function WestMidlandsSellingProcess() {
         </a>
       </div>
 
-      {/* Desktop version — matches Figma desktop node 591:1254 */}
+      {/* Desktop version */}
       <div className="hidden max-w-[51.5rem] flex-col items-center gap-3 text-center lg:flex">
         <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
           <span className="size-2 rounded-full bg-blue" />
           Selling Process
         </span>
-        <h2 className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-ink capitalize sm:text-[3.375rem]">
-          Sell Your Narrowboat in the West Midlands
+        <h2 className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-[#020f17] capitalize sm:text-[3.375rem]">
+          The Narrowboat Will Choose You, Rather Than The Other Way
         </h2>
         <p className="max-w-[51.5rem] text-base leading-[26px] text-[#929292]">
-          Looking to{' '}
-          <a
-            href="https://theboatbrokers.co.uk/selling/"
-            target="_blank"
-            rel="noreferrer"
-            className="underline"
-          >
-            sell your narrowboat in the West Midlands
-          </a>
-          ? We handle the entire process from free valuation to completed sale, with no upfront
-          costs and no fees unless your boat sells.
+          At The Boat Brokers, we specialise in narrowboat sales, blending modern technology with
+          personal service.
         </p>
-        <div className="mt-2 flex items-center gap-1.5 text-xs tracking-[0.5px] text-blue uppercase">
+        <div className="mt-2 flex items-center justify-center gap-1.5 text-xs tracking-[0.5px] text-blue uppercase">
           <span>01</span>
           <svg
             viewBox="0 0 217.002 14.7279"
             fill="none"
             aria-hidden="true"
-            className="h-3.5 w-32 text-[#6e6e6e] transition-colors duration-200 hover:text-blue sm:w-54"
+            className="h-3.5 w-54 text-[#6e6e6e] transition-colors duration-200 hover:text-blue"
           >
             <path
               d="M216.709 8.07107C217.1 7.68054 217.1 7.04738 216.709 6.65685L210.345 0.292893C209.955 -0.097631 209.322 -0.097631 208.931 0.292893C208.541 0.683418 208.541 1.31658 208.931 1.70711L214.588 7.36396L208.931 13.0208C208.541 13.4113 208.541 14.0445 208.931 14.435C209.322 14.8256 209.955 14.8256 210.345 14.435L216.709 8.07107ZM0 7.36396V8.36396H216.002V7.36396V6.36396H0V7.36396Z"

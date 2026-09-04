@@ -7,7 +7,7 @@ export default function Faq() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
       <FaqHero />
-      <FaqSection singleColumn hideCta />
+      <FaqSection singleColumn hideCta mobileLeftAlign />
       <CtaBanner />
       <Footer />
     </main>
