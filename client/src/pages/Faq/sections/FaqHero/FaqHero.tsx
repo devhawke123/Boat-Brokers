@@ -8,7 +8,7 @@ export default function FaqHero() {
       style={{ backgroundImage: `url(${heroBg})` }}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(54.6deg,rgba(102,102,102,0)_26%,rgba(0,0,0,0.2)_32%)]" />
-      <Navbar />
+      <Navbar activeLabel="" />
 
       <div className="relative z-[5] flex max-w-[43rem] flex-col items-center gap-6">
         <h1 className="font-accent text-[44px] leading-[1.2] tracking-[-1.6px] text-white sm:text-[5rem]">
