@@ -13,11 +13,11 @@ const boatInput = z.object({
   lengthFeet: z.number().positive(),
   description: z.string().min(1),
   imageUrl: z.string().url().optional(),
-  brokerId: z.number().int(),
+  sellerId: z.number().int(),
 });
 
 boatsRouter.get("/", async (_req, res) => {
-  const boats = await prisma.boat.findMany({ include: { broker: true } });
+  const boats = await prisma.boat.findMany({ include: { seller: true } });
   res.json(boats);
 });
 

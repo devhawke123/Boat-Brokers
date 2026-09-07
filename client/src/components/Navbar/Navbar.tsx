@@ -36,7 +36,17 @@ const navLinks: NavLink[] = [
       { label: 'Warwickshire', href: '/areas-we-serve/warwickshire' },
     ],
   },
-  { label: 'About', href: '/about', hasDropdown: true },
+  {
+    label: 'About',
+    href: '/about',
+    hasDropdown: true,
+    dropdownItems: [
+      { label: 'Book a Viewing', href: '/book-a-viewing' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Why Choose Us', href: '/why-choose-us' },
+      { label: 'FAQ', href: '/faq' },
+    ],
+  },
 ]
 
 type NavbarProps = {

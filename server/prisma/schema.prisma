@@ -8,22 +8,138 @@ datasource db {
 }
 
 model Boat {
-  id          Int      @id @default(autoincrement())
-  title       String
-  make        String
-  model       String
-  year        Int
-  price       Decimal  @db.Decimal(12, 2)
-  lengthFeet  Decimal  @db.Decimal(6, 2)
-  description String   @db.Text
-  imageUrl    String?
-  brokerId    Int
-  broker      Broker   @relation(fields: [brokerId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id       Int         @id @default(autoincrement())
+  name     String
+  cost     String
+  imageUrl String?
+  sellerId Int
+  seller   Seller      @relation(fields: [sellerId], references: [id])
+  images   BoatImage[]
+
+  // History
+  cinNumber              String?
+  crtNumber              String?
+  licenseNumber          String?
+  previousOwners         String?
+  engineServiceHistory   String?
+  boilerServiceHistory   String?
+  survey                 String?
+  blacking               String?
+  anodes                 String?
+  documentationAvailable String?
+
+  // Dimensions
+  draft            String?
+  internalHeadroom String?
+  saloonLength     String?
+  galleyLength     String?
+  bathroomLength   String?
+  bedroomLength    String?
+
+  // Engine
+  engine             String?
+  hours              String?
+  gearbox            String?
+  bowthruster        String?
+  weedhatch          String?
+  dieselTankCapacity String?
+  engineExtraNotes   String?
+
+  // Heating
+  centralHeating    String?
+  solidFuelStove    String?
+  sourceOfHotWater  String?
+  waterTank         String?
+  waterTankCapacity String?
+  heatingExtraNotes String?
+
+  // Electrical
+  alternator           String?
+  batteries            String?
+  lighting             String?
+  inverterCharger      String?
+  landlineSocket       String?
+  galvanicIsolator     String?
+  electricalExtraNotes String?
+
+  // Gas
+  gasBottles    String?
+  appliances    String?
+  gasExtraNotes String?
+
+  // Interior - general
+  insulation         String?
+  ballast            String?
+  ceiling            String?
+  cabinSides         String?
+  hullSides          String?
+  flooring           String?
+  sideDoors          String?
+  windows            String?
+  interiorExtraNotes String?
+
+  // Interior - Saloon
+  saloonSeating String?
+  saloonDinette String?
+
+  // Interior - Galley
+  galleyCooker         String?
+  galleyFridgeFreezer  String?
+  galleyMicrowave      String?
+  galleyWashingMachine String?
+  galleyExtraNotes     String?
+
+  // Interior - Bathroom
+  bathroomToilet            String?
+  bathroomWasteTankCapacity String?
+  bathroomBathShower        String?
+  bathroomVanityBasin       String?
+  bathroomExtraNotes        String?
+
+  // Interior - Bedroom
+  bedroomBed        String?
+  bedroomDinette    String?
+  bedroomExtraNotes String?
+
+  // Other
+  tv                  String?
+  covers              String?
+  navigationEquipment String?
+  hullBuilder         String?
+  fitOut              String?
+  year                String?
+  steelSpec           String?
+  lastService         String?
+  boatSafety          String?
+  recentSurvey        String?
+
+  // Key Details
+  boatName   String?
+  location   String?
+  lengthBeam String?
+  noOfBerths String?
+  sternType  String?
+  yearBuilt  String?
+  builder    String?
+  boatType   String?
+  overview   String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Broker {
+model BoatImage {
+  id        Int      @id @default(autoincrement())
+  boatId    Int
+  boat      Boat     @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  path      String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([boatId])
+}
+
+model Seller {
   id        Int      @id @default(autoincrement())
   name      String
   email     String   @unique

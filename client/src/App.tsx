@@ -6,6 +6,7 @@ import BoatForSale from './pages/BoatForSale/BoatForSale'
 import BoatDetail from './pages/BoatDetail/BoatDetail'
 import NoelCreary from './pages/NoelCreary/NoelCreary'
 import Faq from './pages/Faq/Faq'
+import BookAViewing from './pages/BookAViewing/BookAViewing'
 import AreasWeServe from './pages/AreasWeServe/AreasWeServe'
 import WestMidlands from './pages/AreasWeServe/WestMidlands/WestMidlands'
 import Warwickshire from './pages/AreasWeServe/Warwickshire/Warwickshire'
@@ -39,6 +40,10 @@ function App() {
 
   if (pathname === '/faq') {
     return <Faq />
+  }
+
+  if (pathname === '/book-a-viewing') {
+    return <BookAViewing />
   }
 
   if (pathname === '/areas-we-serve/west-midlands') {
