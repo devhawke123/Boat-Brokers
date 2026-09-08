@@ -4,12 +4,14 @@ import Buying from './pages/Buying/Buying'
 import Selling from './pages/Selling/Selling'
 import BoatForSale from './pages/BoatForSale/BoatForSale'
 import BoatDetail from './pages/BoatDetail/BoatDetail'
+import JargonBuster from './pages/JargonBuster/JargonBuster'
 import NoelCreary from './pages/NoelCreary/NoelCreary'
 import Faq from './pages/Faq/Faq'
 import BookAViewing from './pages/BookAViewing/BookAViewing'
 import AreasWeServe from './pages/AreasWeServe/AreasWeServe'
 import WestMidlands from './pages/AreasWeServe/WestMidlands/WestMidlands'
 import Warwickshire from './pages/AreasWeServe/Warwickshire/Warwickshire'
+import Worcestershire from './pages/AreasWeServe/Worcestershire/Worcestershire'
 
 function App() {
   const { pathname } = window.location
@@ -34,6 +36,10 @@ function App() {
     return <BoatDetail slug={pathname.replace('/boats/', '')} />
   }
 
+  if (pathname === '/jargon-buster') {
+    return <JargonBuster />
+  }
+
   if (pathname === '/noel-creary') {
     return <NoelCreary />
   }
@@ -52,6 +58,10 @@ function App() {
 
   if (pathname === '/areas-we-serve/warwickshire') {
     return <Warwickshire />
+  }
+
+  if (pathname === '/areas-we-serve/worcestershire') {
+    return <Worcestershire />
   }
 
   if (pathname === '/areas-we-serve') {

@@ -32,7 +32,7 @@ const navLinks: NavLink[] = [
       { label: 'Wolverhampton', href: '/areas-we-serve' },
       { label: 'Worcester', href: '/areas-we-serve' },
       { label: 'West Midlands', href: '/areas-we-serve/west-midlands' },
-      { label: 'Worcestershire', href: '/areas-we-serve' },
+      { label: 'Worcestershire', href: '/areas-we-serve/worcestershire' },
       { label: 'Warwickshire', href: '/areas-we-serve/warwickshire' },
     ],
   },
