@@ -97,7 +97,10 @@ export default function SellingGuide() {
   const isLast = current === steps.length - 1
 
   return (
-    <section className="flex flex-col items-center gap-12 rounded-3xl bg-[#f5f8fa] px-6 py-16 sm:px-16 sm:py-24">
+    <section
+      id="selling-guide"
+      className="flex flex-col items-center gap-12 rounded-3xl bg-[#f5f8fa] px-6 py-16 sm:px-16 sm:py-24 scroll-mt-28"
+    >
       <div className="flex max-w-[61.25rem] flex-col items-center gap-3 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
           <span className="size-2 rounded-full bg-blue" />

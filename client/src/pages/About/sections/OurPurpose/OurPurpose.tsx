@@ -31,10 +31,10 @@ export default function OurPurpose() {
           <span className="size-2 rounded-full bg-blue-light" />
           Built on Commitment
         </span>
-        <h2 className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-white capitalize sm:text-[3.375rem]">
+        <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[3.375rem] sm:leading-[1.3]">
           Our Purpose &amp; Principles
         </h2>
-        <p className="text-base leading-[26px] text-text-muted">
+        <p className="text-sm leading-[26px] text-text-muted sm:text-base">
           We&rsquo;re guided by a clear purpose: delivering honest, expert, and effortless boat
           brokerage experiences.
         </p>
@@ -52,7 +52,7 @@ export default function OurPurpose() {
             <h3 className="font-display text-[1.75rem] leading-[1.3] tracking-[-1px] text-black capitalize">
               {pillar.title}
             </h3>
-            <p className="text-base leading-[1.8] text-text-body">{pillar.description}</p>
+            <p className="text-sm leading-[1.8] text-text-body sm:text-base">{pillar.description}</p>
           </article>
         ))}
       </div>

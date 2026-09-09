@@ -1,5 +1,4 @@
 import listingsImage from '../../../../../assets/west-midlands-listings.png'
-import listingsImageMobile from '../../../../../assets/west-midlands-why-us-mobile.png'
 import Button from '../../../../../components/Button/Button'
 
 export default function WestMidlandsListings() {
@@ -8,15 +7,11 @@ export default function WestMidlandsListings() {
       <div className="mx-auto grid max-w-[87.5rem] grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] lg:items-start lg:gap-20">
         <div className="flex flex-col gap-8 lg:h-[31rem] lg:justify-between">
           <div className="flex flex-col gap-3">
-            <h2 className="font-display text-[2.125rem] leading-[1.2] tracking-[-2px] text-black capitalize sm:text-[2.375rem] sm:leading-[1.3] lg:text-[3.375rem]">
+            <h2 className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-black capitalize sm:text-[3.375rem]">
               Narrowboats For Sale in the West Midlands
             </h2>
 
-            <h3 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-[#1a1a1a] capitalize lg:hidden">
-              Your Boat Journey, Made Simple
-            </h3>
-
-            <div className="flex flex-col gap-2 text-sm leading-[1.5] font-light text-text-body sm:text-base">
+            <div className="flex flex-col gap-2 text-base leading-[1.5] font-light text-text-body">
               <p>
                 We maintain a regularly updated selection of{' '}
                 <a
@@ -52,16 +47,11 @@ export default function WestMidlandsListings() {
           </div>
         </div>
 
-        <div className="aspect-[350/502] w-full overflow-hidden rounded-2xl sm:aspect-square lg:w-[31rem]">
-          <img
-            src={listingsImageMobile}
-            alt="A narrowboat on a canal at sunset in the West Midlands"
-            className="size-full scale-x-[-1] object-cover lg:hidden"
-          />
+        <div className="aspect-square w-full overflow-hidden rounded-2xl lg:w-[31rem]">
           <img
             src={listingsImage}
             alt="A narrowboat on a canal at sunset in the West Midlands"
-            className="hidden size-full object-cover lg:block"
+            className="size-full scale-x-[-1] object-cover"
           />
         </div>
       </div>

@@ -21,7 +21,7 @@ export default function VirtualTour() {
   const goNext = () => setActive((i) => (i + 1) % gallery.length)
 
   return (
-    <section className="px-6 sm:px-16">
+    <section id="virtual-tour" className="scroll-mt-28 px-6 sm:px-16">
       <div className="mx-auto flex w-full max-w-[80rem] flex-col items-center gap-12 rounded-2xl bg-navy-darkest px-6 py-16 sm:px-[3.75rem] sm:py-[7.5rem]">
         <div className="flex w-full flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-[7.5rem]">
           <div className="flex flex-1 flex-col items-start gap-6">
@@ -94,8 +94,24 @@ export default function VirtualTour() {
           </button>
         </div>
 
-        <div className="flex w-full items-center gap-6 overflow-x-auto sm:gap-8">
-          <div className="flex shrink-0 flex-col items-center justify-center gap-6">
+        <div className="flex w-full flex-col items-center gap-6 sm:flex-row sm:gap-8">
+          <div className="relative h-[15.25rem] w-full flex-1 overflow-hidden rounded-[9px]">
+            {gallery.map((item, index) => (
+              <img
+                key={item.label}
+                src={item.src}
+                alt={item.label}
+                className={`absolute inset-0 size-full object-cover transition-opacity duration-200 ${
+                  index === active ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            ))}
+            <span className="absolute top-[19px] left-1/2 -translate-x-1/2 rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
+              {gallery[active].label}
+            </span>
+          </div>
+
+          <div className="flex shrink-0 items-center justify-center gap-6 sm:flex-col">
             <button
               type="button"
               onClick={goPrev}
@@ -115,22 +131,6 @@ export default function VirtualTour() {
             >
               <img src={arrowDark} alt="" aria-hidden="true" className="size-[1.375rem]" />
             </button>
-          </div>
-
-          <div className="grid flex-1 grid-cols-3 gap-4">
-            {gallery.map((item, index) => (
-              <div
-                key={item.label}
-                className={`relative h-[15.25rem] w-full overflow-hidden rounded-[9px] transition-[outline] ${
-                  index === active ? 'outline outline-2 outline-offset-2 outline-blue' : ''
-                }`}
-              >
-                <img src={item.src} alt={item.label} className="absolute inset-0 size-full object-cover" />
-                <span className="absolute top-[19px] left-1/2 -translate-x-1/2 rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
-                  {item.label}
-                </span>
-              </div>
-            ))}
           </div>
         </div>
       </div>

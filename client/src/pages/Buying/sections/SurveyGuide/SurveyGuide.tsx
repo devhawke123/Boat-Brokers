@@ -40,7 +40,10 @@ const surveyTypes: SurveyType[] = [
 
 export default function SurveyGuide() {
   return (
-    <section className="flex flex-col items-center gap-16 rounded-2xl bg-navy-darkest px-6 py-14 sm:px-16 sm:py-20">
+    <section
+      id="survey"
+      className="flex flex-col items-center gap-16 rounded-2xl bg-navy-darkest px-6 py-14 sm:px-16 sm:py-20 scroll-mt-28"
+    >
       <div className="flex w-full max-w-[80rem] flex-col gap-16">
         <div className="flex flex-col gap-4">
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">

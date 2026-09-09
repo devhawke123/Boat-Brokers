@@ -13,8 +13,8 @@ export default function About() {
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
       <AboutHero />
       <OurStory />
-      <BuySellConfidence />
       <OurPurpose />
+      <BuySellConfidence />
       <Testimonials />
       <BrandsCarousel />
       <TeamLead />

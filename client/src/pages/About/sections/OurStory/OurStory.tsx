@@ -29,14 +29,14 @@ export default function OurStory() {
                 <span className="size-2 rounded-full bg-blue" />
                 A Few Words About Us
               </span>
-              <h2 className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-[#020f17] capitalize sm:text-[3.375rem]">
+              <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-[#020f17] capitalize sm:text-[3.375rem] sm:leading-[1.3]">
                 About The
                 <br className="hidden lg:block" /> Boat Brokers
               </h2>
             </div>
 
             <div className="flex flex-col gap-8 lg:flex-1 lg:justify-between">
-              <p className="max-w-[27.3125rem] text-base leading-[26px] text-text-body">
+              <p className="max-w-[27.3125rem] text-sm leading-[26px] text-text-body sm:text-base">
                 We are passionate about boating and dedicated to providing our clients with
                 exceptional service. Whether you are a seasoned boater or new to the industry, we
                 are here to help you navigate the waters of buying or selling.
@@ -58,14 +58,14 @@ export default function OurStory() {
           </div>
         </div>
 
-        <ul className="flex flex-wrap items-start justify-between gap-6">
+        <ul className="grid grid-cols-4 items-start gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-6">
           {stats.map((stat, index) => (
             <Fragment key={stat.value}>
-              <li className="flex items-center gap-1.5">
-                <span className="font-display text-[3.375rem] tracking-[-2px] text-black capitalize">
+              <li className="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-center sm:gap-1.5 sm:text-left">
+                <span className="font-display text-xl tracking-[-1px] text-black capitalize sm:text-[3.375rem] sm:tracking-[-2px]">
                   {stat.value}
                 </span>
-                <span className="max-w-[130px] font-body text-sm font-light text-[#6e6e6e]">
+                <span className="font-body text-[10px] leading-[14px] text-[#6e6e6e] sm:max-w-[130px] sm:text-sm sm:leading-normal sm:font-light">
                   {stat.label}
                 </span>
               </li>

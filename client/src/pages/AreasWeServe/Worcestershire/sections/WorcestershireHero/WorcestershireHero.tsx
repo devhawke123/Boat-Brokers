@@ -10,7 +10,7 @@ export default function WorcestershireHero() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.1)_35%,rgba(0,0,0,0.4)_100%)]" />
       <Navbar activeLabel="Areas We Serve" />
 
-      <div className="relative z-[5] flex max-w-[79.375rem] flex-col items-center gap-8">
+      <div className="relative z-[5] mt-24 flex max-w-[79.375rem] flex-col items-center gap-8 sm:mt-0">
         <h1 className="font-display text-[40px] leading-[1.2] tracking-[-1.6px] text-white capitalize sm:text-[5rem] sm:tracking-[-2px]">
           Worcestershire&rsquo;s Specialist Canal Boat &amp; Narrowboat Broker
         </h1>

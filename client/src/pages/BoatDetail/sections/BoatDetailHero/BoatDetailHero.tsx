@@ -18,7 +18,7 @@ export default function BoatDetailHero({ boat }: BoatDetailHeroProps) {
 
       {status && (
         <span
-          className={`absolute top-24 left-8 z-[5] flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold tracking-[0.35px] text-white shadow-sm max-[900px]:top-20 max-[900px]:left-5 sm:top-32 sm:left-14 ${status.className}`}
+          className={`absolute top-24 left-8 z-[5] flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-semibold tracking-[0.35px] text-white shadow-sm max-[900px]:top-28 max-[900px]:left-5 sm:top-32 sm:left-14 ${status.className}`}
         >
           <span className="size-2 rounded-full bg-white" />
           {status.label}

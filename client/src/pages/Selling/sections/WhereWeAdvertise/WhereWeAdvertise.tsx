@@ -5,7 +5,7 @@ import publicationsIcon from '../../../../assets/icons/publications.svg'
 
 export default function WhereWeAdvertise() {
   return (
-    <section className="flex flex-col items-center gap-8 px-6 py-12 sm:px-16 sm:py-16">
+    <section id="advertise" className="flex flex-col items-center gap-8 px-6 py-12 sm:px-16 sm:py-16 scroll-mt-28">
       <div className="flex max-w-[42rem] flex-col items-center gap-3 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
           <span className="size-2 rounded-full bg-blue" />

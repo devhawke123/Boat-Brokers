@@ -58,6 +58,9 @@ export const boatListings: BoatListing[] = [
       hullThickness: '10/6/6mm',
       engineMake: 'Beta Marine',
       tags: ['Semi-Trad Stern', 'Modern Engine', 'Low Engine Hours'],
+      brochureUrl: 'mailto:info@theboatbrokers.co.uk?subject=Brochure request - Sunflower',
+      videoUrl: '/selling#virtual-tour',
+      virtualTourUrl: '/selling#virtual-tour',
       overview: [
         'Sunflower is a beautifully presented 62ft semi-traditional narrowboat built in 2022 by Tim Tyler, offering a modern layout with the character and finish of a bespoke fit-out.',
         'Stepping aboard, you are welcomed into a bright saloon with large windows and a wood-burning stove, leading through to a well-equipped galley with a full-size cooker, fridge freezer and generous worktop space. The main bedroom features a fixed double bed with wardrobes either side, and the boat is completed by a spacious shower room with a separate cassette toilet.',
@@ -103,6 +106,9 @@ export const boatListings: BoatListing[] = [
       hullThickness: '10/6/6mm',
       engineMake: 'Bolinder',
       tags: ['Trad Stern', 'Historic Engine', 'Recent Survey'],
+      brochureUrl: 'mailto:info@theboatbrokers.co.uk?subject=Brochure request - Sentinel',
+      videoUrl: '/selling#virtual-tour',
+      virtualTourUrl: '/selling#virtual-tour',
       overview: [
         'Sentinel is a characterful 70ft traditional narrowboat built in 1976, with her hull by Colecraft and fitted out by Brian Duvall, and powered by the much-admired Bolinder engine, perfectly complementing her classic lines and timeless appeal.',
         'Stepping aboard from the bow, you are welcomed into a spacious saloon, followed by a well-equipped walkthrough galley featuring a freestanding cooker, washing machine, fridge freezer and ample storage. The light and airy main bedroom offers a comfortable retreat, while the impressive engine room houses the iconic Bolinder engine and generator enabling life aboard to be completely self sufficient. Completing the accommodation is a traditional boatman’s cabin with a single berth, full of charm and surprisingly spacious.',

@@ -60,7 +60,10 @@ const steps: Step[] = [
 
 export default function BuyingProcessSteps() {
   return (
-    <section className="flex flex-col items-center gap-12 px-6 py-16 sm:px-16 sm:py-24">
+    <section
+      id="buying-process"
+      className="flex flex-col items-center gap-12 px-6 py-16 sm:px-16 sm:py-24 scroll-mt-28"
+    >
       <div className="flex max-w-[42rem] flex-col items-center gap-3 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
           <span className="size-2 rounded-full bg-blue" />
@@ -73,7 +76,7 @@ export default function BuyingProcessSteps() {
           At The Boat Brokers, we specialise in narrowboat sales, blending modern technology with
           personal service.
         </p>
-        <div className="mt-2 flex items-center gap-3 text-xs tracking-[0.5px] text-blue uppercase">
+        <div className="font-accent mt-2 flex items-center gap-3 text-xs tracking-[0.5px] text-blue uppercase">
           <span>01</span>
           <svg
             viewBox="0 0 217.002 14.7279"
@@ -94,21 +97,21 @@ export default function BuyingProcessSteps() {
         {steps.map((step) => (
           <div
             key={step.number}
-            className="group flex flex-col justify-between gap-8 bg-white p-8 transition-colors duration-200 hover:bg-[#e8f9ff]"
+            className="group flex flex-col justify-between gap-6 bg-white p-5 transition-colors duration-200 hover:bg-[#e8f9ff] sm:gap-8 sm:p-8"
           >
-            <div className="flex items-start justify-between gap-8">
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-3">
-                  <img src={ellipseIcon} alt="" aria-hidden="true" className="size-6 shrink-0" />
-                  <h3 className="font-display text-[1.75rem] leading-[1.3] tracking-[-2px] text-ink capitalize">
+            <div className="flex items-start justify-between gap-3 sm:gap-8">
+              <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-6">
+                <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                  <img src={ellipseIcon} alt="" aria-hidden="true" className="size-5 shrink-0 sm:size-6" />
+                  <h3 className="min-w-0 font-display text-lg leading-[1.3] tracking-[-1px] text-ink capitalize sm:text-[1.75rem] sm:tracking-[-2px]">
                     {step.title}
                   </h3>
                 </div>
-                <p className="max-w-[23rem] text-base leading-[28px] text-[rgba(0,0,0,0.63)]">
+                <p className="max-w-[23rem] text-sm leading-[22px] text-[rgba(0,0,0,0.63)] sm:text-base sm:leading-[28px]">
                   {step.description}
                 </p>
               </div>
-              <span className="font-display shrink-0 text-[5rem] leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:text-[7.5rem]">
+              <span className="font-accent w-14 shrink-0 text-right text-4xl leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:w-auto sm:text-left sm:text-[7.5rem]">
                 {step.number}
               </span>
             </div>

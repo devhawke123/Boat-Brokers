@@ -63,14 +63,14 @@ export default function WarwickshireWhyUs() {
           </div>
         </div>
 
-        <ul className="flex flex-wrap items-start justify-between gap-6">
+        <ul className="grid grid-cols-4 items-start gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-6">
           {stats.map((stat, index) => (
             <Fragment key={stat.value}>
-              <li className="flex items-center gap-1.5">
-                <span className="font-display text-[3.375rem] tracking-[-2px] text-black capitalize">
+              <li className="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-center sm:gap-1.5 sm:text-left">
+                <span className="font-display text-xl tracking-[-1px] text-black capitalize sm:text-[3.375rem] sm:tracking-[-2px]">
                   {stat.value}
                 </span>
-                <span className="max-w-[130px] font-body text-sm font-light text-[#6e6e6e]">
+                <span className="font-body text-[10px] leading-[14px] text-[#6e6e6e] sm:max-w-[130px] sm:text-sm sm:leading-normal sm:font-light">
                   {stat.label}
                 </span>
               </li>

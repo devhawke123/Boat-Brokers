@@ -16,15 +16,15 @@ export default function TeamLead() {
 
         <div className="flex max-w-[38.125rem] flex-col gap-8">
           <div className="flex flex-col">
-            <p className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-blue capitalize sm:text-[3.375rem]">
+            <p className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-blue capitalize sm:text-[3.375rem] sm:leading-[1.3]">
               &ldquo;Noel Creary&rdquo;
             </p>
-            <p className="font-display text-[2.375rem] leading-[1.3] tracking-[-2px] text-black capitalize sm:text-[3.375rem]">
+            <p className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-black capitalize sm:text-[3.375rem] sm:leading-[1.3]">
               Managing Director
             </p>
           </div>
 
-          <p className="text-base leading-[26px] text-text-body sm:text-xl sm:leading-[30px]">
+          <p className="text-sm leading-[26px] text-text-body sm:text-xl sm:leading-[30px]">
             &ldquo;I&rsquo;ve been involved in building canal boats for over 20 years, having
             successfully managed two top quality canal boat builders, Amber Boats and Heritage
             Boats of Evesham. I&rsquo;ve also bought and sold hundreds of used boats in my time. I

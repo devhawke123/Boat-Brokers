@@ -3,7 +3,7 @@ import Button from '../../../../components/Button/Button'
 
 export default function WhyUseABroker() {
   return (
-    <section className="flex flex-col gap-8 px-6 py-16 sm:px-16 sm:py-24">
+    <section id="why-use-a-broker" className="flex flex-col gap-8 px-6 py-16 sm:px-16 sm:py-24 scroll-mt-28">
       <h2 className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-ink capitalize sm:text-[3.375rem]">
         Why Use A Broker?
       </h2>
@@ -16,7 +16,7 @@ export default function WhyUseABroker() {
         />
 
         <div className="flex flex-col items-start gap-8">
-          <div className="flex flex-col gap-4 text-base leading-[26px] text-[#6e6e6e]">
+          <div className="flex flex-col gap-4 text-sm leading-[24px] text-[#6e6e6e] sm:text-base sm:leading-[26px]">
             <p>
               You may have considered trying to sell your own boat, placing adverts, dealing with
               the enquiries and negotiating and administering the sale yourself.

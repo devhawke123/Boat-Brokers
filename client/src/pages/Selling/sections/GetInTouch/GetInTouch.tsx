@@ -5,7 +5,10 @@ import Button from '../../../../components/Button/Button'
 
 export default function GetInTouch() {
   return (
-    <section className="flex flex-col items-center rounded-2xl border border-[#e2e8f0] bg-white px-6 py-14 sm:px-16 sm:py-24">
+    <section
+      id="ask-a-question"
+      className="flex flex-col items-center rounded-2xl border border-[#e2e8f0] bg-white px-6 py-14 sm:px-16 sm:py-24 scroll-mt-28"
+    >
       <div className="grid w-full max-w-[80rem] grid-cols-1 items-center gap-14 lg:grid-cols-2">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">

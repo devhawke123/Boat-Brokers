@@ -91,21 +91,21 @@ export default function WarwickshireSellingProcess() {
         {steps.map((step) => (
           <div
             key={step.number}
-            className="group flex flex-col gap-6 bg-white p-8 transition-colors duration-200 hover:bg-[#e8f9ff]"
+            className="group flex flex-col gap-6 bg-white p-5 transition-colors duration-200 hover:bg-[#e8f9ff] sm:p-8"
           >
-            <div className="flex items-start justify-between gap-8">
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-3">
-                  <img src={ellipseIcon} alt="" aria-hidden="true" className="size-6 shrink-0" />
-                  <h3 className="font-display text-[1.75rem] leading-[1.3] tracking-[-2px] text-ink capitalize">
+            <div className="flex items-start justify-between gap-3 sm:gap-8">
+              <div className="flex min-w-0 flex-1 flex-col gap-3 sm:gap-6">
+                <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                  <img src={ellipseIcon} alt="" aria-hidden="true" className="size-5 shrink-0 sm:size-6" />
+                  <h3 className="min-w-0 font-display text-lg leading-[1.3] tracking-[-1px] text-ink capitalize sm:text-[1.75rem] sm:tracking-[-2px]">
                     {step.title}
                   </h3>
                 </div>
-                <p className="max-w-[23rem] text-base leading-[28px] text-[rgba(0,0,0,0.63)]">
+                <p className="max-w-[23rem] text-sm leading-[22px] text-[rgba(0,0,0,0.63)] sm:text-base sm:leading-[28px]">
                   {step.description}
                 </p>
               </div>
-              <span className="font-display shrink-0 text-[5rem] leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:text-[7.5rem]">
+              <span className="font-display shrink-0 text-2xl leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:text-[7.5rem]">
                 {step.number}
               </span>
             </div>

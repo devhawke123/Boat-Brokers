@@ -14,7 +14,7 @@ export default function SellingHero() {
         <h1 className="font-display text-[44px] leading-[1.2] tracking-[-1.6px] text-white capitalize sm:text-[5rem]">
           The Selling Process
         </h1>
-        <p className="max-w-[35rem] text-base leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]">
+        <p className="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]">
           Ready to sell your boat? We make the process simple and straightforward, helping you
           present your boat to the right buyers and achieve the best possible outcome.
         </p>

@@ -12,6 +12,11 @@ import AreasWeServe from './pages/AreasWeServe/AreasWeServe'
 import WestMidlands from './pages/AreasWeServe/WestMidlands/WestMidlands'
 import Warwickshire from './pages/AreasWeServe/Warwickshire/Warwickshire'
 import Worcestershire from './pages/AreasWeServe/Worcestershire/Worcestershire'
+import Birmingham from './pages/AreasWeServe/Birmingham/Birmingham'
+import Wolverhampton from './pages/AreasWeServe/Wolverhampton/Wolverhampton'
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
+import Blog from './pages/Blog/Blog'
+import BlogDetail from './pages/BlogDetail/BlogDetail'
 
 function App() {
   const { pathname } = window.location
@@ -64,8 +69,28 @@ function App() {
     return <Worcestershire />
   }
 
+  if (pathname === '/areas-we-serve/birmingham') {
+    return <Birmingham />
+  }
+
+  if (pathname === '/areas-we-serve/wolverhampton') {
+    return <Wolverhampton />
+  }
+
   if (pathname === '/areas-we-serve') {
     return <AreasWeServe />
+  }
+
+  if (pathname === '/privacy-policy') {
+    return <PrivacyPolicy />
+  }
+
+  if (pathname.startsWith('/blog/')) {
+    return <BlogDetail slug={pathname.replace('/blog/', '')} />
+  }
+
+  if (pathname === '/blog') {
+    return <Blog />
   }
 
   return <Home />
