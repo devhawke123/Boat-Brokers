@@ -65,7 +65,7 @@ export default function BirminghamWhyUs() {
                 <span className="font-display text-xl tracking-[-1px] text-black capitalize sm:text-[3.375rem] sm:tracking-[-2px]">
                   {stat.value}
                 </span>
-                <span className="font-body text-[10px] leading-[14px] text-[#6e6e6e] sm:max-w-[130px] sm:text-sm sm:leading-normal sm:font-light">
+                <span className="font-body text-[10px] leading-[14px] text-[#6e6e6e] sm:max-w-[8.125rem] sm:text-sm sm:leading-normal sm:font-light">
                   {stat.label}
                 </span>
               </li>

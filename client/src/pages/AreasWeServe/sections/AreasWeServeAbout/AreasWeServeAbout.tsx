@@ -131,7 +131,7 @@ export default function AreasWeServeAbout() {
                 <span className="font-display text-[3.375rem] tracking-[-2px] text-black capitalize">
                   {stat.value}
                 </span>
-                <span className="max-w-[130px] font-body text-sm font-light text-[#6e6e6e]">
+                <span className="max-w-[8.125rem] font-body text-sm font-light text-[#6e6e6e]">
                   {stat.label}
                 </span>
               </li>

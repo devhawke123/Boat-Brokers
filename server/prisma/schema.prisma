@@ -10,7 +10,16 @@ datasource db {
 model Boat {
   id       Int         @id @default(autoincrement())
   name     String
+  // Raw source text for the price/status cell as originally imported
+  // (e.g. "£69,950", "sold", "under offer"). Kept for reference/audit —
+  // the app uses `price` and the status booleans below instead.
   cost     String
+  // Real numeric asking price. Null when there's no price yet (sold /
+  // under offer / not set) — an admin dashboard will manage this directly.
+  price        Int?
+  isSold       Boolean @default(false)
+  isUnderOffer Boolean @default(false)
+  isFeatured   Boolean @default(false)
   imageUrl String?
   sellerId Int
   seller   Seller      @relation(fields: [sellerId], references: [id])

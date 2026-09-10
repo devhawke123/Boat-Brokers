@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import plus from '../../assets/icons/plus.svg'
-import arrowRightWhite from '../../assets/icons/arrow-right-dark.svg'
+import arrowRightWhite from '../../assets/icons/arrow-right-white.svg'
 
 type FaqItem = {
   question: string
@@ -59,8 +59,8 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
             aria-expanded={isOpen}
           >
             <span
-              className={`max-w-[41.875rem] font-display text-2xl leading-[130%] font-normal capitalize ${
-                isOpen ? 'text-[#0b3a58]' : 'text-[#020f17]'
+              className={`max-w-[41.875rem] font-display text-h6 font-normal capitalize ${
+                isOpen ? 'text-navy-dark' : 'text-ink'
               }`}
             >
               {faq.question}
@@ -74,7 +74,7 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
           </button>
           {isOpen && (
             <div className="px-6 pb-6">
-              <p className="text-base leading-[1.5] text-text-body">{faq.answer}</p>
+              <p className="text-body text-text-body">{faq.answer}</p>
             </div>
           )}
         </div>
@@ -90,8 +90,8 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
           aria-expanded={isOpen}
         >
           <span
-            className={`font-display text-[1.75rem] leading-[1.3] tracking-[-1px] capitalize ${
-              isOpen ? 'text-[#0b3a58]' : 'text-[#020f17]'
+            className={`font-display text-h6 capitalize ${
+              isOpen ? 'text-navy-dark' : 'text-ink'
             }`}
           >
             {faq.question}
@@ -105,7 +105,7 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
         </button>
         {isOpen && (
           <div className="px-6 pb-6">
-            <p className="text-sm leading-[1.5] text-text-body">{faq.answer}</p>
+            <p className="text-body-sm text-text-body">{faq.answer}</p>
           </div>
         )}
       </div>
@@ -116,11 +116,11 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
     <section className="flex flex-col items-center gap-12 py-16 lg:py-24">
       {!hideHeader && (
         <div className="flex max-w-[34.25rem] flex-col items-center gap-6 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
+          <span className="inline-flex items-center gap-2 rounded-full bg-badge-bg px-4 py-1.5 text-label font-medium text-badge-text uppercase">
             <span className="size-2 rounded-full bg-blue" />
             FAQ
           </span>
-          <h2 className="font-accent text-[2.5rem] leading-[1.2] tracking-[-0.07rem] text-[#020f17] sm:text-[3.5rem]">
+          <h2 className="font-accent text-cta text-ink">
             Frequently Asked Question
           </h2>
         </div>

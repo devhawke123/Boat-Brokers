@@ -6,7 +6,7 @@ import tourKitchen from '../../../../assets/tour-kitchen.png'
 import tourDivider from '../../../../assets/icons/tour-divider.svg'
 import playIcon from '../../../../assets/icons/play.svg'
 import arrowDark from '../../../../assets/icons/arrow-right-white.svg'
-import arrowLight from '../../../../assets/icons/arrow-right-dark2.svg'
+import arrowLight from '../../../../assets/icons/arrow-right-white2.svg'
 
 const gallery = [
   { src: tourLivingRoom, label: 'Living Room' },

@@ -45,6 +45,18 @@ function listImagesForFolder(folderName) {
   return files.map((f) => path.relative(path.resolve(__dirname, '..', '..'), f).split(path.sep).join('/'));
 }
 
+// The source spreadsheet's "cost" cell mixes a real price with status words
+// ("sold", "under offer"). Split that into proper structured fields so the
+// app never has to re-parse free text to know a boat's status.
+function parseCostField(cost) {
+  const normalized = cost.trim().toLowerCase();
+  const isSold = normalized === 'sold';
+  const isUnderOffer = normalized.includes('under offer');
+  const digits = cost.replace(/[^0-9]/g, '');
+  const price = !isSold && !isUnderOffer && digits ? parseInt(digits, 10) : null;
+  return { price, isSold, isUnderOffer };
+}
+
 async function main() {
   const boats = JSON.parse(fs.readFileSync(BOATS_JSON, 'utf8'));
   const folderIndex = buildImageFolderIndex();
@@ -67,6 +79,7 @@ async function main() {
 
   for (const raw of boats) {
     const { name, cost, overview, boatType, ...rest } = raw;
+    const { price, isSold, isUnderOffer } = parseCostField(cost);
 
     const folderName = folderIndex.get(name.trim().toLowerCase());
     let images = [];
@@ -82,6 +95,10 @@ async function main() {
       data: {
         name,
         cost,
+        price,
+        isSold,
+        isUnderOffer,
+        isFeatured: false,
         overview: overview || null,
         boatType: boatType || null,
         location: null,

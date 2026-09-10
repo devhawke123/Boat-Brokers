@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import image1 from '../../../../../assets/west-midlands-why-choose-1.png'
 import image2 from '../../../../../assets/west-midlands-why-choose-2.png'
-import arrowRight from '../../../../../assets/icons/arrow-right-dark.svg'
+import arrowRight from '../../../../../assets/icons/arrow-right-white.svg'
 import bulletIcon from '../../../../../assets/Rectangle 11912.png'
 
 const rows: { items: ReactNode[]; image: string; imageAlt: string; textFirst: boolean }[] = [

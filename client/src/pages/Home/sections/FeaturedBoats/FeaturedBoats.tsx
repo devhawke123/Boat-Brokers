@@ -53,14 +53,14 @@ export default function FeaturedBoats() {
   return (
     <section className="flex flex-col items-center gap-12 rounded-2xl bg-navy-darkest px-6 py-14 sm:px-20 sm:py-20">
       <div className="flex max-w-[39.25rem] flex-col items-center gap-4 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-label font-medium text-blue-light uppercase">
           <span className="size-2 rounded-full bg-blue-light" />
           Featured Boats
         </span>
-        <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-white capitalize sm:text-[3.375rem] sm:leading-[1.3]">
+        <h2 className="font-display text-h2 text-white capitalize">
           Find Your Perfect Boat
         </h2>
-        <p className="text-base leading-[26px] text-text-muted">
+        <p className="text-body text-text-muted">
           Explore our handpicked selection of quality narrowboats, carefully chosen for their
           character, condition, and value.
         </p>

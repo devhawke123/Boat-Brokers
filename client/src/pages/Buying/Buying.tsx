@@ -19,5 +19,5 @@ export default function Buying() {
       <GetInTouch />
       <Footer />
     </main>
-  )
+   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import anchorIcon from '../../../../assets/icons/anchor.svg'
-import nextArrowIcon from '../../../../assets/icons/arrow-right-dark2.svg'
+import nextArrowIcon from '../../../../assets/icons/arrow-right-white2.svg'
 import checkIcon from '../../../../assets/icons/check-blue.svg'
 import quoteIcon from '../../../../assets/icons/minimumfee.svg'
 

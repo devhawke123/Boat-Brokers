@@ -55,7 +55,7 @@ export default function Button({
     <>
       <span className="flex flex-col items-start leading-[1.2]">
         <span className="font-body text-base font-semibold">{label}</span>
-        {sublabel && <span className="font-body text-[8px] font-normal">{sublabel}</span>}
+        {sublabel && <span className="font-body text-caption font-normal">{sublabel}</span>}
       </span>
       {icon === 'arrow-right' && (
         <img className="size-[18px] shrink-0" src={arrowByVariant[variant]} alt="" aria-hidden="true" />

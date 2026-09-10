@@ -45,7 +45,7 @@ export default function BoatCarousel({ boats, className }: BoatCarouselProps) {
           onClick={() => goTo(activeIndex - 1)}
           disabled={activeIndex === 0}
           aria-label="Previous boat"
-          className="flex size-8 items-center justify-center rounded bg-[#1b5b74] disabled:opacity-40"
+          className="flex size-8 items-center justify-center rounded bg-navy-dark disabled:opacity-40"
         >
           <img src={arrowLeft} alt="" aria-hidden="true" className="size-4" />
         </button>

@@ -33,11 +33,11 @@ export default function Footer() {
 
   return (
     <footer className="relative flex flex-col gap-6 rounded-3xl bg-navy-darkest px-6 pt-20 pb-12 sm:px-14">
-      <div className="flex flex-wrap justify-between gap-10 border-b border-[#094165] pb-20 sm:gap-[7.5rem]">
+      <div className="flex flex-wrap justify-between gap-10 border-b border-border-dark pb-20 sm:gap-[7.5rem]">
         <div className="flex max-w-[24.875rem] flex-1 flex-col justify-between gap-6" style={{ flexBasis: '24.875rem' }}>
           <div className="flex flex-col gap-6">
             <img src={logoWhite} alt="The Boat Brokers" className="h-[4.75rem] w-auto" />
-            <p className="text-sm leading-[1.5] text-[#ededed]">
+            <p className="text-body-sm text-body-light">
               The Boat Brokers delivers unforgettable luxury yacht experiences with premium
               comfort, exclusive destinations, and world-class hospitality designed for elegant
               ocean adventures.
@@ -61,8 +61,8 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h3 className="font-display text-2xl leading-[1.3] text-white">Quick Links</h3>
-          <ul className="flex flex-col gap-4 text-sm text-[#ededed]">
+          <h3 className="font-display text-h6 text-white">Quick Links</h3>
+          <ul className="flex flex-col gap-4 text-body-sm text-body-light">
             {quickLinks.map((link) => (
               <li key={link.label}>
                 <a href={link.href} className="inline-flex items-center gap-1.5">
@@ -74,14 +74,14 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h3 className="font-display text-2xl leading-[1.3] text-white">Services Links</h3>
-          <ul className="flex flex-col gap-4 text-sm text-[#ededed]">
+          <h3 className="font-display text-h6 text-white">Services Links</h3>
+          <ul className="flex flex-col gap-4 text-body-sm text-body-light">
             {serviceLinks.map((link) => (
               <li key={link.label}>
                 <a href={link.href} className="inline-flex items-center gap-1.5">
                   {link.label}
                   {link.badge && (
-                    <span className="inline-flex items-center justify-center rounded-full bg-white px-1 py-0.5 text-[0.5rem] text-[#0b3a58]">
+                    <span className="inline-flex items-center justify-center rounded-full bg-white px-1 py-0.5 text-[0.5rem] text-navy-dark">
                       {link.badge}
                     </span>
                   )}
@@ -92,8 +92,8 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <h3 className="font-display text-2xl leading-[1.3] text-white">Contact Information</h3>
-          <div className="flex flex-col gap-4 text-sm text-[#ededed]">
+          <h3 className="font-display text-h6 text-white">Contact Information</h3>
+          <div className="flex flex-col gap-4 text-body-sm text-body-light">
             <p>07960 768724</p>
             <a href="mailto:info@theboatbrokers.co.uk" className="underline">
               info@theboatbrokers.co.uk
@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[#ededed]">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-body-sm text-body-light">
         <p>&copy; 2026 The Boat Brokers. All Rights Reserved</p>
         <p>Designed and Developed By Blue Hawke.</p>
       </div>

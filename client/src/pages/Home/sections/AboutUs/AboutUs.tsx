@@ -51,15 +51,15 @@ export default function AboutUs() {
       <div className="order-1 flex flex-col gap-6 lg:order-2">
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-4">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-badge-bg px-4 py-1.5 text-label font-medium text-badge-text uppercase">
               <span className="size-2 rounded-full bg-blue" />
               About Us
             </span>
-            <h2 className="font-display text-[34px] leading-[1.2] tracking-[-2px] text-[#1a1a1a] capitalize lg:text-[3.375rem] lg:leading-[1.3]">
+            <h2 className="font-display text-h2 text-ink capitalize">
               The Boat Brokers
             </h2>
           </div>
-          <p className="text-base leading-[26px] text-text-body">
+          <p className="text-body text-text-body">
             At The Boat Brokers, we specialise in narrowboat sales, blending modern technology
             with personal service. While we&rsquo;ve invested heavily in streamlining the boat
             sales process, we haven&rsquo;t replaced everything with automation. We keep costs
@@ -82,11 +82,11 @@ export default function AboutUs() {
 
       <ul className="col-span-full flex items-start justify-center gap-5 pt-8 lg:hidden">
         {stats.slice(0, 3).map((stat) => (
-          <li key={stat.value} className="flex w-[101px] flex-col gap-1.5 p-3">
-            <span className="font-display text-[34px] tracking-[-2px] text-black capitalize">
+          <li key={stat.value} className="flex w-[6.3125rem] flex-col gap-1.5 p-3">
+            <span className="font-display text-h2 text-ink capitalize">
               {stat.value}
             </span>
-            <span className="font-body text-[10px] leading-[19px] text-[#6e6e6e]">
+            <span className="font-body text-caption text-text-body">
               {stat.label}
             </span>
           </li>
@@ -97,15 +97,15 @@ export default function AboutUs() {
         {stats.map((stat, index) => (
           <Fragment key={stat.value}>
             <li className="flex items-center gap-1.5">
-              <span className="font-display text-[3.375rem] tracking-[-2px] text-black capitalize">
+              <span className="font-display text-h2 text-ink capitalize">
                 {stat.value}
               </span>
-              <span className="max-w-[130px] font-body text-sm font-light text-[#6e6e6e]">
+              <span className="max-w-[8.125rem] font-body text-body-sm font-light text-text-body">
                 {stat.label}
               </span>
             </li>
             {index < stats.length - 1 && (
-              <li className="self-center font-accent text-[2rem] text-black opacity-50" aria-hidden="true">
+              <li className="self-center font-accent text-accent text-ink opacity-50" aria-hidden="true">
                 /
               </li>
             )}
