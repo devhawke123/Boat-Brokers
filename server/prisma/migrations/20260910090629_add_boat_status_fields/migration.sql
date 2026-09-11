@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `Boat` ADD COLUMN `isFeatured` BOOLEAN NOT NULL DEFAULT false,
-    ADD COLUMN `isSold` BOOLEAN NOT NULL DEFAULT false,
-    ADD COLUMN `isUnderOffer` BOOLEAN NOT NULL DEFAULT false,
-    ADD COLUMN `price` INTEGER NULL;
