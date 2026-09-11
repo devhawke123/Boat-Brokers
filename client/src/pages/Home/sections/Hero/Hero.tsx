@@ -34,7 +34,7 @@ const socialLinks = [
 export default function Hero() {
   return (
     <section
-      className="relative flex min-h-[min(56.25rem,88vh)] flex-col justify-end overflow-hidden rounded-3xl bg-cover  bg-center p-8 max-[900px]:min-h-[min(45rem,85vh)] max-[900px]:p-5 sm:p-14"
+      className="relative flex min-h-[min(56.25rem,88vh)] flex-col justify-end overflow-hidden rounded-3xl bg-cover bg-top p-8 max-[900px]:min-h-[min(45rem,85vh)] max-[900px]:p-5 sm:p-14"
       style={{ backgroundImage: `url(${heroBg})` }}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]" />
