@@ -24,7 +24,7 @@ type ButtonProps = ButtonAsButton | ButtonAsAnchor
 const arrowByVariant: Record<ButtonVariant, string> = {
   dark: arrowRightWhite,
   light: arrowRightDark,
-  'outline-white': arrowRightDark,
+  'outline-white': arrowRightWhite,
   'outline-dark': arrowRightDark,
 }
 

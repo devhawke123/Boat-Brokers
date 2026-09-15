@@ -107,17 +107,17 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
       ref={headerRef}
       className="absolute inset-x-section-x top-section-y z-20 mx-auto max-w-[100rem] rounded-3xl bg-[rgba(23,23,23,0.25)] backdrop-blur-[15px]"
     >
-      <div className="flex items-center justify-between gap-6 px-5 py-3">
+      <div className="flex items-center justify-between gap-3 px-4 py-3 2xl:gap-6 2xl:px-5">
         <a href="/" className="flex shrink-0 items-center" aria-label="The Boat Brokers home">
           <img src={logo} alt="The Boat Brokers" className="h-11 w-auto" />
         </a>
 
-        <nav className="flex flex-wrap items-center text-white gap-5 max-[1100px]:hidden" aria-label="Primary">
+        <nav className="flex flex-wrap items-center text-white gap-3 max-nav:hidden 2xl:gap-5" aria-label="Primary">
           {navLinks.map((link) => (
             <div key={link.label} className="group relative">
               <a
                 href={link.href}
-                className={`inline-flex items-center gap-1.5 rounded-xl px-2 py-1 text-base transition-colors duration-150 hover:text-blue-active ${
+                className={`inline-flex items-center gap-1 rounded-xl px-1.5 py-1 text-base transition-colors duration-150 hover:text-blue-active 2xl:gap-1.5 2xl:px-2 ${
                   link.label === activeLabel ? 'font-semibold text-blue-active' : 'text-white'
                 }`}
               >
@@ -152,7 +152,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-4 max-[700px]:hidden">
+        <div className="flex shrink-0 items-center gap-2 max-nav:hidden 2xl:gap-4">
           <Button
             variant="outline-white"
             label="Buy Boats Now"
@@ -168,7 +168,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
           aria-expanded={isMenuOpen}
           aria-controls="mobile-nav-panel"
           aria-label="Toggle menu"
-          className="flex size-[30px] shrink-0 items-center justify-center min-[1101px]:hidden"
+          className="flex size-[30px] shrink-0 items-center justify-center nav:hidden"
         >
           <img src={menuIcon} alt="" aria-hidden="true" className="size-full" />
         </button>
@@ -186,7 +186,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
               width: mobilePanelStyle.width,
               maxHeight: `calc(100vh - ${mobilePanelStyle.top}px)`,
             }}
-            className="z-20 flex flex-col gap-4 overflow-y-auto rounded-3xl bg-[rgba(23,23,23,0.25)] px-5 py-4 shadow-btn backdrop-blur-[15px] min-[1101px]:hidden"
+            className="z-20 flex flex-col gap-4 overflow-y-auto rounded-3xl bg-[rgba(23,23,23,0.25)] px-5 py-4 shadow-btn backdrop-blur-[15px] nav:hidden"
           >
             <nav className="flex flex-col text-white gap-1" aria-label="Primary">
               {navLinks.map((link) => (

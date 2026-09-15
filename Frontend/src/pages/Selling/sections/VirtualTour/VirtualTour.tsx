@@ -5,7 +5,7 @@ import tourBed from '../../../../assets/tour-bed.png'
 import tourKitchen from '../../../../assets/tour-kitchen.png'
 import tourDivider from '../../../../assets/icons/tour-divider.svg'
 import playIcon from '../../../../assets/icons/play.svg'
-import arrowDark from '../../../../assets/icons/arrow-right-white.svg'
+import arrowDark from '../../../../assets/icons/arrow-right-blue.svg'
 import arrowLight from '../../../../assets/icons/arrow-right-white2.svg'
 
 const gallery = [
@@ -19,6 +19,8 @@ export default function VirtualTour() {
 
   const goPrev = () => setActive((i) => (i - 1 + gallery.length) % gallery.length)
   const goNext = () => setActive((i) => (i + 1) % gallery.length)
+
+  const visible = Array.from({ length: 3 }, (_, i) => gallery[(active + i) % gallery.length])
 
   return (
     <section id="virtual-tour" className="scroll-mt-28 px-6 sm:px-16">
@@ -35,7 +37,7 @@ export default function VirtualTour() {
             </h2>
 
             <div className="flex flex-col items-start gap-2">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-[26px]">
                 <span className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-white sm:text-[3.375rem]">
                   01
                 </span>
@@ -51,7 +53,7 @@ export default function VirtualTour() {
             </div>
 
             <div className="flex flex-col items-start gap-2">
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-[26px]">
                 <span className="font-display text-[34px] leading-[1.3] tracking-[-2px] text-white sm:text-[3.375rem]">
                   02
                 </span>
@@ -60,7 +62,7 @@ export default function VirtualTour() {
               <h4 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-white capitalize sm:text-[2.125rem]">
                 Stop! Pre-view the boat without leaving your house with our virtual tours.
               </h4>
-              <div className="flex max-w-[40rem] flex-col gap-4 text-base leading-[26px] text-[#c0c0c0]">
+              <div className="flex max-w-[40.125rem] flex-col text-base leading-[26px] text-[#c0c0c0]">
                 <p>It&rsquo;s not always simple to find the time to view boats due to busy schedules.</p>
                 <p>
                   In order to make your life easier, we&rsquo;ve created virtual tours of the
@@ -78,7 +80,7 @@ export default function VirtualTour() {
 
           <button
             type="button"
-            className="media-frame group flex aspect-[510/416] w-full max-w-[31.875rem] shrink-0 items-center justify-center rounded-xl lg:w-[31.875rem]"
+            className="media-frame group flex aspect-[510/689] w-full max-w-[31.875rem] shrink-0 items-center justify-center rounded-xl lg:w-[31.875rem]"
           >
             <img src={tourVideoThumb} alt="Narrowboat interior virtual tour preview" />
             <img
@@ -90,31 +92,15 @@ export default function VirtualTour() {
           </button>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-6 sm:flex-row sm:gap-8">
-          <div className="relative h-[15.25rem] w-full flex-1 overflow-hidden rounded-[9px]">
-            {gallery.map((item, index) => (
-              <img
-                key={item.label}
-                src={item.src}
-                alt={item.label}
-                className={`absolute inset-0 size-full object-cover transition-opacity duration-200 ${
-                  index === active ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-            ))}
-            <span className="absolute top-[19px] left-1/2 -translate-x-1/2 rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
-              {gallery[active].label}
-            </span>
-          </div>
-
-          <div className="flex shrink-0 items-center justify-center gap-6 sm:flex-col">
+        <div className="flex w-full flex-col items-center gap-8 sm:flex-row sm:gap-[3.375rem]">
+          <div className="order-2 flex shrink-0 items-center justify-center gap-6 sm:order-1 sm:flex-col">
             <button
               type="button"
               onClick={goPrev}
-              aria-label="Previous room"
+              aria-label="Previous rooms"
               className="flex items-center justify-center rounded-full bg-[#0d5673] p-3.5"
             >
-              <img src={arrowLight} alt="" aria-hidden="true" className="size-[1.375rem] rotate-180" />
+              <img src={arrowLight} alt="" aria-hidden="true" className="size-[2.0625rem] rotate-180" />
             </button>
             <span className="font-display text-[1.75rem] tracking-[-1px] text-white">
               {String(active + 1).padStart(2, '0')}/{String(gallery.length).padStart(2, '0')}
@@ -122,11 +108,22 @@ export default function VirtualTour() {
             <button
               type="button"
               onClick={goNext}
-              aria-label="Next room"
+              aria-label="Next rooms"
               className="flex items-center justify-center rounded-full bg-white p-3.5"
             >
-              <img src={arrowDark} alt="" aria-hidden="true" className="size-[1.375rem]" />
+              <img src={arrowDark} alt="" aria-hidden="true" className="size-[2.0625rem]" />
             </button>
+          </div>
+
+          <div className="order-1 grid w-full flex-1 grid-cols-1 gap-10 sm:order-2 sm:grid-cols-3">
+            {visible.map((item) => (
+              <div key={item.label} className="media-frame h-[15.1875rem] w-full rounded-[9px]">
+                <img src={item.src} alt={item.label} />
+                <span className="absolute top-[19px] right-[20px] z-[1] rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
+                  {item.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

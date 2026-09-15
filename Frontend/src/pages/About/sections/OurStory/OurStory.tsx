@@ -49,7 +49,7 @@ export default function OurStory() {
             </div>
           </div>
 
-          <div className="hidden self-end overflow-hidden rounded-2xl lg:block lg:h-[15rem] lg:w-[15rem]">
+          <div className="hidden self-end overflow-hidden rounded-2xl lg:block lg:h-[25rem] lg:w-[25rem]">
             <img
               src={storyAccent}
               alt="Boats moored along a canal towpath"

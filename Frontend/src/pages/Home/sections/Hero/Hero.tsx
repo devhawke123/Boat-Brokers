@@ -45,7 +45,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]" />
       <Navbar />
 
-      <ul className="absolute top-[140px] right-section-x z-[5] flex flex-col gap-4 sm:top-[297px]">
+      <ul className="absolute top-[140px] right-section-x z-[5] hidden flex-col gap-4 sm:top-[297px] sm:flex">
         {socialLinks.map((social) => (
           <li key={social.name}>
             <a
@@ -88,33 +88,8 @@ export default function Hero() {
           </div>
 
           <div className="flex items-center gap-3.5 short:hidden">
-            <div className="flex items-center">
-              <img
-                src={customer1}
-                alt=""
-                className="-mr-3.5 size-12 rounded-full border-2 border-white/50 object-cover"
-              />
-              <img
-                src={customer2}
-                alt=""
-                className="-mr-3.5 size-12 rounded-full border-2 border-white/50 object-cover"
-              />
-              <img
-                src={customer3}
-                alt=""
-                className="-mr-3.5 size-12 rounded-full border-2 border-white/50 object-cover"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-1">
-                <img src={star} alt="" className="size-[18px]" />
-                <img src={star} alt="" className="size-[18px]" />
-                <img src={star} alt="" className="size-[18px]" />
-                <img src={star} alt="" className="size-[18px]" />
-                <img src={starHalf} alt="" className="size-[18px]" />
-              </div>
-              <p className="text-base tracking-[-0.32px] text-body-light">Happy Customer</p>
-            </div>
+           
+           
           </div>
         </div>
       </div>

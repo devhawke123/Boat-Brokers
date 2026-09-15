@@ -47,7 +47,7 @@ export default function WhyChooseUs() {
       </div>
 
       <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-center">
-        <div className="w-[90%] sm:w-[80%] lg:w-[clamp(16rem,22%,19rem)] lg:shrink-0">
+        <div className="w-[90%] sm:w-[80%] md:w-[65%] lg:w-[clamp(16rem,22%,19rem)] lg:shrink-0">
           <div className="flex flex-col gap-6">
             {left.map((reason) => (
               <article
@@ -66,7 +66,7 @@ export default function WhyChooseUs() {
           </div>
         </div>
 
-        <div className="w-[85%] shrink-0 overflow-hidden rounded-xl sm:w-[75%] lg:w-[clamp(26rem,24%,30rem)]">
+        <div className="w-[85%] shrink-0 overflow-hidden rounded-xl sm:w-[75%] md:w-[65%] lg:w-[clamp(26rem,24%,30rem)]">
           <img
             src={whyChooseImg}
             alt="A narrowboat moored on a calm canal at sunrise"
@@ -74,7 +74,7 @@ export default function WhyChooseUs() {
           />
         </div>
 
-        <div className="w-[90%] sm:w-[80%] lg:w-[clamp(16rem,22%,19rem)] lg:shrink-0">
+        <div className="w-[90%] sm:w-[80%] md:w-[65%] lg:w-[clamp(16rem,22%,19rem)] lg:shrink-0">
           <div className="flex flex-col gap-6">
             {right.map((reason) => (
               <article

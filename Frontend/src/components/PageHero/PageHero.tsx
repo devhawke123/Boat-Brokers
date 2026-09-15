@@ -4,9 +4,9 @@ import Navbar from '../Navbar/Navbar'
 type PageHeroSize = 'sm' | 'md' | 'lg'
 
 const sectionSizeClassNames: Record<PageHeroSize, string> = {
-  sm: 'min-h-[min(34rem,70vh)] max-[900px]:min-h-[min(28rem,65vh)] sm:p-14',
-  md: 'min-h-[min(35rem,70vh)] max-[900px]:min-h-[min(28rem,65vh)] sm:p-14',
-  lg: 'min-h-[min(40rem,75vh)] max-[900px]:min-h-[min(32rem,70vh)] sm:p-16',
+  sm: 'min-h-[95svh] sm:p-14',
+  md: 'min-h-[95svh] sm:p-14',
+  lg: 'min-h-[95svh] sm:p-16',
 }
 
 const titleSizeClassNames: Record<PageHeroSize, string> = {

@@ -33,7 +33,7 @@ export default function Footer() {
 
   return (
     <footer className="relative flex flex-col gap-6 rounded-3xl bg-navy-darkest px-section-x pt-20 pb-12 mb-0">
-      <div className="flex flex-wrap justify-between gap-10 border-b border-border-dark pb-10 sm:gap-[7.5rem]">
+      <div className="flex flex-wrap justify-between gap-10 border-b border-border-dark pb-10 sm:gap-12 md:gap-16 lg:gap-[7.5rem]">
         <div className="flex max-w-[24.875rem] flex-1 flex-col justify-between gap-6" style={{ flexBasis: '24.875rem' }}>
           <div className="flex flex-col gap-6">
             <img src={logoWhite} alt="The Boat Brokers" className="h-[4.75rem] w-auto self-start" />
@@ -111,11 +111,11 @@ export default function Footer() {
 
       <button
         type="button"
-        className="absolute bottom-0 left-1/2 flex size-28 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full"
+        className="absolute bottom-0 left-1/2 flex size-16 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full sm:size-20 lg:size-28"
         onClick={scrollToTop}
         aria-label="Back to top"
       >
-        <img src={arrowRightWhite} alt="" aria-hidden="true" className="size-15" />
+        <img src={arrowRightWhite} alt="" aria-hidden="true" className="size-8 sm:size-10 lg:size-15" />
       </button>
     </footer>
   )
