@@ -1,15 +1,11 @@
 import { formatPrice, type BoatListing } from '../../../../data/boats'
-import {
-  IconBed,
-  IconCalendar,
-  IconCube,
-  IconDownload,
-  IconGear,
-  IconPlay,
-  IconRuler,
-  IconShield,
-  IconWheel,
-} from '../../icons'
+import { IconCube, IconDownload, IconPlay } from '../../icons'
+import lengthIcon from '../../../../assets/icons/length.svg'
+import berthIcon from '../../../../assets/icons/berth.svg'
+import engineIcon from '../../../../assets/icons/engine.svg'
+import yearIcon from '../../../../assets/icons/year.svg'
+import sternIcon from '../../../../assets/icons/stern.svg'
+import steelIcon from '../../../../assets/icons/steel.svg'
 
 type BoatDetailContentProps = {
   boat: BoatListing
@@ -17,27 +13,25 @@ type BoatDetailContentProps = {
 
 export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
   const specChips = [
-    { icon: IconRuler, label: 'Length', value: boat.length },
-    { icon: IconBed, label: 'Berths', value: `${boat.berths}` },
-    { icon: IconGear, label: 'Engine', value: boat.detail.engineMake },
-    { icon: IconCalendar, label: 'Year', value: boat.yearBuilt },
-    { icon: IconWheel, label: 'Stern', value: boat.detail.sternType },
-    { icon: IconShield, label: 'Steel', value: boat.detail.hullThickness },
+    { icon: lengthIcon, label: 'Length', value: boat.length },
+    { icon: berthIcon, label: 'Berths', value: `${boat.berths}` },
+    { icon: engineIcon, label: 'Engine', value: boat.detail.engineMake },
+    { icon: yearIcon, label: 'Year', value: boat.yearBuilt },
+    { icon: sternIcon, label: 'Stern', value: boat.detail.sternType },
+    { icon: steelIcon, label: 'Steel', value: boat.detail.hullThickness },
   ].filter((chip) => chip.value && chip.value !== 'N/A')
 
   const viewingHref = `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Viewing enquiry: ${boat.name}`)}`
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex gap-4 overflow-x-auto pb-1">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-1">
         {specChips.map((chip) => (
           <div
             key={chip.label}
-            className="flex w-[11rem] shrink-0 items-center gap-4 rounded-2xl border border-[#f3f4f6] bg-white p-4 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)]"
+            className="flex items-center gap-4 rounded-2xl border border-[#f3f4f6] bg-white p-4 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)] sm:w-[11rem] sm:shrink-0"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[rgba(28,192,255,0.1)]">
-              <chip.icon className="size-4 text-navy-darkest" />
-            </span>
+            <img src={chip.icon} alt="" aria-hidden="true" className="size-10 shrink-0" />
             <span className="flex flex-col gap-0.5">
               <span className="text-xs text-[#6e6e6e]">{chip.label}</span>
               <span className="font-body text-base font-bold text-navy-dark">{chip.value}</span>
@@ -52,7 +46,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
             {boat.detail.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-[#e5e7eb] bg-white px-3 py-1 text-xs font-medium text-navy-dark shadow-sm"
+                className="rounded-lg border border-[#e5e7eb] bg-white px-3 py-1 text-xs font-medium text-navy-dark shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
               >
                 {tag}
               </span>

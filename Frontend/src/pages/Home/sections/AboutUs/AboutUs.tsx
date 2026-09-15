@@ -66,7 +66,7 @@ export default function AboutUs() {
         <Button variant="dark" label="Learn More" href="/about" />
       </div>
 
-      <ul className="col-span-full flex items-start justify-center gap-5 pt-8 short:pt-4 md:gap-10 lg:hidden">
+      <ul className="order-3 col-span-full flex items-start justify-center gap-5 pt-8 short:pt-4 md:gap-10 lg:hidden">
         {stats.slice(0, 3).map((stat) => (
           <li key={stat.value} className="flex w-[6.3125rem] flex-col gap-1.5 p-3 md:w-40">
             <span className="font-display text-h2 text-ink capitalize">
@@ -79,7 +79,7 @@ export default function AboutUs() {
         ))}
       </ul>
 
-      <ul className="col-span-full hidden flex-wrap items-start justify-between gap-6 pt-14 short:pt-6 lg:flex">
+      <ul className="order-3 col-span-full hidden flex-wrap items-start justify-between gap-6 pt-14 short:pt-6 lg:flex">
         {stats.map((stat, index) => (
           <Fragment key={stat.value}>
             <li className="flex items-center gap-1.5">

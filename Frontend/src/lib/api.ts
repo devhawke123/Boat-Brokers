@@ -142,3 +142,33 @@ export function fetchBoats(): Promise<ApiBoat[]> {
 export function fetchBoat(id: number): Promise<ApiBoat> {
   return apiGet<ApiBoat>(`/boats/${id}`)
 }
+
+// Mirrors the Blog admin panel: an editor pastes the fields below and the
+// post is served back as-is.
+export type ApiBlogPostSummary = {
+  slug: string
+  title: string
+  excerpt: string
+  author: string
+  date: string
+  readTime: string
+  imageUrl: string | null
+}
+
+export type ApiBlogPost = {
+  slug: string
+  title: string
+  author: string
+  date: string
+  readTime: string
+  imageUrl: string | null
+  content: string
+}
+
+export function fetchBlogPosts(): Promise<ApiBlogPostSummary[]> {
+  return apiGet<ApiBlogPostSummary[]>('/blogs')
+}
+
+export function fetchBlogPost(slug: string): Promise<ApiBlogPost> {
+  return apiGet<ApiBlogPost>(`/blogs/${slug}`)
+}

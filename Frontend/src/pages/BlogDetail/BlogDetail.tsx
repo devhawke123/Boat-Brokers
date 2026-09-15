@@ -1,52 +1,45 @@
-import heroBg from '../../assets/blog/blog-hero-bg.png'
-import PageHero from '../../components/PageHero/PageHero'
-import BlogDetailContent from './sections/BlogDetailContent/BlogDetailContent'
-import BlogDetailPostNav from './sections/BlogDetailPostNav/BlogDetailPostNav'
-import BlogDetailRelated from './sections/BlogDetailRelated/BlogDetailRelated'
-import CtaBanner from '../../components/CtaBanner/CtaBanner'
+import { useBlogPostBySlug } from '../../data/blogPostDetail'
+import Navbar from '../../components/Navbar/Navbar'
+import Button from '../../components/Button/Button'
 import Footer from '../../components/Footer/Footer'
-import { blogPostDetail } from '../../data/blogPostDetail'
-import { IconComment } from './icons'
+import BlogDetailView from '../../components/BlogDetailView/BlogDetailView'
 
 type BlogDetailProps = {
   slug: string
 }
 
 export default function BlogDetail({ slug }: BlogDetailProps) {
-  const post = { ...blogPostDetail, slug }
+  const { post, loading, error } = useBlogPostBySlug(slug)
 
-  return (
-    <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <PageHero
-        image={heroBg}
-        activeLabel=""
-        size="md"
-        title={post.title}
-        maxWidthClassName="max-w-[66.875rem]"
-        gapClassName="gap-4"
-        overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.1)_35%,rgba(0,0,0,0.4)_100%)]"
-        eyebrow={
-          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold tracking-[2.4px] text-[#d1d5db] uppercase">
-            <span>{post.date}</span>
-            <span className="size-1 rounded-full bg-[#d1d5db]" />
-            <span className="text-blue">{post.category}</span>
-            <span className="size-1 rounded-full bg-[#d1d5db]" />
-            <span>By {post.author}</span>
-          </div>
-        }
-      >
-        <div className="flex items-center gap-2 pt-2 text-sm text-[#9ca3af]">
-          <IconComment className="size-4" />
-          <span>
-            {post.commentsCount} {post.commentsCount === 1 ? 'Comment' : 'Comments'}
-          </span>
-        </div>
-      </PageHero>
-      <BlogDetailContent post={post} />
-      <BlogDetailPostNav post={post} />
-      <BlogDetailRelated currentSlug={slug} />
-      <CtaBanner />
-      <Footer />
-    </main>
-  )
+  if (loading) {
+    return (
+      <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+        <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
+          <Navbar activeLabel="" />
+          <p className="text-base text-[#ededed]">Loading post&hellip;</p>
+        </section>
+        <Footer />
+      </main>
+    )
+  }
+
+  if (!post) {
+    return (
+      <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+        <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
+          <Navbar activeLabel="" />
+          <h1 className="font-accent text-4xl text-white">Post not found</h1>
+          <p className="max-w-md text-base text-[#ededed]">
+            {error
+              ? `Couldn't load this post from the server: ${error}`
+              : `We couldn't find a post for '${slug}'. It may have been removed or the link may be out of date.`}
+          </p>
+          <Button variant="light" label="Back to Blog" href="/blog" />
+        </section>
+        <Footer />
+      </main>
+    )
+  }
+
+  return <BlogDetailView post={post} />
 }

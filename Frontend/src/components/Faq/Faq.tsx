@@ -82,15 +82,15 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
     }
 
     return (
-      <div key={faq.question} className="w-full overflow-hidden rounded-lg bg-white">
+      <div key={faq.question} className="w-full overflow-hidden rounded-lg bg-transparent sm:bg-white">
         <button
           type="button"
-          className="flex w-full items-center justify-between gap-4 border-none bg-transparent p-6 text-left"
+          className="flex w-full items-center justify-between gap-4 border-none bg-transparent px-0 py-6 text-left sm:p-6"
           onClick={() => toggle(index)}
           aria-expanded={isOpen}
         >
           <span
-            className={`font-display text-h6 capitalize ${
+            className={`font-display text-[20px] leading-[1.3] tracking-[-1px] capitalize sm:text-h6 sm:leading-normal sm:tracking-normal ${
               isOpen ? 'text-navy-dark' : 'text-ink'
             }`}
           >
@@ -100,11 +100,11 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
             src={plus}
             alt=""
             aria-hidden="true"
-            className={`size-7 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}
+            className={`size-[22px] shrink-0 transition-transform duration-200 sm:size-7 ${isOpen ? 'rotate-45' : ''}`}
           />
         </button>
         {isOpen && (
-          <div className="px-6 pb-6">
+          <div className="px-0 pb-6 sm:px-6">
             <p className="text-body-sm text-text-body">{faq.answer}</p>
           </div>
         )}
@@ -113,15 +113,15 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
   }
 
   return (
-    <section className="section flex flex-col items-center gap-12 short:gap-6">
+    <section className="section flex flex-col items-start gap-8 sm:items-center sm:gap-12 short:gap-6">
       {!hideHeader && (
-        <div className="flex max-w-[34.25rem] flex-col items-center gap-6 short:gap-3 text-center">
+        <div className="flex max-w-full flex-col items-start gap-6 text-left short:gap-3 sm:max-w-[34.25rem] sm:items-center sm:text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-badge-bg px-4 py-1.5 text-label font-medium text-badge-text uppercase">
             <span className="size-2 rounded-full bg-blue" />
             FAQ
           </span>
           <h2 className="font-accent text-cta text-ink">
-            Frequently Asked Question
+            Frequently Asked Questions
           </h2>
         </div>
       )}
@@ -131,11 +131,11 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
           {faqs.map((faq, i) => renderItem(faq, i))}
         </div>
       ) : (
-        <div className="flex w-full max-w-[75rem] flex-wrap items-start gap-6">
-          <div className="flex min-w-72 flex-1 flex-col gap-6" style={{ flexBasis: '22rem' }}>
+        <div className="flex w-full max-w-[75rem] flex-wrap items-start gap-0 sm:gap-6">
+          <div className="flex min-w-72 flex-1 flex-col gap-0 sm:gap-6" style={{ flexBasis: '22rem' }}>
             {left.map((faq, i) => renderItem(faq, i))}
           </div>
-          <div className="flex min-w-72 flex-1 flex-col gap-6" style={{ flexBasis: '22rem' }}>
+          <div className="flex min-w-72 flex-1 flex-col gap-0 sm:gap-6" style={{ flexBasis: '22rem' }}>
             {right.map((faq, i) => renderItem(faq, i + left.length))}
           </div>
         </div>

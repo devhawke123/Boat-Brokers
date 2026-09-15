@@ -36,7 +36,6 @@ type Filters = {
   priceRange: [number, number]
   lengthRange: [number, number]
   minBerths: number
-  location: string
   sortBy: SortValue
 }
 
@@ -50,7 +49,6 @@ const DEFAULT_FILTERS: Filters = {
   priceRange: [PRICE_MIN, PRICE_MAX],
   lengthRange: [LENGTH_MIN, LENGTH_MAX],
   minBerths: 0,
-  location: 'any',
   sortBy: 'newest',
 }
 
@@ -96,8 +94,6 @@ function applyFilters(boats: BoatListing[], filters: Filters): BoatListing[] {
 
     if (filters.minBerths > 0 && (boat.berthsCount === null || boat.berthsCount < filters.minBerths)) return false
 
-    if (filters.location !== 'any' && boat.location !== filters.location) return false
-
     return true
   })
 }
@@ -127,10 +123,9 @@ type FilterPanelProps = {
   onSave: () => void
   justSaved: boolean
   boatTypeCounts: Record<string, number>
-  locationOptions: string[]
 }
 
-function FilterPanel({ filters, onChange, onClear, onApply, onSave, justSaved, boatTypeCounts, locationOptions }: FilterPanelProps) {
+function FilterPanel({ filters, onChange, onClear, onApply, onSave, justSaved, boatTypeCounts }: FilterPanelProps) {
   function toggleBoatType(type: string) {
     const has = filters.boatTypes.includes(type)
     onChange({
@@ -247,28 +242,6 @@ function FilterPanel({ filters, onChange, onClear, onApply, onSave, justSaved, b
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <h4 className="text-base font-semibold text-[#1e293b]">Location</h4>
-        <div className="relative">
-          <select
-            value={filters.location}
-            onChange={(e) => onChange({ ...filters, location: e.target.value })}
-            className="w-full appearance-none rounded-[10px] border border-[#e2e8f0] bg-white px-4 py-2.5 text-base text-[#1e293b]"
-          >
-            <option value="any">Any Location</option>
-            {locationOptions.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-          <IconChevronDown className="pointer-events-none absolute top-1/2 right-4 size-3.5 -translate-y-1/2 text-[#9ca3af]" />
-        </div>
-        {locationOptions.length === 0 && (
-          <p className="text-xs text-[#9ca3af]">No location data yet — every listing will match.</p>
-        )}
-      </div>
-
       <div className="flex flex-col gap-3 border-t border-[#e2e8f0] pt-6">
         <button
           type="button"
@@ -331,14 +304,6 @@ export default function BoatsListing() {
     return counts
   }, [tabFilteredBoats])
 
-  const locationOptions = useMemo(
-    () =>
-      [...new Set(boatListings.map((b) => b.location))]
-        .filter((loc) => loc !== 'Location available on request')
-        .sort(),
-    [boatListings],
-  )
-
   const filteredBoats = useMemo(() => applyFilters(tabFilteredBoats, filters), [tabFilteredBoats, filters])
   const sortedBoats = useMemo(() => sortBoats(filteredBoats, filters.sortBy), [filteredBoats, filters.sortBy])
 
@@ -377,10 +342,6 @@ export default function BoatsListing() {
   if (filters.minBerths > 0) {
     chips.push({ key: 'berths', label: `${filters.minBerths}+ Berths`, onRemove: () => updateFilters({ minBerths: 0 }) })
   }
-  if (filters.location !== 'any') {
-    chips.push({ key: 'location', label: filters.location, onRemove: () => updateFilters({ location: 'any' }) })
-  }
-
   function updateFilters(patch: Partial<Filters>) {
     setFilters((f) => ({ ...f, ...patch }))
     setPage(1)
@@ -460,7 +421,6 @@ export default function BoatsListing() {
             onSave={handleSaveSearch}
             justSaved={justSaved}
             boatTypeCounts={boatTypeCounts}
-            locationOptions={locationOptions}
           />
         </aside>
 
@@ -497,7 +457,6 @@ export default function BoatsListing() {
                   onSave={handleSaveSearch}
                   justSaved={justSaved}
                   boatTypeCounts={boatTypeCounts}
-                  locationOptions={locationOptions}
                 />
               </div>
             )}

@@ -68,7 +68,7 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
         <BoatDetailTabs boat={boat} />
       </section>
 
-      <section className="flex flex-col items-center gap-6 px-6 py-4 text-center">
+      <section className="flex flex-col items-center gap-6 border-t border-[#e5e7eb] px-6 py-4 text-center">
         <Button variant="dark" label="Back to Boats for Sale" href="/boats-for-sale" />
         <p className="max-w-2xl text-xs leading-[1.6] text-[#6e6e6e]">
           Disclaimer: The details provided are intended to give a fair description of the vessel but

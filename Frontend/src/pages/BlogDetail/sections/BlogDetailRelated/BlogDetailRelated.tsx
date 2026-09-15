@@ -1,4 +1,4 @@
-import { blogPosts } from '../../../../data/blogPosts'
+import { useBlogPosts } from '../../../../data/blogPosts'
 import BlogCard from '../../../Blog/sections/BlogListing/BlogCard'
 
 type BlogDetailRelatedProps = {
@@ -6,7 +6,8 @@ type BlogDetailRelatedProps = {
 }
 
 export default function BlogDetailRelated({ currentSlug }: BlogDetailRelatedProps) {
-  const relatedPosts = blogPosts.filter((post) => post.slug !== currentSlug).slice(0, 3)
+  const { posts } = useBlogPosts()
+  const relatedPosts = posts.filter((post) => post.slug !== currentSlug).slice(0, 3)
 
   if (relatedPosts.length === 0) return null
 

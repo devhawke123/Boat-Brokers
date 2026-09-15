@@ -23,7 +23,7 @@ export default function BrandsCarousel() {
             key={`${brand.name}-${index}`}
             src={brand.logo}
             alt={brand.name}
-            className="h-9 w-auto shrink-0 opacity-90 sm:h-11"
+            className="h-[41px] w-auto shrink-0 opacity-90 sm:h-[49px]"
           />
         ))}
       </div>

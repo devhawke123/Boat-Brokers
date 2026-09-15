@@ -35,7 +35,7 @@ export default function WhyChooseUs() {
   const [left, right] = [reasons.slice(0, 2), reasons.slice(2)]
 
   return (
-    <section className="section flex flex-col items-center gap-6 short:gap-4">
+    <section id="why-choose-us" className="section flex scroll-mt-28 flex-col items-center gap-6 short:gap-4">
       <div className="flex max-w-[26.25rem] flex-col items-center gap-4 short:gap-2 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(33,192,253,0.12)] px-4 py-1.5 text-label font-medium text-badge-text uppercase">
           <span className="size-2 rounded-full bg-blue" />

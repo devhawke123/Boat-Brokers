@@ -2,20 +2,20 @@
   "name": "boat-brokers",
   "version": "1.0.0",
   "private": true,
-  "description": "Boat Brokers full-stack website (React + TypeScript client, Node.js + Express + Prisma server, MySQL database)",
+  "description": "Boat Brokers full-stack website (React + TypeScript frontend, Node.js + Express + Prisma backend, MySQL database)",
   "workspaces": [
-    "client",
-    "server"
+    "Frontend",
+    "Backend"
   ],
   "scripts": {
-    "dev:client": "npm run dev -w client",
-    "dev:server": "npm run dev -w server",
-    "build:client": "npm run build -w client",
-    "build:server": "npm run build -w server",
+    "dev:client": "npm run dev -w frontend",
+    "dev:server": "npm run dev -w backend",
+    "build:client": "npm run build -w frontend",
+    "build:server": "npm run build -w backend",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down",
-    "prisma:generate": "npm run prisma:generate -w server",
-    "prisma:migrate": "npm run prisma:migrate -w server"
+    "prisma:generate": "npm run prisma:generate -w backend",
+    "prisma:migrate": "npm run prisma:migrate -w backend"
   },
   "allowScripts": {
     "@prisma/client@6.19.3": true,

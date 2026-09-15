@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { blogPosts } from '../../../../data/blogPosts'
+import { useBlogPosts } from '../../../../data/blogPosts'
 import BlogCard from './BlogCard'
 import { IconChevronDown, IconGrid, IconList, IconSearch } from './icons'
 
@@ -14,6 +14,7 @@ const sortOptions: { value: SortOption; label: string }[] = [
 const PAGE_SIZE = 6
 
 export default function BlogListing() {
+  const { posts: blogPosts, loading, error } = useBlogPosts()
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState<SortOption>('newest')
   const [view, setView] = useState<'grid' | 'list'>('grid')
@@ -37,7 +38,7 @@ export default function BlogListing() {
     }
 
     return results
-  }, [search, sort])
+  }, [blogPosts, search, sort])
 
   const visiblePosts = filteredPosts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredPosts.length
@@ -121,7 +122,17 @@ export default function BlogListing() {
         </div>
       </div>
 
-      {visiblePosts.length > 0 ? (
+      {loading ? (
+        <div className="grid w-full max-w-[80rem] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-[420px] animate-pulse rounded-xl border border-[#e2e8f0] bg-[#f8fafc]" />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="flex w-full max-w-[80rem] flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
+          <p>Couldn&rsquo;t load blog posts from the server: {error}</p>
+        </div>
+      ) : visiblePosts.length > 0 ? (
         <div
           className={`grid w-full max-w-[80rem] gap-6 ${
             view === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'

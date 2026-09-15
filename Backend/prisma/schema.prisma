@@ -148,6 +148,21 @@ model BoatImage {
   @@index([boatId])
 }
 
+model BlogPost {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  title     String
+  // Raw HTML pasted by an admin (e.g. from a rich text editor) — stored and
+  // rendered as-is.
+  content   String   @db.Text
+  readTime  String
+  author    String
+  date      String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Seller {
   id        Int      @id @default(autoincrement())
   name      String

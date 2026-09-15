@@ -38,7 +38,7 @@ export default function GetInTouch() {
             our team.
           </p>
 
-          <Button variant="dark" label="Contact Now" href="mailto:info@theboatbrokers.co.uk" />
+          <Button variant="dark" label="Contact Now" href="/book-a-viewing" />
         </div>
 
         <div className="flex flex-col justify-end gap-6">

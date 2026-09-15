@@ -5,10 +5,12 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { boatsRouter } from "./routes/boats";
+import { blogsRouter } from "./routes/blogs";
 
 const app = express();
 const port = process.env.PORT || 4000;
 const imagesRoot = path.resolve(__dirname, "..", "..", "boat brokers product images");
+const blogImagesRoot = path.resolve(__dirname, "..", "..", "bb-blogs");
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
@@ -20,7 +22,9 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/boats", boatsRouter);
+app.use("/api/blogs", blogsRouter);
 app.use("/media", express.static(imagesRoot));
+app.use("/media/blogs", express.static(blogImagesRoot));
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);
