@@ -6,6 +6,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { boatsRouter } from "./routes/boats";
 import { blogsRouter } from "./routes/blogs";
+import { sellersRouter } from "./routes/sellers";
+import { boatListingsRouter } from "./routes/boatListings";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -23,6 +25,8 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/boats", boatsRouter);
 app.use("/api/blogs", blogsRouter);
+app.use("/api/sellers", sellersRouter);
+app.use("/api/listings", boatListingsRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 

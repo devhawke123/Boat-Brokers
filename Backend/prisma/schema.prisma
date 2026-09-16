@@ -9,6 +9,8 @@ datasource db {
 
 model Boat {
   id       Int         @id @default(autoincrement())
+  // Unique, system-generated public identifier (e.g. shown in the admin/seller UI)
+  boatId   String      @unique @default(cuid())
   name     String
   // Raw source text for the price/status cell as originally imported
   // (e.g. "£69,950", "sold", "under offer"). Kept for reference/audit —
@@ -24,6 +26,7 @@ model Boat {
   sellerId Int
   seller   Seller      @relation(fields: [sellerId], references: [id])
   images   BoatImage[]
+  listings BoatListing[]
 
   // History
   cinNumber              String?
@@ -164,10 +167,47 @@ model BlogPost {
 }
 
 model Seller {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String?
-  boats     Boat[]
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  // Unique, system-generated public identifier (e.g. shown to the seller/admin UI)
+  sellerId    String   @unique @default(cuid())
+  name        String
+  email       String   @unique
+  // Hashed password (e.g. bcrypt) used for seller-portal login
+  password    String?
+  phone       String?
+  location    String?
+  joiningDate DateTime @default(now())
+  boats       Boat[]
+  listings    BoatListing[]
+}
+
+enum ListingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model BoatListing {
+  id        Int           @id @default(autoincrement())
+  boatId    Int
+  boat      Boat          @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  sellerId  Int
+  seller    Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  status    ListingStatus @default(PENDING)
+  comments  ListingComment[]
+  createdAt DateTime      @default(now())
+
+  @@index([boatId])
+  @@index([sellerId])
+}
+
+model ListingComment {
+  id        Int         @id @default(autoincrement())
+  listingId Int
+  listing   BoatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  content   String      @db.Text
+  author    String?
+  createdAt DateTime    @default(now())
+
+  @@index([listingId])
 }
