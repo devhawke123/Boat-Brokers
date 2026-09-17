@@ -15,6 +15,12 @@ export const sellerLoginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const changeSellerPasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8),
+});
+
 export type CreateSellerInput = z.infer<typeof createSellerSchema>;
 export type UpdateSellerInput = z.infer<typeof updateSellerSchema>;
 export type SellerLoginInput = z.infer<typeof sellerLoginSchema>;
+export type ChangeSellerPasswordInput = z.infer<typeof changeSellerPasswordSchema>;

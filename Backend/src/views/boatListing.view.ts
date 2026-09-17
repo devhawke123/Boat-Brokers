@@ -5,7 +5,7 @@ import { serializeSeller } from "./seller.view";
 type ListingWithRelations = BoatListing & {
   boat: Boat;
   seller: Seller;
-  comments: ListingComment[];
+  comments: (ListingComment & { replies: ListingComment[] })[];
 };
 
 export function serializeListing(listing: ListingWithRelations) {
@@ -13,6 +13,11 @@ export function serializeListing(listing: ListingWithRelations) {
     id: listing.id,
     status: listing.status,
     createdAt: listing.createdAt,
+    sellTimeline: listing.sellTimeline,
+    contactTime: listing.contactTime,
+    listerType: listing.listerType,
+    additionalNotes: listing.additionalNotes,
+    agreedToContact: listing.agreedToContact,
     boat: {
       id: listing.boat.id,
       boatId: listing.boat.boatId,

@@ -17,6 +17,10 @@ export type SpecificationsValues = {
   previousOwners: string
   engineServiceHistory: string
   boilerServiceHistory: string
+  blacking: string
+  anodes: string
+  survey: string
+  documentationAvailable: string
 
   // Dimensions
   draft: string
@@ -33,6 +37,7 @@ export type SpecificationsValues = {
   bowthruster: string
   weedhatch: string
   dieselTankCapacity: string
+  engineExtraNotes: string
 
   // Heating
   centralHeating: string
@@ -92,6 +97,10 @@ export const initialSpecificationsValues: SpecificationsValues = {
   previousOwners: '',
   engineServiceHistory: '',
   boilerServiceHistory: '',
+  blacking: '',
+  anodes: '',
+  survey: '',
+  documentationAvailable: '',
 
   draft: '',
   internalHeadroom: '',
@@ -106,6 +115,7 @@ export const initialSpecificationsValues: SpecificationsValues = {
   bowthruster: '',
   weedhatch: '',
   dieselTankCapacity: '',
+  engineExtraNotes: '',
 
   centralHeating: '',
   solidFuelStove: '',
@@ -215,6 +225,14 @@ export default function SpecificationsForm({ values, onChange }: SpecificationsF
             {field('engineServiceHistory', 'Engine service history', 'e.g. Colecraft')}
             {field('boilerServiceHistory', 'Boiler service history', 'e.g. Colecraft')}
           </FieldRow>
+          <FieldRow>
+            {field('blacking', 'Blacking', 'e.g. 2023')}
+            {field('anodes', 'Anodes', 'e.g. Replaced 2023')}
+          </FieldRow>
+          <FieldRow>
+            {field('survey', 'Survey', 'e.g. Available on request')}
+            {field('documentationAvailable', 'Documentation available', 'e.g. Full history file')}
+          </FieldRow>
         </div>
       )}
 
@@ -249,6 +267,7 @@ export default function SpecificationsForm({ values, onChange }: SpecificationsF
             {field('weedhatch', 'Weedhatch', 'e.g. Quick release under rear deck')}
             {field('dieselTankCapacity', 'Diesel tank capacity', 'e.g. 180 litres approx.')}
           </FieldRow>
+          <FieldRow>{field('engineExtraNotes', 'Notes', 'e.g. N/A')}</FieldRow>
         </div>
       )}
 

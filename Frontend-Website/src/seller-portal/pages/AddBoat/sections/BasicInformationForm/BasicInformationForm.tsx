@@ -1,6 +1,7 @@
 import { FieldRow, SelectField, TextField, TextareaField } from '../../../../components/FormField/FormField'
 
 export type BasicInformationValues = {
+  boatName: string
   length: string
   berths: string
   engine: string
@@ -18,6 +19,7 @@ export type BasicInformationValues = {
 }
 
 export const initialBasicInformationValues: BasicInformationValues = {
+  boatName: '',
   length: '',
   berths: '',
   engine: '',
@@ -45,6 +47,16 @@ type BasicInformationFormProps = {
 export default function BasicInformationForm({ values, onChange }: BasicInformationFormProps) {
   return (
     <>
+      <FieldRow>
+        <TextField
+          label="Boat name"
+          required
+          placeholder="e.g. Sea Ray Sundancer 320"
+          value={values.boatName}
+          onChange={(v) => onChange('boatName', v)}
+        />
+      </FieldRow>
+
       <FieldRow>
         <SelectField
           label="Berths"

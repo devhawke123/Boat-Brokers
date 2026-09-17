@@ -136,6 +136,14 @@ model Boat {
   boatType   String?
   overview   String? @db.Text
 
+  // Media
+  // TEXT (not VARCHAR) so these don't push the already-wide Boat row over
+  // MySQL's 65535-byte row-size limit — see migration history.
+  // brochureUrl is a local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
+  brochureUrl    String? @db.Text
+  videoUrl       String? @db.Text
+  virtualTourUrl String? @db.Text
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -176,6 +184,8 @@ model Seller {
   password    String?
   phone       String?
   location    String?
+  // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
+  avatarUrl   String?
   joiningDate DateTime @default(now())
   boats       Boat[]
   listings    BoatListing[]
@@ -197,17 +207,34 @@ model BoatListing {
   comments  ListingComment[]
   createdAt DateTime      @default(now())
 
+  // Seller preferences captured when this listing was submitted
+  // (Key Details step of the Add Boat form).
+  sellTimeline     String?
+  contactTime      String?
+  listerType       String?
+  additionalNotes  String?  @db.Text
+  agreedToContact  Boolean  @default(true)
+
   @@index([boatId])
   @@index([sellerId])
 }
 
 model ListingComment {
-  id        Int         @id @default(autoincrement())
-  listingId Int
-  listing   BoatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  content   String      @db.Text
-  author    String?
-  createdAt DateTime    @default(now())
+  id         Int         @id @default(autoincrement())
+  listingId  Int
+  listing    BoatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  content    String      @db.Text
+  author     String?
+  // True when this comment/reply was posted by the seller (from the Comments module),
+  // as opposed to a buyer/admin comment left on the listing.
+  fromSeller Boolean     @default(false)
+  // Self-relation: a null parentId is a top-level comment, non-null is a reply to it.
+  // Only one level deep is used by the UI today.
+  parentId   Int?
+  parent     ListingComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    ListingComment[] @relation("CommentReplies")
+  createdAt  DateTime    @default(now())
 
   @@index([listingId])
+  @@index([parentId])
 }

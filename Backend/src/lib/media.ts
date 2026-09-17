@@ -7,6 +7,8 @@ const IMAGES_FOLDER_NAME = "boat brokers product images";
 
 export function toMediaUrl(relPath: string | null | undefined): string | null {
   if (!relPath) return null;
+  // Already a servable URL (e.g. seller-uploaded photos under /uploads) — pass through.
+  if (relPath.startsWith("/")) return relPath;
   const normalized = relPath.split(path.sep).join("/");
   const withoutRoot = normalized.startsWith(`${IMAGES_FOLDER_NAME}/`)
     ? normalized.slice(IMAGES_FOLDER_NAME.length + 1)

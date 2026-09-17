@@ -15,6 +15,10 @@ export function formatDateTime(iso: string) {
   })
 }
 
+export function formatMonthYear(iso: string) {
+  return new Date(iso).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })
+}
+
 export function formatPrice(value: number | null) {
   return value == null ? '—' : `£${value.toLocaleString('en-GB')}`
 }

@@ -1,10 +1,16 @@
-import type { ListingStatus } from "@prisma/client";
+import type { ListingStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
-const listingInclude = {
+export const listingInclude = {
   boat: true,
   seller: true,
-  comments: { orderBy: { createdAt: "asc" as const } },
+  // Only top-level comments here; each carries its own replies nested one
+  // level deep (see ListingComment's self-relation in schema.prisma).
+  comments: {
+    where: { parentId: null },
+    orderBy: { createdAt: "asc" as const },
+    include: { replies: { orderBy: { createdAt: "asc" as const } } },
+  },
 };
 
 export function findAllListings() {
@@ -18,9 +24,14 @@ export function findListingById(id: number) {
   return prisma.boatListing.findUnique({ where: { id }, include: listingInclude });
 }
 
-export function createListing(boatId: number, sellerId: number) {
+type ListingPreferences = Pick<
+  Prisma.BoatListingUncheckedCreateInput,
+  "sellTimeline" | "contactTime" | "listerType" | "additionalNotes" | "agreedToContact"
+>;
+
+export function createListing(boatId: number, sellerId: number, preferences: ListingPreferences = {}) {
   return prisma.boatListing.create({
-    data: { boatId, sellerId },
+    data: { boatId, sellerId, ...preferences },
     include: listingInclude,
   });
 }
@@ -37,8 +48,14 @@ export function updateListingStatus(id: number, status: ListingStatus) {
   });
 }
 
-export function addListingComment(listingId: number, content: string, author?: string) {
+type NewCommentOptions = {
+  parentId?: number;
+  fromSeller?: boolean;
+};
+
+export function addListingComment(listingId: number, content: string, author?: string, options: NewCommentOptions = {}) {
   return prisma.listingComment.create({
-    data: { listingId, content, author },
+    data: { listingId, content, author, parentId: options.parentId, fromSeller: options.fromSeller ?? false },
+    include: { replies: { orderBy: { createdAt: "asc" as const } } },
   });
 }

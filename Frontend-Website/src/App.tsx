@@ -21,6 +21,10 @@ import Login from './seller-portal/pages/Login/Login'
 import Dashboard from './seller-portal/pages/Dashboard/Dashboard'
 import MyBoats from './seller-portal/pages/MyBoats/MyBoats'
 import AddBoat from './seller-portal/pages/AddBoat/AddBoat'
+import Comments from './seller-portal/pages/Comments/Comments'
+import CommentThread from './seller-portal/pages/CommentThread/CommentThread'
+import Profile from './seller-portal/pages/Profile/Profile'
+import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
 
 function App() {
   const { pathname } = window.location
@@ -111,6 +115,23 @@ function App() {
 
   if (pathname === '/seller-portal/boats/new') {
     return <AddBoat />
+  }
+
+  if (pathname === '/seller-portal/comments') {
+    return <Comments />
+  }
+
+  if (pathname.startsWith('/seller-portal/comments/')) {
+    const listingId = Number(pathname.replace('/seller-portal/comments/', ''))
+    if (Number.isInteger(listingId)) return <CommentThread listingId={listingId} />
+  }
+
+  if (pathname === '/seller-portal/profile') {
+    return <Profile />
+  }
+
+  if (pathname === '/seller-portal/help') {
+    return <HelpSupport />
   }
 
   return <Home />

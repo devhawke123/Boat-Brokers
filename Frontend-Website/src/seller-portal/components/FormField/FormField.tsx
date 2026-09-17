@@ -27,7 +27,7 @@ export function TextField({
   prefix?: string
 }) {
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex min-w-0 flex-1 flex-col gap-2">
       <Label required={required}>{label}</Label>
       <div className="relative flex h-11 w-full items-center rounded-lg border border-[#e2e8f0] bg-white">
         {prefix && <span className="pl-4 text-[16px] text-[#94a3b8]">{prefix}</span>}
@@ -64,7 +64,7 @@ export function SelectField({
   onChange: (value: string) => void
 }) {
   return (
-    <div className="flex flex-1 flex-col gap-2">
+    <div className="flex min-w-0 flex-1 flex-col gap-2">
       <Label required={required}>{label}</Label>
       <div className="relative flex h-11 w-full items-center rounded-lg border border-[#e2e8f0] bg-white">
         <select

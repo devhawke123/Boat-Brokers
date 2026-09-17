@@ -5,6 +5,7 @@ export type ApiSeller = {
   email: string
   phone: string | null
   location: string | null
+  avatarUrl: string | null
   joiningDate: string
 }
 
@@ -13,15 +14,46 @@ export type ApiListingComment = {
   listingId: number
   content: string
   author: string | null
+  fromSeller: boolean
+  parentId: number | null
   createdAt: string
+  // Only ever populated one level deep — a reply's own `replies` is omitted by the API.
+  replies: ApiListingComment[]
 }
 
 export type ListingStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export type ApiBoatImage = {
+  id: number
+  path: string | null
+  position: number
+}
+
+// The Boat model carries dozens of optional spec fields (history,
+// dimensions, engine, heating, electrical, gas, interior, other) — rather
+// than duplicating every column name here, callers that need one narrow it
+// with a cast; this type only pins down the fields the UI relies on.
+export type ApiBoat = {
+  id: number
+  boatId: string
+  name: string
+  boatName: string | null
+  imageUrl: string | null
+  price: number | null
+  seller: ApiSeller
+  images: ApiBoatImage[]
+  [field: string]: unknown
+}
 
 export type ApiBoatListing = {
   id: number
   status: ListingStatus
   createdAt: string
+  sellTimeline: string | null
+  contactTime: string | null
+  listerType: string | null
+  additionalNotes: string | null
+  agreedToContact: boolean
   boat: {
     id: number
     boatId: string
@@ -35,11 +67,7 @@ export type ApiBoatListing = {
 
 const API_BASE = '/api'
 
-async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
-  })
+async function readResponse<T>(res: Response, path: string): Promise<T> {
   if (!res.ok) {
     // Controllers respond with { error: string } (plain message) or
     // { error: { fieldErrors, formErrors } } (zod .flatten()) — surface the
@@ -51,6 +79,21 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   }
   if (res.status === 204) return undefined as T
   return res.json() as Promise<T>
+}
+
+async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: { 'Content-Type': 'application/json', ...init?.headers },
+  })
+  return readResponse<T>(res, path)
+}
+
+// Bypasses the JSON Content-Type header so the browser can set its own
+// multipart boundary for file uploads (e.g. boat photos).
+async function apiPostFormData<T>(path: string, formData: FormData): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, { method: 'POST', body: formData })
+  return readResponse<T>(res, path)
 }
 
 function apiGet<T>(path: string): Promise<T> {
@@ -109,6 +152,29 @@ export function loginSeller(email: string, password: string): Promise<ApiSeller>
   return apiPost<ApiSeller>('/sellers/login', { email, password })
 }
 
+export function changeSellerPassword(id: number, currentPassword: string, newPassword: string): Promise<void> {
+  return apiPut<void>(`/sellers/${id}/password`, { currentPassword, newPassword })
+}
+
+export function uploadSellerAvatar(id: number, file: File): Promise<ApiSeller> {
+  const formData = new FormData()
+  formData.set('avatar', file, file.name)
+  return apiPostFormData<ApiSeller>(`/sellers/${id}/avatar`, formData)
+}
+
+// Boats
+
+export type CreateBoatResponse = {
+  boat: ApiBoat
+  listing: ApiBoatListing
+}
+
+// Expects a FormData with `sellerId`, `name`, the Boat spec fields as plain
+// string values, and any number of `photos` file entries.
+export function createBoat(formData: FormData): Promise<CreateBoatResponse> {
+  return apiPostFormData<CreateBoatResponse>('/boats', formData)
+}
+
 // Listings
 
 export function fetchListings(): Promise<ApiBoatListing[]> {
@@ -131,10 +197,16 @@ export function updateListingStatus(id: number, status: ListingStatus): Promise<
   return apiPatch<ApiBoatListing>(`/listings/${id}/status`, { status })
 }
 
+export type AddListingCommentOptions = {
+  parentId?: number
+  fromSeller?: boolean
+}
+
 export function addListingComment(
   listingId: number,
   content: string,
   author?: string,
+  options: AddListingCommentOptions = {},
 ): Promise<ApiListingComment> {
-  return apiPost<ApiListingComment>(`/listings/${listingId}/comments`, { content, author })
+  return apiPost<ApiListingComment>(`/listings/${listingId}/comments`, { content, author, ...options })
 }

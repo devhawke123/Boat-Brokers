@@ -32,7 +32,8 @@ export async function createListingHandler(req: Request, res: Response) {
   const parsed = createBoatListingSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
-  const listing = await createListing(parsed.data.boatId, parsed.data.sellerId);
+  const { boatId, sellerId, ...preferences } = parsed.data;
+  const listing = await createListing(boatId, sellerId, preferences);
   res.status(201).json(serializeListing(listing));
 }
 
@@ -71,6 +72,11 @@ export async function addListingCommentHandler(req: Request, res: Response) {
   const listing = await findListingById(id);
   if (!listing) return res.status(404).json({ error: "Listing not found" });
 
-  const comment = await addListingComment(id, parsed.data.content, parsed.data.author);
+  const { content, author, parentId, fromSeller } = parsed.data;
+  if (parentId !== undefined && !listing.comments.some((comment) => comment.id === parentId)) {
+    return res.status(400).json({ error: "Comment being replied to was not found on this listing" });
+  }
+
+  const comment = await addListingComment(id, content, author, { parentId, fromSeller });
   res.status(201).json(comment);
 }
