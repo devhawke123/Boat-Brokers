@@ -60,6 +60,14 @@ export type ApiBoatListing = {
     name: string
     imageUrl: string | null
     price: number | null
+    // Full spec + media fields — populated on all listing endpoints now
+    brochureUrl: string | null
+    videoUrl: string | null
+    virtualTourUrl: string | null
+    overview: string | null
+    images: ApiBoatImage[]
+    customFields: { id: number; label: string; value: string; position: number }[]
+    [field: string]: unknown
   }
   seller: ApiSeller
   comments: ApiListingComment[]
@@ -174,6 +182,29 @@ export type CreateBoatResponse = {
 export function createBoat(formData: FormData): Promise<CreateBoatResponse> {
   return apiPostFormData<CreateBoatResponse>('/boats', formData)
 }
+
+// Partially updates an existing boat. Same FormData shape as createBoat but
+// all fields are optional. New photos are appended; existing ones are kept.
+export function updateBoat(boatId: number, formData: FormData): Promise<ApiBoat> {
+  const res = fetch(`${API_BASE}/boats/${boatId}`, { method: 'PATCH', body: formData })
+  return res.then((r) => readResponse<ApiBoat>(r, `/boats/${boatId}`))
+}
+
+export type UpdateListingPreferences = {
+  sellTimeline?: string
+  contactTime?: string
+  listerType?: string
+  additionalNotes?: string
+  agreedToContact?: boolean
+}
+
+export function updateListingPreferences(
+  listingId: number,
+  preferences: UpdateListingPreferences,
+): Promise<ApiBoatListing> {
+  return apiPatch<ApiBoatListing>(`/listings/${listingId}/preferences`, preferences)
+}
+
 
 // Listings
 

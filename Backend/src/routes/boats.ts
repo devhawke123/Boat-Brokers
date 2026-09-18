@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createBoatHandler, getBoat, listBoats } from "../controllers/boat.controller";
+import { createBoatHandler, getBoat, listBoats, updateBoatHandler } from "../controllers/boat.controller";
 import { uploadBoatMedia } from "../lib/upload";
 
 export const boatsRouter = Router();
@@ -13,3 +13,11 @@ boatsRouter.post("/", (req, res, next) => {
     createBoatHandler(req, res).catch(next);
   });
 });
+
+boatsRouter.patch("/:id", (req, res, next) => {
+  uploadBoatMedia(req, res, (err: unknown) => {
+    if (err) return res.status(400).json({ error: err instanceof Error ? err.message : "Upload failed" });
+    updateBoatHandler(req, res).catch(next);
+  });
+});
+

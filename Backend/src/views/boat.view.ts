@@ -1,8 +1,8 @@
-import type { Boat, BoatImage, Seller } from "@prisma/client";
+import type { Boat, BoatCustomField, BoatImage, Seller } from "@prisma/client";
 import { toMediaUrl } from "../lib/media";
 import { serializeSeller } from "./seller.view";
 
-type BoatWithRelations = Boat & { seller: Seller; images: BoatImage[] };
+type BoatWithRelations = Boat & { seller: Seller; images: BoatImage[]; customFields: BoatCustomField[] };
 
 export function serializeBoat(boat: BoatWithRelations) {
   return {

@@ -110,6 +110,11 @@ const optionalTrimmed = z.preprocess(
   z.string().trim().optional(),
 );
 
+const updateOptionalTrimmed = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? null : value),
+  z.string().trim().nullable().optional(),
+);
+
 const optionalPrice = z.preprocess((value) => {
   if (value === undefined || value === null || value === "") return undefined;
   const n = Number(value);
@@ -124,6 +129,31 @@ const optionalBoolean = z.preprocess((value) => {
   if (typeof value === "string") return value === "true" || value === "1";
   return value;
 }, z.boolean().optional());
+
+// multipart/form-data has no array type — the seller portal sends the custom
+// Additional Fields as one JSON-encoded string field. JSON callers may send the
+// array directly.
+const optionalCustomFields = z.preprocess(
+  (value) => {
+    if (value === undefined || value === null || value === "") return undefined;
+    if (typeof value !== "string") return value;
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  },
+  z
+    .array(
+      z.object({
+        // max 190 so the label fits the VARCHAR(191) column
+        label: z.string().trim().min(1).max(190),
+        value: z.string().trim().min(1).max(5000),
+      }),
+    )
+    .max(50)
+    .optional(),
+);
 
 const shape = Object.fromEntries(OPTIONAL_STRING_FIELDS.map((field) => [field, optionalTrimmed])) as Record<
   (typeof OPTIONAL_STRING_FIELDS)[number],
@@ -141,7 +171,26 @@ export const createBoatSchema = z.object({
   listerType: optionalTrimmed,
   additionalNotes: optionalTrimmed,
   agreedToContact: optionalBoolean,
+  // Seller-defined extra spec rows — these persist to BoatCustomField rows, not
+  // to columns on the Boat itself.
+  customFields: optionalCustomFields,
   ...shape,
 });
 
 export type CreateBoatInput = z.infer<typeof createBoatSchema>;
+
+export const updateBoatSchema = z.object({
+  name: z.string().trim().min(1, "Boat name is required").optional(),
+  price: optionalPrice,
+  sellTimeline: optionalTrimmed,
+  contactTime: optionalTrimmed,
+  listerType: optionalTrimmed,
+  additionalNotes: optionalTrimmed,
+  agreedToContact: optionalBoolean,
+  customFields: optionalCustomFields,
+  ...Object.fromEntries(
+    OPTIONAL_STRING_FIELDS.map((field) => [field, updateOptionalTrimmed]),
+  ) as Record<(typeof OPTIONAL_STRING_FIELDS)[number], typeof updateOptionalTrimmed>,
+});
+
+export type UpdateBoatInput = z.infer<typeof updateBoatSchema>;

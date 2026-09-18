@@ -14,7 +14,7 @@ export type MediaPhoto = {
   id: string
   url: string
   name: string
-  file: File
+  file: File | null
 }
 
 export type MediaValues = {

@@ -67,6 +67,12 @@ export default function BoatsTable({ listings }: BoatsTableProps) {
     setPage(1)
   }
 
+  function getReviewHref(listing: ApiBoatListing) {
+    return listing.status === 'PENDING'
+      ? `/seller-portal/boats/new?step=5&listingId=${listing.id}`
+      : `/seller-portal/listings/${listing.id}`
+  }
+
   return (
     <div className="w-full overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f3f4f6] px-5 py-3">
@@ -163,7 +169,7 @@ export default function BoatsTable({ listings }: BoatsTableProps) {
                 </td>
                 <td className="px-5 py-2 text-right">
                   <a
-                    href={`/seller-portal/listings/${listing.id}`}
+                    href={getReviewHref(listing)}
                     className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
                   >
                     Review

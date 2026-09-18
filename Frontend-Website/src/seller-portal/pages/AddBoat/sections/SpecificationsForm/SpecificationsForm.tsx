@@ -1,5 +1,6 @@
-import { useState } from 'react'
 import { FieldRow, TextField } from '../../../../components/FormField/FormField'
+import AdditionalFieldsForm, { type AdditionalFieldsValues } from '../AdditionalFieldsForm/AdditionalFieldsForm'
+import addFieldIcon from '../../../../assets/AddBoat/add-field-icon.svg'
 import historyIcon from '../../../../assets/AddBoat/spec-tabs/history.svg'
 import dimensionsIcon from '../../../../assets/AddBoat/spec-tabs/dimensions.svg'
 import engineIcon from '../../../../assets/AddBoat/spec-tabs/engine.svg'
@@ -163,7 +164,16 @@ export const initialSpecificationsValues: SpecificationsValues = {
   navigationEquipment: '',
 }
 
-type SpecTab = 'history' | 'dimensions' | 'engine' | 'heating' | 'electrical' | 'gas' | 'interior' | 'other'
+export type SpecTab =
+  | 'history'
+  | 'dimensions'
+  | 'engine'
+  | 'heating'
+  | 'electrical'
+  | 'gas'
+  | 'interior'
+  | 'other'
+  | 'additional'
 
 const SPEC_TABS: { id: SpecTab; label: string; icon: string }[] = [
   { id: 'history', label: 'History', icon: historyIcon },
@@ -174,15 +184,30 @@ const SPEC_TABS: { id: SpecTab; label: string; icon: string }[] = [
   { id: 'gas', label: 'Gas', icon: gasIcon },
   { id: 'interior', label: 'Interior', icon: interiorIcon },
   { id: 'other', label: 'Other', icon: otherIcon },
+  { id: 'additional', label: 'Additional', icon: addFieldIcon },
 ]
 
 type SpecificationsFormProps = {
   values: SpecificationsValues
   onChange: (field: keyof SpecificationsValues, value: string) => void
+  activeTab: SpecTab
+  onTabChange: (tab: SpecTab) => void
+  customFields: AdditionalFieldsValues
+  onCustomFieldAdd: () => void
+  onCustomFieldRemove: (id: string) => void
+  onCustomFieldChange: (id: string, key: 'label' | 'value', value: string) => void
 }
 
-export default function SpecificationsForm({ values, onChange }: SpecificationsFormProps) {
-  const [activeTab, setActiveTab] = useState<SpecTab>('history')
+export default function SpecificationsForm({
+  values,
+  onChange,
+  activeTab,
+  onTabChange,
+  customFields,
+  onCustomFieldAdd,
+  onCustomFieldRemove,
+  onCustomFieldChange,
+}: SpecificationsFormProps) {
 
   function field(key: keyof SpecificationsValues, label: string, placeholder: string) {
     return <TextField label={label} placeholder={placeholder} value={values[key]} onChange={(v) => onChange(key, v)} />
@@ -197,7 +222,7 @@ export default function SpecificationsForm({ values, onChange }: SpecificationsF
             <button
               key={tab.id}
               type="button"
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => onTabChange(tab.id)}
               className={
                 isActive
                   ? 'flex items-center gap-2 rounded-lg bg-[#0a4359] px-5 py-2.5 text-[14px] font-medium text-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]'
@@ -372,6 +397,15 @@ export default function SpecificationsForm({ values, onChange }: SpecificationsF
           </FieldRow>
           <FieldRow>{field('navigationEquipment', 'Navigation equipment', 'e.g. Various')}</FieldRow>
         </div>
+      )}
+
+      {activeTab === 'additional' && (
+        <AdditionalFieldsForm
+          values={customFields}
+          onAdd={onCustomFieldAdd}
+          onRemove={onCustomFieldRemove}
+          onChange={onCustomFieldChange}
+        />
       )}
     </>
   )

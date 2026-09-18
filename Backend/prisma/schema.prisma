@@ -27,6 +27,7 @@ model Boat {
   seller   Seller      @relation(fields: [sellerId], references: [id])
   images   BoatImage[]
   listings BoatListing[]
+  customFields BoatCustomField[]
 
   // History
   cinNumber              String?
@@ -153,6 +154,21 @@ model BoatImage {
   boatId    Int
   boat      Boat     @relation(fields: [boatId], references: [id], onDelete: Cascade)
   path      String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([boatId])
+}
+
+// Seller-defined extra spec rows (label + value) that vary per boat — see the
+// Additional Fields tab of the Add Boat form. A child table rather than columns
+// on Boat because the Boat row is already near MySQL's 65535-byte row-size limit.
+model BoatCustomField {
+  id        Int      @id @default(autoincrement())
+  boatId    Int
+  boat      Boat     @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  label     String
+  value     String   @db.Text
   position  Int      @default(0)
   createdAt DateTime @default(now())
 

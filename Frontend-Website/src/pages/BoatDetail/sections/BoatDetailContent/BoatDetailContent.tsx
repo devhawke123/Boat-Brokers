@@ -23,6 +23,11 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
 
   const viewingHref = `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Viewing enquiry: ${boat.name}`)}`
 
+  // Only real, hosted brochure files (served from /uploads) can be downloaded
+  // directly — the mailto fallback used when a boat has no PDF on file must
+  // open the user's mail client instead.
+  const hasDownloadableBrochure = boat.detail.brochureUrl?.startsWith('/uploads/') ?? false
+
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-1">
@@ -87,8 +92,9 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
             {boat.detail.brochureUrl && (
               <a
                 href={boat.detail.brochureUrl}
-                target="_blank"
-                rel="noreferrer"
+                {...(hasDownloadableBrochure
+                  ? { download: `${boat.name} - Brochure.pdf` }
+                  : { target: '_blank', rel: 'noreferrer' })}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-navy-dark px-4 py-3.5 text-base font-semibold text-white"
               >
                 <IconDownload className="size-4" />

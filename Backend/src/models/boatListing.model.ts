@@ -2,7 +2,12 @@ import type { ListingStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 
 export const listingInclude = {
-  boat: true,
+  boat: {
+    include: {
+      images: { orderBy: { position: "asc" as const } },
+      customFields: { orderBy: { position: "asc" as const } },
+    },
+  },
   seller: true,
   // Only top-level comments here; each carries its own replies nested one
   // level deep (see ListingComment's self-relation in schema.prisma).
@@ -44,6 +49,14 @@ export function updateListingStatus(id: number, status: ListingStatus) {
   return prisma.boatListing.update({
     where: { id },
     data: { status },
+    include: listingInclude,
+  });
+}
+
+export function updateListingPreferences(id: number, preferences: ListingPreferences) {
+  return prisma.boatListing.update({
+    where: { id },
+    data: preferences,
     include: listingInclude,
   });
 }

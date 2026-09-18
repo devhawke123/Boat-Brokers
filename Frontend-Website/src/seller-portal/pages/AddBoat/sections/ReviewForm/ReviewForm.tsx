@@ -3,6 +3,7 @@ import type { BasicInformationValues } from '../BasicInformationForm/BasicInform
 import type { SpecificationsValues } from '../SpecificationsForm/SpecificationsForm'
 import type { MediaValues } from '../MediaForm/MediaForm'
 import type { KeyDetailsValues } from '../KeyDetailsForm/KeyDetailsForm'
+import type { AdditionalFieldsValues } from '../AdditionalFieldsForm/AdditionalFieldsForm'
 import editChevron from '../../../../assets/AddBoat/review/edit-chevron.svg'
 import videoIcon from '../../../../assets/AddBoat/review/video-icon.svg'
 import pdfIcon from '../../../../assets/AddBoat/review/pdf-icon.svg'
@@ -14,6 +15,7 @@ type ReviewFormProps = {
   specifications: SpecificationsValues
   media: MediaValues
   keyDetails: KeyDetailsValues
+  customFields: AdditionalFieldsValues
   onEditStep: (step: number) => void
 }
 
@@ -78,6 +80,7 @@ const BASIC_INFO_FIELDS: { key: keyof BasicInformationValues; label: string }[] 
   { key: 'recentSurvey', label: 'Recent survey' },
   { key: 'steel', label: 'Steel' },
   { key: 'length', label: 'Length' },
+  { key: 'price', label: 'Price' },
 ]
 
 const SPEC_GROUPS: { title: string; fields: { key: keyof SpecificationsValues; label: string }[] }[] = [
@@ -194,7 +197,15 @@ const REQUIRED_BASIC_INFO_FIELDS: (keyof BasicInformationValues)[] = [
   'lastService',
 ]
 
-export default function ReviewForm({ basicInfo, specifications, media, keyDetails, onEditStep }: ReviewFormProps) {
+export default function ReviewForm({
+  basicInfo,
+  specifications,
+  media,
+  keyDetails,
+  customFields,
+  onEditStep,
+}: ReviewFormProps) {
+  const completedCustomFields = customFields.fields.filter((f) => isFilled(f.label) && isFilled(f.value))
   const basicInfoValues = Object.values(basicInfo)
   const specValues = Object.values(specifications)
   const keyDetailsStrings = [
@@ -215,7 +226,13 @@ export default function ReviewForm({ basicInfo, specifications, media, keyDetail
     (media.brochure ? 1 : 0) +
     (isFilled(media.virtualTourUrl) ? 1 : 0)
   const totalFields = stringFields.length + 4
-  const percentComplete = Math.round(((filledStrings + mediaFieldsFilled) / totalFields) * 100)
+  // Custom fields are optional extras, so they count toward the numerator only —
+  // leaving blank rows out of the denominator means they can't drag the score
+  // down. The clamp keeps the bonus from pushing the ring past 100%.
+  const percentComplete = Math.min(
+    100,
+    Math.round(((filledStrings + mediaFieldsFilled + completedCustomFields.length) / totalFields) * 100),
+  )
 
   const strengthLabel =
     percentComplete >= 90 ? 'Excellent Strength' : percentComplete >= 70 ? 'Good Strength' : percentComplete >= 40 ? 'Fair Strength' : 'Needs Work'
@@ -304,6 +321,17 @@ export default function ReviewForm({ basicInfo, specifications, media, keyDetail
             </FieldGrid>
           </div>
         ))}
+
+        {completedCustomFields.length > 0 && (
+          <div className="flex flex-col gap-4">
+            <h4 className="text-[13px] font-semibold text-[#0f2a3d]">Additional Fields</h4>
+            <FieldGrid>
+              {completedCustomFields.map((field) => (
+                <Field key={field.id} label={field.label} value={field.value} />
+              ))}
+            </FieldGrid>
+          </div>
+        )}
       </SectionCard>
 
       <SectionCard title="Photos & Video" onEdit={() => onEditStep(3)}>

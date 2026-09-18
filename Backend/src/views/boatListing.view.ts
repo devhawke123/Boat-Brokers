@@ -1,9 +1,9 @@
-import type { Boat, BoatListing, ListingComment, Seller } from "@prisma/client";
+import type { Boat, BoatCustomField, BoatImage, BoatListing, ListingComment, Seller } from "@prisma/client";
 import { toMediaUrl } from "../lib/media";
 import { serializeSeller } from "./seller.view";
 
 type ListingWithRelations = BoatListing & {
-  boat: Boat;
+  boat: Boat & { images: BoatImage[]; customFields: BoatCustomField[] };
   seller: Seller;
   comments: (ListingComment & { replies: ListingComment[] })[];
 };
@@ -19,11 +19,11 @@ export function serializeListing(listing: ListingWithRelations) {
     additionalNotes: listing.additionalNotes,
     agreedToContact: listing.agreedToContact,
     boat: {
-      id: listing.boat.id,
-      boatId: listing.boat.boatId,
-      name: listing.boat.name,
+      ...listing.boat,
       imageUrl: toMediaUrl(listing.boat.imageUrl),
-      price: listing.boat.price,
+      brochureUrl: toMediaUrl(listing.boat.brochureUrl),
+      images: listing.boat.images.map((img) => ({ ...img, path: toMediaUrl(img.path) })),
+      customFields: listing.boat.customFields,
     },
     seller: serializeSeller(listing.seller),
     comments: listing.comments,

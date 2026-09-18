@@ -22,6 +22,15 @@ export const updateListingStatusSchema = z.object({
   status: z.enum(["PENDING", "APPROVED", "REJECTED"]),
 });
 
+export const updateListingPreferencesSchema = z.object({
+  sellTimeline: z.string().trim().optional(),
+  contactTime: z.string().trim().optional(),
+  listerType: z.string().trim().optional(),
+  additionalNotes: z.string().trim().optional(),
+  agreedToContact: z.boolean().optional(),
+});
+
 export type CreateBoatListingInput = z.infer<typeof createBoatListingSchema>;
 export type CreateListingCommentInput = z.infer<typeof createListingCommentSchema>;
 export type UpdateListingStatusInput = z.infer<typeof updateListingStatusSchema>;
+export type UpdateListingPreferencesInput = z.infer<typeof updateListingPreferencesSchema>;

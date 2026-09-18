@@ -26,13 +26,11 @@ export default function CommentsList({ listings }: CommentsListProps) {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
-  const withComments = useMemo(() => listings.filter((listing) => listing.comments.length > 0), [listings])
-
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
-    if (query === '') return withComments
-    return withComments.filter((listing) => listing.boat.name.toLowerCase().includes(query))
-  }, [withComments, search])
+    if (query === '') return listings
+    return listings.filter((listing) => listing.boat.name.toLowerCase().includes(query))
+  }, [listings, search])
 
   const sorted = useMemo(
     () =>
@@ -149,11 +147,11 @@ export default function CommentsList({ listings }: CommentsListProps) {
             {paginated.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-5 py-8 text-center text-sm text-[#64748b]">
-                  {withComments.length === 0
-                    ? 'No comments yet.'
+                  {listings.length === 0
+                    ? 'No conversations yet.'
                     : search
                       ? `No listings match "${search}".`
-                      : 'No comments in this category.'}
+                      : 'No conversations in this category.'}
                 </td>
               </tr>
             )}

@@ -11,6 +11,7 @@ type StepFormCardProps = {
   continueLabel?: string
   continueDisabled?: boolean
   showAddField?: boolean
+  onAddField?: () => void
   showBack?: boolean
   children: ReactNode
 }
@@ -24,6 +25,7 @@ export default function StepFormCard({
   continueLabel = 'Save & Continue',
   continueDisabled = false,
   showAddField = true,
+  onAddField,
   showBack = false,
   children,
 }: StepFormCardProps) {
@@ -36,9 +38,10 @@ export default function StepFormCard({
             <p className="text-[14px] text-[#64748b]">{subtitle}</p>
           </div>
 
-          {showAddField && (
+          {showAddField && onAddField && (
             <button
               type="button"
+              onClick={onAddField}
               className="flex shrink-0 items-center gap-2 rounded-lg border border-[#e2e8f0] bg-white px-4 py-2.5 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
             >
               <img src={addFieldIcon} alt="" aria-hidden="true" className="h-3.5 w-3" />

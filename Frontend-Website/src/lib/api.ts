@@ -4,6 +4,15 @@ export type ApiBoatImage = {
   position: number
 }
 
+// Seller-defined extra spec rows — see the Additional Fields tab of the seller
+// portal's Add Boat form.
+export type ApiBoatCustomField = {
+  id: number
+  label: string
+  value: string
+  position: number
+}
+
 export type ApiSeller = {
   id: number
   name: string
@@ -25,6 +34,8 @@ export type ApiBoat = {
   sellerId: number
   seller: ApiSeller
   images: ApiBoatImage[]
+  // Optional: boats created before this relation existed have no such rows.
+  customFields?: ApiBoatCustomField[]
 
   cinNumber: string | null
   crtNumber: string | null
@@ -120,6 +131,10 @@ export type ApiBoat = {
   builder: string | null
   boatType: string | null
   overview: string | null
+
+  brochureUrl: string | null
+  videoUrl: string | null
+  virtualTourUrl: string | null
 
   createdAt: string
   updatedAt: string

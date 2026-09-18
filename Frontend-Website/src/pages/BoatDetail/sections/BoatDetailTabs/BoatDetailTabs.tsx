@@ -5,7 +5,17 @@ type BoatDetailTabsProps = {
   boat: BoatListing
 }
 
-const tabs = ['History', 'Dimensions', 'Engine', 'Heating', 'Electrical', 'Gas', 'Interior', 'Other'] as const
+const tabs = [
+  'History',
+  'Dimensions',
+  'Engine',
+  'Heating',
+  'Electrical',
+  'Gas',
+  'Interior',
+  'Other',
+  'Additional',
+] as const
 type Tab = (typeof tabs)[number]
 
 const tabDetailKey: Record<Tab, keyof BoatListing['detail']> = {
@@ -17,14 +27,17 @@ const tabDetailKey: Record<Tab, keyof BoatListing['detail']> = {
   Gas: 'gas',
   Interior: 'interior',
   Other: 'other',
+  Additional: 'additional',
 }
 
 function SpecList({ rows }: { rows: BoatSpec[] }) {
   return (
     <dl className="grid grid-cols-1 gap-x-10 gap-y-3 sm:grid-cols-2">
-      {rows.map((row) => (
+      {rows.map((row, i) => (
         <div
-          key={row.label}
+          // Seller-authored labels aren't guaranteed unique, so the index is
+          // part of the key.
+          key={`${row.label}-${i}`}
           className="flex flex-col gap-1 border-b border-[#f3f4f6] py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
         >
           <dt className="text-sm text-[#6e6e6e]">{row.label}</dt>
@@ -38,11 +51,14 @@ function SpecList({ rows }: { rows: BoatSpec[] }) {
 export default function BoatDetailTabs({ boat }: BoatDetailTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('History')
   const rows = boat.detail[tabDetailKey[activeTab]] as BoatSpec[]
+  // Every other tab falls back to "available on request", which reads as missing
+  // data. Custom fields simply don't apply to most boats, so hide the tab instead.
+  const visibleTabs = tabs.filter((tab) => tab !== 'Additional' || boat.detail.additional.length > 0)
 
   return (
     <div className="flex flex-col gap-8 rounded-[22px] border border-[#f3f4f6] bg-white p-8 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)]">
       <div className="flex items-center gap-2 overflow-x-auto border-b border-[#f3f4f6]">
-        {tabs.map((tab) => (
+        {visibleTabs.map((tab) => (
           <button
             key={tab}
             type="button"

@@ -6,11 +6,13 @@ import {
   findAllListings,
   findListingById,
   updateListingStatus,
+  updateListingPreferences,
 } from "../models/boatListing.model";
 import {
   createBoatListingSchema,
   createListingCommentSchema,
   updateListingStatusSchema,
+  updateListingPreferencesSchema,
 } from "../schemas/boatListing.schema";
 import { serializeListing } from "../views/boatListing.view";
 
@@ -59,6 +61,20 @@ export async function updateListingStatusHandler(req: Request, res: Response) {
   if (!existing) return res.status(404).json({ error: "Listing not found" });
 
   const listing = await updateListingStatus(id, parsed.data.status);
+  res.json(serializeListing(listing));
+}
+
+export async function updateListingPreferencesHandler(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid listing id" });
+
+  const parsed = updateListingPreferencesSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const existing = await findListingById(id);
+  if (!existing) return res.status(404).json({ error: "Listing not found" });
+
+  const listing = await updateListingPreferences(id, parsed.data);
   res.json(serializeListing(listing));
 }
 

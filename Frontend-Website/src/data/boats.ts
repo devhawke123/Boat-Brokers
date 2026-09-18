@@ -26,6 +26,7 @@ export type BoatDetail = {
   gas: BoatSpec[]
   interior: BoatSpec[]
   other: BoatSpec[]
+  additional: BoatSpec[]
   brochureUrl?: string
   videoUrl?: string
   virtualTourUrl?: string
@@ -298,9 +299,12 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Boat safety', boat.boatSafety],
         ['Recent survey', boat.recentSurvey],
       ]),
-      brochureUrl: `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Brochure request - ${boat.name}`)}`,
-      videoUrl: '/selling#virtual-tour',
-      virtualTourUrl: '/selling#virtual-tour',
+      additional: specs((boat.customFields ?? []).map((f) => [f.label, f.value] as [string, string])),
+      brochureUrl:
+        boat.brochureUrl ??
+        `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Brochure request - ${boat.name}`)}`,
+      videoUrl: boat.videoUrl ?? '/selling#virtual-tour',
+      virtualTourUrl: boat.virtualTourUrl ?? '/selling#virtual-tour',
     },
   }
 }
