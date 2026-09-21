@@ -154,7 +154,7 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
 
         <div className="flex flex-col gap-2">
           <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">How soon do you want to sell?</span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {SELL_TIMELINE_OPTIONS.map((option) => {
               const isSelected = values.sellTimeline === option
               return (
@@ -175,7 +175,7 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
 
         <div className="flex flex-col gap-2">
           <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">When&apos;s the best time to reach you?</span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {CONTACT_TIME_OPTIONS.map(({ value, icon }) => {
               const isSelected = values.contactTime === value
               return (
@@ -198,7 +198,7 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
 
       <div className="flex flex-col gap-4 rounded-lg bg-[#f5f8fb]/50 px-4 py-5">
         <h3 className="font-display text-[17px] text-[#073040]">Who&apos;s listing this boat?</h3>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {LISTER_TYPE_OPTIONS.map(({ value, icon }) => {
             const isSelected = values.listerType === value
             return (

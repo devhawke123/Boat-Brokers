@@ -19,7 +19,7 @@ const serviceLinks = [
   { label: 'Jargon Buster', href: '/jargon-buster', badge: 'New' },
   { label: 'Selling Process', href: '/selling' },
   { label: 'Privacy Policy', href: '/privacy-policy' },
-  { label: 'Terms & Condition', href: '/terms' },
+ 
 ]
 
 const socialLinks = [

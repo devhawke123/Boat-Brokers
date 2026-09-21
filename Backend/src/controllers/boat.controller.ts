@@ -4,6 +4,9 @@ import { createBoatWithListing, findAllBoats, findBoatById, updateBoat } from ".
 import { createBoatSchema, updateBoatSchema } from "../schemas/boat.schema";
 import { serializeBoat } from "../views/boat.view";
 import { serializeListing } from "../views/boatListing.view";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function listBoats(_req: Request, res: Response) {
   const boats = await findAllBoats();
@@ -58,6 +61,37 @@ export async function createBoatHandler(req: Request, res: Response) {
     { sellTimeline, contactTime, listerType, additionalNotes, agreedToContact },
     customFields ?? [],
   );
+
+  try {
+    const fromEmail = process.env.FROM_EMAIL || 'no-reply@theboatbrokers.co.uk';
+    const toEmail = process.env.CONTACT_EMAIL;
+    
+    console.log("Email Config:");
+    console.log("FROM_EMAIL:", fromEmail);
+    console.log("CONTACT_EMAIL:", toEmail);
+    console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
+
+    if (toEmail) {
+      const response = await resend.emails.send({
+        from: `Boat Brokers <${fromEmail}>`,
+        to: toEmail,
+        replyTo: boat.seller.email,
+        subject: `New Boat Published: ${boat.name}`,
+        text: `A new boat "${boat.name}" has been published by ${boat.seller.name}.
+Listing ID: ${listing.id}`,
+      });
+      
+      console.log("Resend API Response:", JSON.stringify(response, null, 2));
+      
+      if (response.error) {
+        console.error("Resend API Error object:", response.error);
+      }
+    } else {
+      console.warn("Skipping publish email: CONTACT_EMAIL is not set in environment variables.");
+    }
+  } catch (err) {
+    console.error("Exception during publish email send:", err);
+  }
 
   res.status(201).json({ boat: serializeBoat(boat), listing: serializeListing(listing) });
 }

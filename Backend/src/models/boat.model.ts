@@ -9,7 +9,16 @@ export const boatInclude = {
 };
 
 export function findAllBoats() {
-  return prisma.boat.findMany({ include: boatInclude, orderBy: { id: "asc" } });
+  return prisma.boat.findMany({
+    where: {
+      OR: [
+        { listings: { none: {} } },
+        { listings: { some: { status: "APPROVED" } } },
+      ],
+    },
+    include: boatInclude,
+    orderBy: { id: "asc" },
+  });
 }
 
 export function findBoatById(id: number) {
