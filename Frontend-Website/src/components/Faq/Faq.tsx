@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import plus from '../../assets/icons/plus.svg'
 import arrowRightWhite from '../../assets/icons/arrow-right-white.svg'
-
+import Button from '../Button/Button'
 type FaqItem = {
   question: string
   answer: string
@@ -142,13 +142,18 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
       )}
 
       {!hideCta && (
-        <button
-          type="button"
+        <div>
+          <Button
+          
+          label=" View More FAQs"
+          href= "/faq"
           className="inline-flex items-center gap-1.5 rounded-xl border-none bg-navy-dark px-5 py-3 text-base font-semibold text-white shadow-btn"
         >
-          View More FAQs
+         
+
           <img src={arrowRightWhite} alt="" aria-hidden="true" className="size-[18px]" />
-        </button>
+        </Button></div>
+        
       )}
     </section>
   )

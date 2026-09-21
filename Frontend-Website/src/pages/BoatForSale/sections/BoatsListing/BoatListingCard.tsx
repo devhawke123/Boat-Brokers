@@ -21,15 +21,7 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
             {status.label}
           </span>
         )}
-        <button
-          type="button"
-          onClick={() => setIsFavorited((v) => !v)}
-          aria-pressed={isFavorited}
-          aria-label={isFavorited ? `Remove ${boat.name} from favourites` : `Add ${boat.name} to favourites`}
-          className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-full bg-white/80 shadow-sm backdrop-blur-[4px]"
-        >
-          <IconHeart className={`size-4 ${isFavorited ? 'fill-[#ef4444] text-[#ef4444]' : 'text-[#9ca3af]'}`} />
-        </button>
+       
       </div>
 
       <div className="flex flex-col gap-4 p-5">
