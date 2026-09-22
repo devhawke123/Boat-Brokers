@@ -38,6 +38,16 @@ const TOTAL_STEPS = 5
 const MAX_PHOTO_SIZE_BYTES = 20 * 1024 * 1024
 const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
+// crypto.randomUUID() only exists in a secure context (HTTPS or localhost) —
+// on a plain-HTTP production origin it's undefined and throws, so fall back
+// to a non-cryptographic id for these client-only list keys.
+function makeId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+}
+
 // BasicInformationValues keys that don't already share their name with the
 // Boat schema column they persist to (see Backend/prisma/schema.prisma).
 const BASIC_INFO_TO_BOAT_FIELD: Partial<Record<keyof BasicInformationValues, string>> = {
@@ -170,7 +180,7 @@ export default function AddBoat() {
 
   function handleCustomFieldAdd() {
     setCustomFields((prev) => ({
-      fields: [...prev.fields, { id: crypto.randomUUID(), label: '', value: '' }],
+      fields: [...prev.fields, { id: makeId(), label: '', value: '' }],
     }))
   }
 
@@ -322,7 +332,7 @@ export default function AddBoat() {
     if (!validFiles.length) return
 
     const newPhotos = validFiles.map((file) => ({
-      id: crypto.randomUUID(),
+      id: makeId(),
       url: URL.createObjectURL(file),
       name: file.name,
       file,
