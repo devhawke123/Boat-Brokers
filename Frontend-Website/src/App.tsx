@@ -42,6 +42,8 @@ import LeadDetail from './admin-portal/pages/LeadDetail/LeadDetail'
 import Sales from './admin-portal/pages/Sales/Sales'
 import SaleForm from './admin-portal/pages/SaleForm/SaleForm'
 import SaleDetail from './admin-portal/pages/SaleDetail/SaleDetail'
+import Blogs from './admin-portal/pages/Blogs/Blogs'
+import BlogPostForm from './admin-portal/pages/BlogPostForm/BlogPostForm'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
@@ -248,6 +250,19 @@ function App() {
   if (pathname.startsWith('/admin-portal/sales/')) {
     const saleId = Number(pathname.replace('/admin-portal/sales/', ''))
     if (Number.isInteger(saleId)) return <SaleDetail saleId={saleId} />
+  }
+
+  if (pathname === '/admin-portal/blogs') {
+    return <Blogs />
+  }
+
+  if (pathname === '/admin-portal/blogs/new') {
+    return <BlogPostForm />
+  }
+
+  if (pathname.startsWith('/admin-portal/blogs/') && pathname.endsWith('/edit')) {
+    const postId = Number(pathname.replace('/admin-portal/blogs/', '').replace('/edit', ''))
+    if (Number.isInteger(postId)) return <BlogPostForm postId={postId} />
   }
 
   // Scoped fallback for the admin portal, same reasoning as the seller

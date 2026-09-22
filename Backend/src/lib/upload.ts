@@ -9,11 +9,12 @@ import path from "path";
 const boatPhotosDir = path.resolve(__dirname, "..", "..", "uploads", "boats");
 const boatBrochuresDir = path.resolve(__dirname, "..", "..", "uploads", "brochures");
 const sellerAvatarsDir = path.resolve(__dirname, "..", "..", "uploads", "sellers");
+const blogImagesDir = path.resolve(__dirname, "..", "..", "uploads", "blogs");
 
 // Fail fast and loud at startup if these can't be created (e.g. a permissions
 // problem on a freshly deployed server) instead of every upload silently
 // 500ing later with no clue why.
-for (const dir of [boatPhotosDir, boatBrochuresDir, sellerAvatarsDir]) {
+for (const dir of [boatPhotosDir, boatBrochuresDir, sellerAvatarsDir, blogImagesDir]) {
   try {
     fs.mkdirSync(dir, { recursive: true });
   } catch (err) {
@@ -66,3 +67,20 @@ export const uploadSellerAvatar = multer({
     cb(null, true);
   },
 }).single("avatar");
+
+const blogImageStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, blogImagesDir),
+  filename: (_req, file, cb) => cb(null, `${crypto.randomUUID()}${path.extname(file.originalname)}`),
+});
+
+export const uploadBlogImage = multer({
+  storage: blogImageStorage,
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
+  fileFilter: (_req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      cb(new Error("Only image files are allowed for a blog post image"));
+      return;
+    }
+    cb(null, true);
+  },
+}).single("image");

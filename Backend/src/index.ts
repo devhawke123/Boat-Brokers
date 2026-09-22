@@ -15,6 +15,7 @@ import { bookingsRouter } from "./routes/bookings";
 import { buyersRouter } from "./routes/buyers";
 import { leadsRouter } from "./routes/leads";
 import { salesRouter } from "./routes/sales";
+import { blogAdminRouter } from "./routes/blogAdmin";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -50,6 +51,7 @@ app.use("/api/bookings", bookingsRouter);
 app.use("/api/buyers", buyersRouter);
 app.use("/api/leads", leadsRouter);
 app.use("/api/sales", salesRouter);
+app.use("/api/admin/blogs", blogAdminRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 app.use("/uploads", express.static(uploadsRoot));

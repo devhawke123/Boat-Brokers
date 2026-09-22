@@ -23,6 +23,8 @@ const BLOG_IMAGES_FOLDER_NAME = "bb-blogs";
 
 export function toBlogMediaUrl(relPath: string | null | undefined): string | null {
   if (!relPath) return null;
+  // Already a servable URL (e.g. an admin-uploaded post image under /uploads) — pass through.
+  if (relPath.startsWith("/")) return relPath;
   const normalized = relPath.split(path.sep).join("/");
   const withoutRoot = normalized.startsWith(`${BLOG_IMAGES_FOLDER_NAME}/`)
     ? normalized.slice(BLOG_IMAGES_FOLDER_NAME.length + 1)

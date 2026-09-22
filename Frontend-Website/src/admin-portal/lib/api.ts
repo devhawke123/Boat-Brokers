@@ -26,6 +26,7 @@ export type DashboardStats = {
 const API_BASE = '/api'
 
 const DEFAULT_TIMEOUT_MS = 30_000
+const UPLOAD_TIMEOUT_MS = 60_000
 
 async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<Response> {
   const controller = new AbortController()
@@ -82,6 +83,13 @@ function apiPatch<T>(path: string, body: unknown): Promise<T> {
 
 function apiDelete(path: string): Promise<void> {
   return apiRequest<void>(path, { method: 'DELETE' })
+}
+
+// Bypasses the JSON Content-Type header so the browser can set its own
+// multipart boundary for file uploads (e.g. a blog post image).
+async function apiFormData<T>(path: string, method: 'POST' | 'PUT', formData: FormData): Promise<T> {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, { method, body: formData }, UPLOAD_TIMEOUT_MS)
+  return readResponse<T>(res, path)
 }
 
 // Admin
@@ -308,4 +316,42 @@ export function deleteSale(id: number): Promise<void> {
 
 export function updateSaleStatus(id: number, status: SaleStatus): Promise<ApiSale> {
   return apiPatch<ApiSale>(`/sales/${id}/status`, { status })
+}
+
+// Blogs — admin CRUD over the existing BlogPost table (the public site's
+// fetchBlogPosts/fetchBlogPost in ../../lib/api.ts only ever read; this file
+// adds the admin-only write side under /api/admin/blogs, which lists every
+// post, not just the public-facing first five).
+
+export type ApiBlogPostAdmin = {
+  id: number
+  slug: string
+  title: string
+  content: string
+  author: string
+  date: string
+  readTime: string
+  imageUrl: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export function fetchBlogPostsAdmin(): Promise<ApiBlogPostAdmin[]> {
+  return apiGet<ApiBlogPostAdmin[]>('/admin/blogs')
+}
+
+export function fetchBlogPostAdmin(id: number): Promise<ApiBlogPostAdmin> {
+  return apiGet<ApiBlogPostAdmin>(`/admin/blogs/${id}`)
+}
+
+export function createBlogPost(formData: FormData): Promise<ApiBlogPostAdmin> {
+  return apiFormData<ApiBlogPostAdmin>('/admin/blogs', 'POST', formData)
+}
+
+export function updateBlogPost(id: number, formData: FormData): Promise<ApiBlogPostAdmin> {
+  return apiFormData<ApiBlogPostAdmin>(`/admin/blogs/${id}`, 'PUT', formData)
+}
+
+export function deleteBlogPost(id: number): Promise<void> {
+  return apiDelete(`/admin/blogs/${id}`)
 }

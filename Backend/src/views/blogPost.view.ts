@@ -38,3 +38,20 @@ export function serializeBlogPostDetail(post: BlogPost) {
     imageUrl: toBlogMediaUrl(post.imageUrl),
   };
 }
+
+// Admin view: same as detail, plus the id (needed for edit/delete) and
+// timestamps — nothing here is sensitive, unlike the PII on other resources.
+export function serializeBlogPostAdmin(post: BlogPost) {
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    content: post.content,
+    author: post.author,
+    date: post.date,
+    readTime: post.readTime,
+    imageUrl: toBlogMediaUrl(post.imageUrl),
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+  };
+}

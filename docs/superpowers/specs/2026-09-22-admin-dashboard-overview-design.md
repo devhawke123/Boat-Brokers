@@ -84,7 +84,14 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
   (just id/time/available) since it's reachable from any boat page; the full booking
   record (with buyer contact info) is only ever returned from the admin-only
   `GET /api/bookings`.
-- **BlogPost** — already exists, just needs an admin CRUD UI. No schema change.
+- **BlogPost** ✅ — no schema change; got a new admin-only CRUD surface
+  (`GET/POST/PUT/DELETE /api/admin/blogs`, separate from the public
+  `/api/blogs` which still deliberately caps the listing at 5 posts — the
+  admin endpoint lists every post). Slug auto-generates from the title on
+  create (de-duped with a `-2`, `-3`, ... suffix) and stays stable across
+  title edits so links never break; an admin can also set it explicitly.
+  Optional image upload reuses the same multer pattern as boat photos/seller
+  avatars, into `uploads/blogs/`. Built.
 
 ## Module build order
 
@@ -108,7 +115,8 @@ they'll be used day-to-day.
    CRUD, manual entry only. Built.
 6. **Sales** ✅ — manual deal log (Current/Completed/Cancelled), full CRUD,
    derived balance, wired into the dashboard's Sales Overview tiles. Built.
-7. **Blogs** — admin CRUD over existing `BlogPost`.
+7. **Blogs** ✅ — admin CRUD over existing `BlogPost`, auto-slug, image
+   upload. Built.
 8. **Roles/Permissions** — last, as agreed.
 
 ## Out of scope
