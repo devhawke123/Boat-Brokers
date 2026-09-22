@@ -70,7 +70,7 @@ export default function BoatsTable({ listings }: BoatsTableProps) {
   function getReviewHref(listing: ApiBoatListing) {
     return listing.status === 'PENDING'
       ? `/seller-portal/boats/new?step=5&listingId=${listing.id}`
-      : `/seller-portal/listings/${listing.id}`
+      : `/seller-portal/comments/${listing.id}`
   }
 
   return (

@@ -82,7 +82,7 @@ export default function MediaForm({
   function handlePhotoDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault()
     setIsPhotoDragOver(false)
-    const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith('image/'))
+    const files = Array.from(e.dataTransfer.files)
     if (files.length) onPhotosAdd(files)
   }
 
@@ -138,7 +138,7 @@ export default function MediaForm({
             <img src={anchorIcon} alt="" aria-hidden="true" className="h-5 w-6" />
           </div>
           <p className="text-[16px] font-semibold text-[#0e2136]">Drag and drop your photos here</p>
-          <p className="text-[13px] text-[#64748b]">Supports JPG, PNG, WEBP (Max 10MB per file)</p>
+          <p className="text-[13px] text-[#64748b]">Supports JPG, PNG, WEBP (Max 20MB per file)</p>
           <button
             type="button"
             onClick={() => photoInputRef.current?.click()}

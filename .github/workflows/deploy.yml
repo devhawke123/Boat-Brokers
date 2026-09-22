@@ -1,0 +1,114 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build frontend
+        working-directory: Frontend-Website
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build backend
+        working-directory: Backend
+        run: |
+          npm ci
+          npx prisma generate
+          npm run build
+
+      - name: Upload frontend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: Frontend-Website/dist
+
+      - name: Upload backend build
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          # node_modules is intentionally excluded — installed fresh on the
+          # server so native deps (bcrypt) compile against its own environment.
+          path: |
+            Backend/dist
+            Backend/package.json
+            Backend/package-lock.json
+            Backend/prisma
+            Backend/ecosystem.config.cjs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Download frontend build
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend-dist
+
+      - name: Download backend build
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: backend-dist
+
+      - name: Deploy frontend
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: frontend-dist/
+          remote_path: ${{ secrets.DEPLOY_PATH }}/Frontend-Website/dist
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT || 22 }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy backend
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          # --delete removes anything on the server that isn't in this build
+          # (e.g. a file removed from prisma/) — but .env and uploads/ live
+          # inside this same remote_path and must survive every deploy, so
+          # they're explicitly excluded from --delete's reach.
+          switches: -avzr --delete
+          exclude: '.env, uploads/, node_modules/'
+          path: backend-dist/
+          remote_path: ${{ secrets.DEPLOY_PATH }}/Backend
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT || 22 }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install backend deps, migrate DB, restart app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -euo pipefail
+            cd "${{ secrets.DEPLOY_PATH }}/Backend"
+            npm ci --omit=dev
+            npx prisma generate
+            npx prisma migrate deploy
+            command -v pm2 >/dev/null || npm install -g pm2
+            pm2 startOrRestart ecosystem.config.cjs
+            pm2 save

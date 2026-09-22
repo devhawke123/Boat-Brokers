@@ -4,6 +4,8 @@ build/
 
 .env
 .env.local
+deploy_key
+deploy_key.pub
 *.log
 .DS_Store
 coverage/

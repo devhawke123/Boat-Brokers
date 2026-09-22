@@ -8,6 +8,7 @@ import { boatsRouter } from "./routes/boats";
 import { blogsRouter } from "./routes/blogs";
 import { sellersRouter } from "./routes/sellers";
 import { boatListingsRouter } from "./routes/boatListings";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -15,8 +16,15 @@ const imagesRoot = path.resolve(__dirname, "..", "..", "boat brokers product ima
 const blogImagesRoot = path.resolve(__dirname, "..", "..", "bb-blogs");
 const uploadsRoot = path.resolve(__dirname, "..", "uploads");
 
+// Supports a comma-separated list (e.g. "https://example.com,https://www.example.com")
+// so production can allow multiple origins without changing single-origin behavior.
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
+app.use(cors({ origin: allowedOrigins.length > 1 ? allowedOrigins : allowedOrigins[0] }));
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -31,6 +39,9 @@ app.use("/api/listings", boatListingsRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 app.use("/uploads", express.static(uploadsRoot));
+
+app.use("/api", notFoundHandler);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}`);

@@ -25,6 +25,7 @@ import Comments from './seller-portal/pages/Comments/Comments'
 import CommentThread from './seller-portal/pages/CommentThread/CommentThread'
 import Profile from './seller-portal/pages/Profile/Profile'
 import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
+import SellerPortalNotFound from './seller-portal/pages/NotFound/NotFound'
 
 function App() {
   const { pathname } = window.location
@@ -132,6 +133,15 @@ function App() {
 
   if (pathname === '/seller-portal/help') {
     return <HelpSupport />
+  }
+
+  // Scoped fallback for the seller portal specifically (e.g. unbuilt signup /
+  // forgot-password links, bad listing ids) so a logged-in seller lands on a
+  // recognizable shell with a way back, instead of silently on the public
+  // marketing homepage. The public site's catch-all below is intentionally
+  // Home — see CLAUDE.md — this doesn't change that.
+  if (pathname.startsWith('/seller-portal/')) {
+    return <SellerPortalNotFound />
   }
 
   return <Home />

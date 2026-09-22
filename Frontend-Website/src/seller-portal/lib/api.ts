@@ -75,6 +75,26 @@ export type ApiBoatListing = {
 
 const API_BASE = '/api'
 
+const DEFAULT_TIMEOUT_MS = 30_000
+// Photo/brochure uploads can carry up to 20 files, so give them more room
+// before treating the request as hung.
+const UPLOAD_TIMEOUT_MS = 60_000
+
+async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error('Request timed out. Please check your connection and try again.')
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 async function readResponse<T>(res: Response, path: string): Promise<T> {
   if (!res.ok) {
     // Controllers respond with { error: string } (plain message) or
@@ -90,7 +110,7 @@ async function readResponse<T>(res: Response, path: string): Promise<T> {
 }
 
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, {
     ...init,
     headers: { 'Content-Type': 'application/json', ...init?.headers },
   })
@@ -100,7 +120,7 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
 // Bypasses the JSON Content-Type header so the browser can set its own
 // multipart boundary for file uploads (e.g. boat photos).
 async function apiPostFormData<T>(path: string, formData: FormData): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, { method: 'POST', body: formData })
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, { method: 'POST', body: formData }, UPLOAD_TIMEOUT_MS)
   return readResponse<T>(res, path)
 }
 
@@ -186,7 +206,7 @@ export function createBoat(formData: FormData): Promise<CreateBoatResponse> {
 // Partially updates an existing boat. Same FormData shape as createBoat but
 // all fields are optional. New photos are appended; existing ones are kept.
 export function updateBoat(boatId: number, formData: FormData): Promise<ApiBoat> {
-  const res = fetch(`${API_BASE}/boats/${boatId}`, { method: 'PATCH', body: formData })
+  const res = fetchWithTimeout(`${API_BASE}/boats/${boatId}`, { method: 'PATCH', body: formData }, UPLOAD_TIMEOUT_MS)
   return res.then((r) => readResponse<ApiBoat>(r, `/boats/${boatId}`))
 }
 

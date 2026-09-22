@@ -9,9 +9,18 @@ import path from "path";
 const boatPhotosDir = path.resolve(__dirname, "..", "..", "uploads", "boats");
 const boatBrochuresDir = path.resolve(__dirname, "..", "..", "uploads", "brochures");
 const sellerAvatarsDir = path.resolve(__dirname, "..", "..", "uploads", "sellers");
-fs.mkdirSync(boatPhotosDir, { recursive: true });
-fs.mkdirSync(boatBrochuresDir, { recursive: true });
-fs.mkdirSync(sellerAvatarsDir, { recursive: true });
+
+// Fail fast and loud at startup if these can't be created (e.g. a permissions
+// problem on a freshly deployed server) instead of every upload silently
+// 500ing later with no clue why.
+for (const dir of [boatPhotosDir, boatBrochuresDir, sellerAvatarsDir]) {
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+  } catch (err) {
+    console.error(`Failed to create upload directory "${dir}". Check filesystem permissions for the process user.`, err);
+    throw err;
+  }
+}
 
 const storage = multer.diskStorage({
   destination: (_req, file, cb) => cb(null, file.fieldname === "brochure" ? boatBrochuresDir : boatPhotosDir),

@@ -32,6 +32,12 @@ import { computeListingScore, isBasicInfoComplete, isKeyDetailsComplete, isMedia
 
 const TOTAL_STEPS = 5
 
+// Matches the backend's real limits in Backend/src/lib/upload.ts, so a
+// rejected photo is caught immediately with a specific message instead of
+// only failing (generically) at final submit.
+const MAX_PHOTO_SIZE_BYTES = 20 * 1024 * 1024
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
 // BasicInformationValues keys that don't already share their name with the
 // Boat schema column they persist to (see Backend/prisma/schema.prisma).
 const BASIC_INFO_TO_BOAT_FIELD: Partial<Record<keyof BasicInformationValues, string>> = {
@@ -71,6 +77,7 @@ export default function AddBoat() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [stepError, setStepError] = useState<string | null>(null)
+  const [mediaError, setMediaError] = useState<string | null>(null)
   const [isLoadingListing, setIsLoadingListing] = useState(isEditing)
   const [editBoatId, setEditBoatId] = useState<number | null>(null)
 
@@ -202,6 +209,7 @@ export default function AddBoat() {
 
     if (currentStep < TOTAL_STEPS) {
       setStepError(null)
+      setMediaError(null)
       setCurrentStep((step) => Math.min(step + 1, TOTAL_STEPS))
       return
     }
@@ -293,11 +301,27 @@ export default function AddBoat() {
 
   function handleBack() {
     setStepError(null)
+    setMediaError(null)
     setCurrentStep((step) => Math.max(step - 1, 1))
   }
 
   function handlePhotosAdd(files: File[]) {
-    const newPhotos = files.map((file) => ({
+    const errors: string[] = []
+    const validFiles = files.filter((file) => {
+      if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+        errors.push(`${file.name}: unsupported file type (use JPG, PNG or WEBP).`)
+        return false
+      }
+      if (file.size > MAX_PHOTO_SIZE_BYTES) {
+        errors.push(`${file.name}: file is too large (max 20MB).`)
+        return false
+      }
+      return true
+    })
+    setMediaError(errors.length ? errors.join(' ') : null)
+    if (!validFiles.length) return
+
+    const newPhotos = validFiles.map((file) => ({
       id: crypto.randomUUID(),
       url: URL.createObjectURL(file),
       name: file.name,
@@ -411,6 +435,7 @@ export default function AddBoat() {
                 onVideoUrlChange={handleVideoUrlChange}
                 onBrochureChange={handleBrochureChange}
                 onVirtualTourUrlChange={handleVirtualTourUrlChange}
+                photosError={mediaError}
               />
             ) : currentStep === 4 ? (
               <KeyDetailsForm values={keyDetailsValues} onChange={handleKeyDetailsChange} />
@@ -423,6 +448,7 @@ export default function AddBoat() {
                 customFields={customFields}
                 onEditStep={(step) => {
                   setStepError(null)
+                  setMediaError(null)
                   setCurrentStep(step)
                 }}
               />

@@ -6,9 +6,10 @@ type BlogDetailRelatedProps = {
 }
 
 export default function BlogDetailRelated({ currentSlug }: BlogDetailRelatedProps) {
-  const { posts } = useBlogPosts()
+  const { posts, error } = useBlogPosts()
   const relatedPosts = posts.filter((post) => post.slug !== currentSlug).slice(0, 3)
 
+  if (error) console.error('Failed to load related blog posts:', error)
   if (relatedPosts.length === 0) return null
 
   return (
