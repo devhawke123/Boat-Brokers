@@ -87,8 +87,7 @@ jobs:
           # (e.g. a file removed from prisma/) — but .env and uploads/ live
           # inside this same remote_path and must survive every deploy, so
           # they're explicitly excluded from --delete's reach.
-          switches: -avzr --delete
-          exclude: '.env, uploads/, node_modules/'
+          switches: -avzr --delete --exclude=.env --exclude=uploads/ --exclude=node_modules/
           path: backend-dist/
           remote_path: ${{ secrets.DEPLOY_PATH }}/Backend
           remote_host: ${{ secrets.SSH_HOST }}
