@@ -47,15 +47,6 @@ export function SalesIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
-export function MarketingIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path d="M2.5 8V13H5.83333L11.6667 17.5V3.5L5.83333 8H2.5Z" stroke="currentColor" strokeWidth="1.6667" strokeLinejoin="round" />
-      <path d="M15.4167 7.5C16.25 8.28333 16.25 11.7167 15.4167 12.5" stroke="currentColor" strokeWidth="1.6667" strokeLinecap="round" />
-    </svg>
-  )
-}
-
 export function BlogsIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

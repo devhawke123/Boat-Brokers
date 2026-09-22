@@ -8,7 +8,6 @@ import {
   DashboardIcon,
   LeadsIcon,
   LogoutIcon,
-  MarketingIcon,
   SalesIcon,
   VendorsIcon,
 } from './icons'
@@ -47,7 +46,6 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       label: 'Business',
       items: [
         { label: 'Sales', href: '/admin-portal/sales', icon: SalesIcon },
-        { label: 'Marketing', href: '/admin-portal/marketing', icon: MarketingIcon },
         { label: 'Blogs', href: '/admin-portal/blogs', icon: BlogsIcon },
         { label: 'Availability', href: '/admin-portal/availability', icon: AvailabilityIcon },
       ],

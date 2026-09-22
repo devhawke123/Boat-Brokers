@@ -12,8 +12,6 @@ export type DashboardStats = {
   peopleMetrics: {
     totalVendors: number
     totalBuyers: number
-    vendorsWon: number
-    buyersWon: number
   }
   salesOverview: {
     listings: number

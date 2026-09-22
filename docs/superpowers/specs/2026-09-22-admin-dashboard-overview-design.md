@@ -18,8 +18,8 @@ spec'd module by module, immediately before that module is built.
   rebuilt from scratch here.
 - `Backend/prisma/schema.prisma` has: `Boat`, `BoatImage`, `BoatCustomField`,
   `BlogPost`, `Seller`, `BoatListing` (+ `ListingStatus` enum: PENDING/APPROVED/
-  REJECTED), `ListingComment`. No `Admin`, `Lead`, `Buyer`, `Sale`, `MarketingEntry`,
-  `AvailabilitySlot`, or `Booking` models exist yet.
+  REJECTED), `ListingComment`, and now `Admin` (added in Module 1). `Lead`, `Buyer`,
+  `Sale`, `AvailabilitySlot`, and `Booking` models don't exist yet.
 - Seller portal (`Frontend-Website/src/seller-portal`) already has: Add Boat, My
   Boats, Listing Review, Comment Thread / Comments, Profile, Help & Support, Login.
   The listing approval workflow (`boatListing.controller.ts`) already supports status
@@ -36,9 +36,10 @@ The reference admin dashboard screenshots included Dashboard, Leads, Boat Vendor
 Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussion:
 
 - **Groups, Reports, Buyer Email are out of scope** — not needed in the new system.
-- **Sales and Marketing are simple manual logs** — admin manually enters rows
-  (no automated linkage to Leads/Bookings/Sales — e.g. creating a Sale does **not**
-  automatically flip a Buyer's status; admin sets everything by hand).
+- **Marketing was dropped from scope entirely** — not building it.
+- **Sales is a simple manual log** — admin manually enters rows (no automated
+  linkage to Leads/Bookings — e.g. creating a Sale does **not** automatically flip
+  a Buyer's status; admin sets everything by hand).
 - New asks added on top: **Blog management**, **Availability & Bookings**,
   **Roles/Permissions** (explicitly last).
 - **Add Boat (admin) was dropped from scope entirely** — admin will not get a
@@ -63,7 +64,6 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
 - **Sale** — new model, manual entry only. Admin picks vendor + buyer + boat from
   dropdowns, enters price/deposit/balance/commission. No automated side effects on
   Buyer/Lead status.
-- **MarketingEntry** — new model, manual log: vendor, type, date, name, cost.
 - **AvailabilitySlot / Booking** — new models. Admin availability is **global and
   single-track**: a 2-hour slot (e.g. 12–2pm) can only ever be attached to one boat
   at a time — booking it for Boat X makes it unavailable for Boat Y too, because it's
@@ -79,9 +79,9 @@ Each module below gets its own brainstorm → spec → plan → implementation c
 we reach it. This order was chosen as: foundation first, then roughly the order
 they'll be used day-to-day.
 
-1. **Admin Auth + Dashboard shell** — login, layout/nav, the metrics dashboard
-   (People Metrics, Sales Overview, date-range filter). Foundation for everything
-   else.
+1. **Admin Auth + Dashboard shell** ✅ — login, layout/nav, the metrics dashboard
+   (People Metrics: Total Vendors/Total Buyers; Sales Overview: Listings/Under
+   Offer/Total Sales/Completed Sales). Foundation for everything else. Built.
 2. **Boat Vendors** — Seller account list/detail, their boats, listing
    approve/reject, comment threads, editable vendor status.
 3. **Availability & Bookings** — admin slot calendar, public booking flow (replacing
@@ -91,13 +91,15 @@ they'll be used day-to-day.
    status/details.
 5. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).
 6. **Sales** — manual deal log.
-7. **Marketing** — manual campaign log.
-8. **Blogs** — admin CRUD over existing `BlogPost`.
-9. **Roles/Permissions** — last, as agreed.
+7. **Blogs** — admin CRUD over existing `BlogPost`.
+8. **Roles/Permissions** — last, as agreed.
 
 ## Out of scope
 
 - Groups, Reports, Buyer Email (dropped from the reference system).
+- Marketing (dropped; no manual campaign log module).
 - Add Boat (admin) — dropped; boat creation stays seller-submitted only.
 - Any automation linking Leads → Buyers/Vendors, Bookings → Buyer status, or
   Sales → Buyer status. Everything is admin-driven, by hand.
+- "Vendors Won" / "Buyers Won" dashboard tiles and the dashboard date-range
+  filter — dropped from Module 1 after review; not planned elsewhere either.

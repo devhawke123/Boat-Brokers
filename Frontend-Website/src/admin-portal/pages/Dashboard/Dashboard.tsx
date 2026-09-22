@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useDashboardStats } from '../../data/useDashboardStats'
@@ -9,8 +8,6 @@ import SalesOverview from './sections/SalesOverview/SalesOverview'
 export default function Dashboard() {
   const { admin, checkedSession } = useAdminSession()
   const { data, loading, error } = useDashboardStats()
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
 
   // Redirecting — render nothing rather than flashing dashboard content.
   if (!checkedSession) return null
@@ -18,13 +15,7 @@ export default function Dashboard() {
   return (
     <AdminShell mainClassName="bg-frost">
       <div className="flex flex-col gap-8 p-4 sm:p-6 lg:p-8">
-        <DashboardHeader
-          name={admin?.name}
-          startDate={startDate}
-          endDate={endDate}
-          onStartDateChange={setStartDate}
-          onEndDateChange={setEndDate}
-        />
+        <DashboardHeader name={admin?.name} />
 
         {error ? (
           <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
@@ -41,8 +32,6 @@ export default function Dashboard() {
             <PeopleMetrics
               totalVendors={data.peopleMetrics.totalVendors}
               totalBuyers={data.peopleMetrics.totalBuyers}
-              vendorsWon={data.peopleMetrics.vendorsWon}
-              buyersWon={data.peopleMetrics.buyersWon}
             />
             <SalesOverview
               listings={data.salesOverview.listings}
