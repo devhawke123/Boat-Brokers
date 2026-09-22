@@ -12,6 +12,7 @@ import { adminRouter } from "./routes/admin";
 import { dashboardStatsRouter } from "./routes/dashboardStats";
 import { availabilityRouter } from "./routes/availability";
 import { bookingsRouter } from "./routes/bookings";
+import { buyersRouter } from "./routes/buyers";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -44,6 +45,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api/admin", dashboardStatsRouter);
 app.use("/api/availability-slots", availabilityRouter);
 app.use("/api/bookings", bookingsRouter);
+app.use("/api/buyers", buyersRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 app.use("/uploads", express.static(uploadsRoot));

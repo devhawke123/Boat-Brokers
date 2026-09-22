@@ -6,11 +6,29 @@ import { prisma } from "../lib/prisma";
 // connection instead of racing a separate one.
 type Db = typeof prisma | Prisma.TransactionClient;
 
+const buyerBookingsInclude = {
+  bookings: {
+    orderBy: { createdAt: "desc" as const },
+    include: { slot: true, boat: { select: { id: true, name: true, imageUrl: true } } },
+  },
+};
+
+export function findAllBuyers() {
+  return prisma.buyer.findMany({ orderBy: { createdAt: "desc" }, include: buyerBookingsInclude });
+}
+
+export function findBuyerById(id: number) {
+  return prisma.buyer.findUnique({ where: { id }, include: buyerBookingsInclude });
+}
+
 export function findBuyerByEmail(email: string, db: Db = prisma) {
   return db.buyer.findFirst({ where: { email } });
 }
 
-export function createBuyer(data: { firstName: string; surname: string; email: string; phone?: string }, db: Db = prisma) {
+export function createBuyer(
+  data: { firstName: string; surname: string; email: string; phone?: string; source?: string },
+  db: Db = prisma,
+) {
   return db.buyer.create({ data });
 }
 
@@ -25,6 +43,17 @@ export async function findOrCreateBuyer(
   return createBuyer(data, db);
 }
 
+export function updateBuyer(
+  id: number,
+  data: Partial<{ firstName: string; surname: string; email: string; phone: string | null }>,
+) {
+  return prisma.buyer.update({ where: { id }, data });
+}
+
 export function updateBuyerStatus(id: number, status: "NEW" | "CONTACTED" | "VIEWING_BOOKED" | "WON" | "LOST") {
   return prisma.buyer.update({ where: { id }, data: { status } });
+}
+
+export function deleteBuyer(id: number) {
+  return prisma.buyer.delete({ where: { id } });
 }

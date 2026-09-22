@@ -72,6 +72,10 @@ function apiPost<T>(path: string, body: unknown): Promise<T> {
   return apiRequest<T>(path, { method: 'POST', body: JSON.stringify(body) })
 }
 
+function apiPut<T>(path: string, body: unknown): Promise<T> {
+  return apiRequest<T>(path, { method: 'PUT', body: JSON.stringify(body) })
+}
+
 function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return apiRequest<T>(path, { method: 'PATCH', body: JSON.stringify(body) })
 }
@@ -137,4 +141,62 @@ export function fetchBookings(): Promise<ApiAdminBooking[]> {
 
 export function updateBookingStatus(id: number, status: 'APPROVED' | 'REJECTED'): Promise<ApiAdminBooking> {
   return apiPatch<ApiAdminBooking>(`/bookings/${id}/status`, { status })
+}
+
+// Buyers
+
+export type BuyerStatus = 'NEW' | 'CONTACTED' | 'VIEWING_BOOKED' | 'WON' | 'LOST'
+
+export type ApiBuyerBooking = {
+  id: number
+  status: BookingStatus
+  createdAt: string
+  slot: { id: number; startsAt: string; endsAt: string }
+  boat: { id: number; name: string; imageUrl: string | null }
+}
+
+export type ApiBuyer = {
+  id: number
+  buyerId: string
+  firstName: string
+  surname: string
+  email: string
+  phone: string | null
+  source: string
+  status: BuyerStatus
+  createdAt: string
+  bookings: ApiBuyerBooking[]
+}
+
+export function fetchBuyers(): Promise<ApiBuyer[]> {
+  return apiGet<ApiBuyer[]>('/buyers')
+}
+
+export function fetchBuyer(id: number): Promise<ApiBuyer> {
+  return apiGet<ApiBuyer>(`/buyers/${id}`)
+}
+
+export type CreateBuyerPayload = {
+  firstName: string
+  surname: string
+  email: string
+  phone?: string
+}
+
+export function createBuyer(payload: CreateBuyerPayload): Promise<ApiBuyer> {
+  return apiPost<ApiBuyer>('/buyers', payload)
+}
+
+export type UpdateBuyerPayload = Partial<CreateBuyerPayload>
+
+export function updateBuyer(id: number, payload: UpdateBuyerPayload): Promise<ApiBuyer> {
+  return apiPut<ApiBuyer>(`/buyers/${id}`, payload)
+}
+
+export function deleteBuyer(id: number): Promise<void> {
+  return apiDelete(`/buyers/${id}`)
+}
+
+export function updateBuyerStatus(id: number, status: BuyerStatus): Promise<ApiBuyer> {
+  return apiPatch<ApiBuyer>(`/buyers/${id}/status`, { status })
 }

@@ -33,6 +33,9 @@ import VendorForm from './admin-portal/pages/VendorForm/VendorForm'
 import VendorDetail from './admin-portal/pages/VendorDetail/VendorDetail'
 import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
 import Availability from './admin-portal/pages/Availability/Availability'
+import Buyers from './admin-portal/pages/Buyers/Buyers'
+import BuyerForm from './admin-portal/pages/BuyerForm/BuyerForm'
+import BuyerDetail from './admin-portal/pages/BuyerDetail/BuyerDetail'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
@@ -185,6 +188,24 @@ function App() {
 
   if (pathname === '/admin-portal/availability') {
     return <Availability />
+  }
+
+  if (pathname === '/admin-portal/buyers') {
+    return <Buyers />
+  }
+
+  if (pathname === '/admin-portal/buyers/new') {
+    return <BuyerForm />
+  }
+
+  if (pathname.startsWith('/admin-portal/buyers/') && pathname.endsWith('/edit')) {
+    const buyerId = Number(pathname.replace('/admin-portal/buyers/', '').replace('/edit', ''))
+    if (Number.isInteger(buyerId)) return <BuyerForm buyerId={buyerId} />
+  }
+
+  if (pathname.startsWith('/admin-portal/buyers/')) {
+    const buyerId = Number(pathname.replace('/admin-portal/buyers/', ''))
+    if (Number.isInteger(buyerId)) return <BuyerDetail buyerId={buyerId} />
   }
 
   // Scoped fallback for the admin portal, same reasoning as the seller

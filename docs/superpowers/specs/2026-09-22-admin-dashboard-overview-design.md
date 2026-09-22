@@ -57,11 +57,14 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
 - **Leads** — vendor-side inquiry pipeline, tracked **separately** from `Seller`
   accounts (no automatic conversion/linking — admin manages both independently).
   Status vocabulary: New / Contacted / Listed / Lost.
-- **Boat Buyers** — new `Buyer` model. Created only two ways: (1) immediately when
-  someone submits a viewing-booking request on the public site (before admin
-  approves the booking itself), or (2) admin manually creating one. Status
-  vocabulary: New / Contacted / Viewing Booked / Won (purchased a boat) / Lost.
-  "Won" is admin-set by hand, same as everything else — not automated off Sales.
+- **Boat Buyers** ✅ — `Buyer` model (added in Module 3). Created only two ways:
+  (1) immediately when someone submits a viewing-booking request on the public
+  site, via find-or-create by email (before admin approves the booking itself),
+  or (2) admin manually adding one (`source: "Manual"` vs `"Booking"`, 409 on
+  duplicate email). Full CRUD (create/edit/delete) plus status editing, and each
+  buyer's detail page shows their viewing-request history. Status vocabulary:
+  New / Contacted / Viewing Booked / Won (purchased a boat) / Lost. "Won" is
+  admin-set by hand, same as everything else — not automated off Sales. Built.
 - **Sale** — new model, manual entry only. Admin picks vendor + buyer + boat from
   dropdowns, enters price/deposit/balance/commission. No automated side effects on
   Buyer/Lead status.
@@ -96,8 +99,8 @@ they'll be used day-to-day.
    a "Book a Viewing" section on each boat's public detail page (replacing the
    Cal.com embed, which has been removed along with its npm dependency),
    approve/reject, Resend email notification on approval. Built.
-4. **Boat Buyers** — buyer list (fed by bookings + manual add), editable
-   status/details.
+4. **Boat Buyers** ✅ — buyer list/detail (fed by bookings + manual add), full
+   CRUD, editable status, per-buyer viewing-request history. Built.
 5. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).
 6. **Sales** — manual deal log.
 7. **Blogs** — admin CRUD over existing `BlogPost`.
