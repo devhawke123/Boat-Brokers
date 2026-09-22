@@ -76,6 +76,10 @@ function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return apiRequest<T>(path, { method: 'PATCH', body: JSON.stringify(body) })
 }
 
+function apiDelete(path: string): Promise<void> {
+  return apiRequest<void>(path, { method: 'DELETE' })
+}
+
 // Admin
 
 export function loginAdmin(email: string, password: string): Promise<ApiAdmin> {
@@ -92,4 +96,45 @@ export function fetchDashboardStats(): Promise<DashboardStats> {
 
 export function updateSellerStatus(id: number, status: VendorStatus): Promise<ApiSeller> {
   return apiPatch<ApiSeller>(`/sellers/${id}/status`, { status })
+}
+
+// Availability & Bookings (the slot list itself — id/startsAt/endsAt/available
+// — is portal-agnostic and reused directly from the public site's lib/api.ts;
+// this file only adds the admin-only mutations and the PII-carrying booking
+// view, which the public endpoint deliberately never returns.)
+
+export function createAvailabilitySlot(startsAt: string): Promise<{ id: number; startsAt: string; endsAt: string; available: boolean }> {
+  return apiPost('/availability-slots', { startsAt })
+}
+
+export function deleteAvailabilitySlot(id: number): Promise<void> {
+  return apiDelete(`/availability-slots/${id}`)
+}
+
+export type BookingStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
+
+export type ApiAdminBooking = {
+  id: number
+  status: BookingStatus
+  notes: string | null
+  createdAt: string
+  slot: { id: number; startsAt: string; endsAt: string }
+  boat: { id: number; name: string; imageUrl: string | null }
+  buyer: {
+    id: number
+    buyerId: string
+    firstName: string
+    surname: string
+    email: string
+    phone: string | null
+    status: string
+  }
+}
+
+export function fetchBookings(): Promise<ApiAdminBooking[]> {
+  return apiGet<ApiAdminBooking[]>('/bookings')
+}
+
+export function updateBookingStatus(id: number, status: 'APPROVED' | 'REJECTED'): Promise<ApiAdminBooking> {
+  return apiPatch<ApiAdminBooking>(`/bookings/${id}/status`, { status })
 }

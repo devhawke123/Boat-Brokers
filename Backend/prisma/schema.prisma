@@ -28,6 +28,7 @@ model Boat {
   images   BoatImage[]
   listings BoatListing[]
   customFields BoatCustomField[]
+  bookings Booking[]
 
   // History
   cinNumber              String?
@@ -276,4 +277,66 @@ model ListingComment {
 
   @@index([listingId])
   @@index([parentId])
+}
+
+// Admin's bookable time — a fixed 2-hour block. Global, not per-boat: since
+// it's the same admin's time either way, a slot can only ever back one
+// active (PENDING/APPROVED) booking regardless of which boat it's for.
+model AvailabilitySlot {
+  id        Int       @id @default(autoincrement())
+  startsAt  DateTime
+  endsAt    DateTime
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+
+  @@index([startsAt])
+}
+
+enum BuyerStatus {
+  NEW
+  CONTACTED
+  VIEWING_BOOKED
+  WON
+  LOST
+}
+
+// Created the moment someone submits a viewing-booking request — see
+// Booking below. No portal/login for buyers; this is just a contact record.
+model Buyer {
+  id        Int         @id @default(autoincrement())
+  buyerId   String      @unique @default(cuid())
+  firstName String
+  surname   String
+  email     String
+  phone     String?
+  // How this buyer record was created (e.g. "Booking", "Manual").
+  source    String      @default("Booking")
+  status    BuyerStatus @default(NEW)
+  bookings  Booking[]
+  createdAt DateTime    @default(now())
+
+  @@index([email])
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Booking {
+  id        Int              @id @default(autoincrement())
+  slotId    Int
+  slot      AvailabilitySlot @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  boatId    Int
+  boat      Boat             @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  buyerId   Int
+  buyer     Buyer            @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  status    BookingStatus    @default(PENDING)
+  notes     String?          @db.Text
+  createdAt DateTime         @default(now())
+
+  @@index([slotId])
+  @@index([boatId])
+  @@index([buyerId])
 }

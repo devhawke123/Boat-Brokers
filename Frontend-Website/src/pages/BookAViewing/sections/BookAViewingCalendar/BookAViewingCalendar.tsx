@@ -1,23 +1,8 @@
-import { useEffect } from 'react'
-import Cal, { getCalApi } from '@calcom/embed-react'
 import mailIcon from '../../../../assets/icons/mail-outline.svg'
 import callIcon from '../../../../assets/icons/call.svg'
-
-const CAL_LINK = import.meta.env.VITE_CAL_COM_LINK ?? 'your-team/consultation'
+import Button from '../../../../components/Button/Button'
 
 export default function BookAViewingCalendar() {
-  useEffect(() => {
-    ;(async () => {
-      const cal = await getCalApi()
-      cal('ui', {
-        theme: 'light',
-        styles: { branding: { brandColor: '#073040' } },
-        hideEventTypeDetails: false,
-        layout: 'month_view',
-      })
-    })()
-  }, [])
-
   return (
     <section className="flex flex-col items-center gap-12 border-t border-[#639dbf] px-4 py-16 sm:px-20 sm:py-[7.5rem]">
       <div className="flex flex-col items-center gap-4 text-center">
@@ -29,19 +14,13 @@ export default function BookAViewingCalendar() {
           Book a Viewing
         </h2>
         <p className="max-w-3xl text-base leading-[26px] text-[#6e6e6e]">
-          Whether you&rsquo;re looking for your new dream canal boat, are looking to sell on, or
-          are just seeking some advice, our expert team can help. You can get in touch with us by
-          simply using the calendar.
+          Viewings are booked from the boat you&rsquo;re interested in, so we always know exactly
+          which boat you&rsquo;d like to see. Browse our boats for sale and open the &ldquo;Book a
+          Viewing&rdquo; section on the one you like.
         </p>
       </div>
 
-      <div className="w-full max-w-[50rem] overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
-        <Cal
-          calLink={CAL_LINK}
-          style={{ width: '100%', height: '44rem', overflow: 'auto' }}
-          config={{ layout: 'month_view' }}
-        />
-      </div>
+      <Button variant="dark" label="Browse Boats for Sale" href="/boats-for-sale" />
 
       <div className="flex flex-col items-center gap-3 text-center">
         <h3 className="font-display text-[2rem] leading-[1.3] tracking-[-2px] text-ink capitalize sm:text-[2.125rem]">

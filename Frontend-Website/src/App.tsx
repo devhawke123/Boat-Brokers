@@ -32,6 +32,7 @@ import Vendors from './admin-portal/pages/Vendors/Vendors'
 import VendorForm from './admin-portal/pages/VendorForm/VendorForm'
 import VendorDetail from './admin-portal/pages/VendorDetail/VendorDetail'
 import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
+import Availability from './admin-portal/pages/Availability/Availability'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
@@ -180,6 +181,10 @@ function App() {
   if (pathname.startsWith('/admin-portal/vendors/')) {
     const vendorId = Number(pathname.replace('/admin-portal/vendors/', ''))
     if (Number.isInteger(vendorId)) return <VendorDetail vendorId={vendorId} />
+  }
+
+  if (pathname === '/admin-portal/availability') {
+    return <Availability />
   }
 
   // Scoped fallback for the admin portal, same reasoning as the seller

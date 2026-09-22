@@ -4,6 +4,7 @@ import BoatSubNav from './sections/BoatSubNav/BoatSubNav'
 import BoatGallery from './sections/BoatGallery/BoatGallery'
 import BoatDetailContent from './sections/BoatDetailContent/BoatDetailContent'
 import BoatDetailTabs from './sections/BoatDetailTabs/BoatDetailTabs'
+import BoatBookViewing from './sections/BoatBookViewing/BoatBookViewing'
 import Button from '../../components/Button/Button'
 import Navbar from '../../components/Navbar/Navbar'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -66,6 +67,7 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
         <BoatGallery boat={boat} />
         <BoatDetailContent boat={boat} />
         <BoatDetailTabs boat={boat} />
+        <BoatBookViewing boatId={boat.id} boatName={boat.name} />
       </section>
 
       <section className="flex flex-col items-center gap-6 border-t border-[#e5e7eb] px-6 py-4 text-center">

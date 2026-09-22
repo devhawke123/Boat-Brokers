@@ -18,17 +18,18 @@ spec'd module by module, immediately before that module is built.
   rebuilt from scratch here.
 - `Backend/prisma/schema.prisma` has: `Boat`, `BoatImage`, `BoatCustomField`,
   `BlogPost`, `Seller`, `BoatListing` (+ `ListingStatus` enum: PENDING/APPROVED/
-  REJECTED), `ListingComment`, and now `Admin` (added in Module 1). `Lead`, `Buyer`,
-  `Sale`, `AvailabilitySlot`, and `Booking` models don't exist yet.
+  REJECTED), `ListingComment`, `Admin` (Module 1), and `AvailabilitySlot` / `Buyer`
+  / `Booking` (Module 3). `Lead` and `Sale` don't exist yet.
 - Seller portal (`Frontend-Website/src/seller-portal`) already has: Add Boat, My
   Boats, Listing Review, Comment Thread / Comments, Profile, Help & Support, Login.
   The listing approval workflow (`boatListing.controller.ts`) already supports status
   updates and threaded comments (`fromSeller` flag) end-to-end on the backend — it
   just has no admin-facing UI yet.
-- Public site's "Book a Viewing" page currently embeds a third-party **Cal.com**
+- Public site's "Book a Viewing" page used to embed a third-party **Cal.com**
   widget — a generic consultation calendar, not tied to a specific boat, and not
-  connected to our backend/database. This will be **removed and replaced** with a
-  custom-built, boat-specific availability/booking component (see Module 3).
+  connected to our backend/database. It's been **removed and replaced** (Module 3)
+  with a custom-built, boat-specific availability/booking component on each boat's
+  own page; the `/book-a-viewing` page now just points people to a boat's page.
 
 ## Reference screenshots vs. final scope
 
@@ -64,13 +65,19 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
 - **Sale** — new model, manual entry only. Admin picks vendor + buyer + boat from
   dropdowns, enters price/deposit/balance/commission. No automated side effects on
   Buyer/Lead status.
-- **AvailabilitySlot / Booking** — new models. Admin availability is **global and
+- **AvailabilitySlot / Booking** ✅ — new models. Admin availability is **global and
   single-track**: a 2-hour slot (e.g. 12–2pm) can only ever be attached to one boat
   at a time — booking it for Boat X makes it unavailable for Boat Y too, because it's
-  the same admin's time. Flow: buyer picks an open slot + a boat on the public site →
-  creates a `Booking` (pending) + a `Buyer` record immediately → admin is notified →
-  admin approves/rejects → on approval: slot is marked taken, buyer gets an email,
-  booking shows on the admin dashboard/calendar.
+  the same admin's time. Booking is always initiated from the boat's own public page
+  (never a generic form) so the boat context is never ambiguous. Flow: buyer picks an
+  open slot on that boat's page → creates a `Booking` (PENDING) + finds-or-creates a
+  `Buyer` by email → admin sees it on the Availability page → admin approves/rejects
+  → on approval: buyer's status flips to `VIEWING_BOOKED`, a confirmation email is
+  sent (Resend), and the slot is no longer offered to anyone else. Rejecting frees the
+  slot back up. The public slot-list endpoint deliberately returns no buyer/boat PII
+  (just id/time/available) since it's reachable from any boat page; the full booking
+  record (with buyer contact info) is only ever returned from the admin-only
+  `GET /api/bookings`.
 - **BlogPost** — already exists, just needs an admin CRUD UI. No schema change.
 
 ## Module build order
@@ -85,9 +92,10 @@ they'll be used day-to-day.
 2. **Boat Vendors** ✅ — Seller account list/detail, their boats, listing
    approve/reject, comment threads, editable vendor status, full account
    CRUD (create/edit/delete). Built.
-3. **Availability & Bookings** — admin slot calendar, public booking flow (replacing
-   the Cal.com embed with a custom component), approve/reject, email notification,
-   dashboard visibility.
+3. **Availability & Bookings** ✅ — admin slot calendar (`/admin-portal/availability`),
+   a "Book a Viewing" section on each boat's public detail page (replacing the
+   Cal.com embed, which has been removed along with its npm dependency),
+   approve/reject, Resend email notification on approval. Built.
 4. **Boat Buyers** — buyer list (fed by bookings + manual add), editable
    status/details.
 5. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).

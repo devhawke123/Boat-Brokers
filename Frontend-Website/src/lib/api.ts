@@ -158,8 +158,7 @@ async function fetchWithTimeout(input: string, init?: RequestInit, timeoutMs = R
   }
 }
 
-async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetchWithTimeout(`${API_BASE}${path}`)
+async function readResponse<T>(res: Response, path: string): Promise<T> {
   if (!res.ok) {
     // Controllers respond with { error: string } (plain message) or
     // { error: { fieldErrors, formErrors } } (zod .flatten()) — surface the
@@ -170,6 +169,20 @@ async function apiGet<T>(path: string): Promise<T> {
     throw new Error(message ?? `Request to ${path} failed with ${res.status}`)
   }
   return res.json() as Promise<T>
+}
+
+async function apiGet<T>(path: string): Promise<T> {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`)
+  return readResponse<T>(res, path)
+}
+
+async function apiPost<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  return readResponse<T>(res, path)
 }
 
 export function fetchBoats(): Promise<ApiBoat[]> {
@@ -208,4 +221,42 @@ export function fetchBlogPosts(): Promise<ApiBlogPostSummary[]> {
 
 export function fetchBlogPost(slug: string): Promise<ApiBlogPost> {
   return apiGet<ApiBlogPost>(`/blogs/${slug}`)
+}
+
+// Availability & Bookings
+
+// No buyer/boat detail — the backend deliberately keeps this endpoint
+// PII-free since it's reachable from any boat's public page.
+export type ApiAvailabilitySlot = {
+  id: number
+  startsAt: string
+  endsAt: string
+  available: boolean
+}
+
+export function fetchAvailabilitySlots(): Promise<ApiAvailabilitySlot[]> {
+  return apiGet<ApiAvailabilitySlot[]>('/availability-slots')
+}
+
+export type CreateBookingPayload = {
+  boatId: number
+  slotId: number
+  firstName: string
+  surname: string
+  email: string
+  phone?: string
+  notes?: string
+}
+
+export type ApiBooking = {
+  id: number
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  notes: string | null
+  createdAt: string
+  slot: { id: number; startsAt: string; endsAt: string }
+  boat: { id: number; name: string; imageUrl: string | null }
+}
+
+export function createBooking(payload: CreateBookingPayload): Promise<ApiBooking> {
+  return apiPost<ApiBooking>('/bookings', payload)
 }
