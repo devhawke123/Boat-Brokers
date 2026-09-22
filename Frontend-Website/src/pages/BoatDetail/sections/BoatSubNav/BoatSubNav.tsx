@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import type { BoatListing } from '../../../../data/boats'
-import { IconAnchor, IconChevronLeft, IconHeart, IconShare } from '../../icons'
+import { IconAnchor, IconChevronLeft, IconShare } from '../../icons'
 
 type BoatSubNavProps = {
   boat: BoatListing
 }
 
 export default function BoatSubNav({ boat }: BoatSubNavProps) {
-  const [isSaved, setIsSaved] = useState(false)
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle')
 
   const handleShare = async () => {

@@ -12,7 +12,9 @@ export const REQUIRED_BASIC_INFO_FIELDS: (keyof BasicInformationValues)[] = [
   'lastService',
 ]
 
-export const REQUIRED_KEY_DETAILS_FIELDS: (keyof KeyDetailsValues)[] = ['fullName', 'email', 'phone', 'country']
+type KeyDetailsStringField = 'fullName' | 'email' | 'phone' | 'country' | 'sellTimeline' | 'contactTime' | 'listerType' | 'additionalNotes'
+
+export const REQUIRED_KEY_DETAILS_FIELDS: KeyDetailsStringField[] = ['fullName', 'email', 'phone', 'country']
 
 export const PHOTOS_MIN = 5
 
@@ -29,7 +31,7 @@ const OPTIONAL_BASIC_INFO_FIELDS: (keyof BasicInformationValues)[] = [
   'overview',
 ]
 
-const OPTIONAL_KEY_DETAILS_FIELDS: (keyof KeyDetailsValues)[] = [
+const OPTIONAL_KEY_DETAILS_FIELDS: KeyDetailsStringField[] = [
   'sellTimeline',
   'contactTime',
   'listerType',

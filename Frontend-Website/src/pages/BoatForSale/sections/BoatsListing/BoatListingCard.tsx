@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import { boatStatusStyles, type BoatListing } from '../../../../data/boats'
-import { IconBed, IconCalendar, IconFuel, IconHeart, IconMapPin, IconRuler } from './icons'
+import { IconBed, IconCalendar, IconFuel, IconMapPin, IconRuler } from './icons'
 
 type BoatListingCardProps = {
   boat: BoatListing
 }
 
 export default function BoatListingCard({ boat }: BoatListingCardProps) {
-  const [isFavorited, setIsFavorited] = useState(false)
   const status = boat.status ? boatStatusStyles[boat.status] : null
 
   return (
