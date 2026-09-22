@@ -41,7 +41,7 @@ export default function BirminghamWhyChoose() {
   return (
     <section className="flex flex-col items-center gap-12 rounded-2xl bg-navy-darkest px-6 py-14 sm:gap-16 sm:px-16 sm:py-20">
       <div className="flex w-full max-w-[80rem] flex-col gap-6">
-        <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
+        <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-[linear-gradient(45deg,rgba(108,214,255,0.30)_0%,rgba(108,214,255,0.18)_50%,rgba(108,214,255,0.10)_100%)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
           <span className="size-2 rounded-full bg-blue-light" />
           Built on Commitment
         </span>
@@ -86,7 +86,7 @@ export default function BirminghamWhyChoose() {
 
       <a
         href="/boats-for-sale"
-        className="inline-flex items-center gap-1.5 rounded-xl bg-white px-6 py-3 text-base font-medium tracking-[-0.32px] text-[#073040] shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
+        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-6 py-3 text-base font-medium tracking-[-0.32px] text-[#073040] shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
       >
         Explore All Boats
         <img src={arrowRight} alt="" aria-hidden="true" className="size-[18px]" />

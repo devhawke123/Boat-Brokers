@@ -69,7 +69,9 @@
     "bedroomBed": "N/A",
     "overview": "48ft Traditional Narrowboat – Project with Great Potential A fantastic opportunity to create your own boat with this 48ft traditional stern narrowboat, built by Teddesley Boats in 1977. Spacious, clean and open-plan inside with a fitted galley, shower room with cassette toilet and solid fuel stove. Powered by a characterful 3-cylinder air-cooled Lister diesel engine which runs well. The cabin sides and roof have recently been repainted, providing a great starting point for the new owner to complete the interior to their own taste. An ideal project for the skilled DIYer or enthusiastic amateur and a very affordable entry into life on the water, whether as a leisure boat or potential liveaboard. Plenty of space, plenty of character and bags of potential.",
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/poppy.pdf"
+    "brochureUrl": "/uploads/brochures/poppy.pdf",
+    "videoUrl": "https://youtu.be/uTUwuHqmfvg",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=7k2562LvHM3"
   },
   {
     "name": "CHRISTABELLA",
@@ -151,7 +153,8 @@
     "bedroomExtraNotes": "Double wardrobe, 3 drawer stack, overbed cupboards & underbed drawers",
     "overview": "Beautifully presented 57ft cruiser stern narrowboat built by S Jackson & Sons and fitted out by Blue Water Boats. Featuring the ever-popular reverse layout, Christabella has been lovingly owned and lived aboard from new, proving herself to be a fantastic liveaboard or leisure boat. Spacious galley with Corian worktops Pullman dinette converting to extra berths Cosy solid fuel stove and Webasto central heating Stylish bathroom with quadrant shower Spacious bedroom with king-size extending bed Perfect for exploring the waterways with family and friends.",
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/christabella.pdf"
+    "brochureUrl": "/uploads/brochures/christabella.pdf",
+    "videoUrl": "https://youtu.be/ancEB8LiHwY"
   },
   {
     "name": "sentinel",
@@ -232,7 +235,9 @@
     "bedroomExtraNotes": "Underbed storage",
     "overview": "Sentinel is a characterful 70ft traditional narrowboat built in 1976 by Brian Duvall and powered by the much-admired Bolinder engine, perfectly complementing her classic lines and timeless appeal. Stepping aboard from the bow, you are welcomed into a spacious saloon, followed by a well-equipped walkthrough galley featuring a freestanding cooker, washing machine, fridge freezer and ample storage. The light and airy main bedroom offers a comfortable retreat, while the impressive engine room houses the iconic Bolinder engine and generator enabling life aboard to be completely self sufficient. Completing the accommodation is a traditional boatman’s cabin with a single berth, full of charm and surprisingly spacious. Sentinel is a rare opportunity to own a traditional narrowboat with an abundance of character and heritage.",
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/sentinel.pdf"
+    "brochureUrl": "/uploads/brochures/sentinel.pdf",
+    "videoUrl": "https://youtu.be/KR9a2rt0Peg?si=DcukoUlIlHQJS8fj",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=Cxse2vYKxqS"
   },
   {
     "name": "sunflower",
@@ -312,7 +317,9 @@
     "bedroomExtraNotes": "Full height wardrobes in both bedrooms",
     "overview": null,
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/sunflower.pdf"
+    "brochureUrl": "/uploads/brochures/sunflower.pdf",
+    "videoUrl": "https://youtu.be/2_s3Jv9VDhU",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=4324JT7yPye"
   },
   {
     "name": "MANDOLIN",
@@ -395,7 +402,9 @@
     "bedroomExtraNotes": "Wardrobe & underbed drawers",
     "overview": null,
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/mandolin.pdf"
+    "brochureUrl": "/uploads/brochures/mandolin.pdf",
+    "videoUrl": "https://youtu.be/LJXJzp-EoNM?si=IxyVqXWNqpb4dSGR",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=af6otNBma1X"
   },
   {
     "name": "BERYL",
@@ -474,7 +483,9 @@
     "bedroomBed": "4ft fixed double",
     "bedroomDinette": "No",
     "overview": null,
-    "boatType": "Narrowboats"
+    "boatType": "Narrowboats",
+    "videoUrl": "https://youtu.be/sjAkbYZDxhg?si=GVOfG4jb997c8jQG",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=qm2rGrUHFC5"
   },
   {
     "name": "HAROLD’S WILL",
@@ -631,7 +642,8 @@
     "bedroomExtraNotes": "Full height wardrobes. Stable doors out to bow deck",
     "overview": null,
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/martin.pdf"
+    "brochureUrl": "/uploads/brochures/martin.pdf",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=muySnyp82tg"
   },
   {
     "name": "MISS SASSY LADY",
@@ -714,7 +726,9 @@
     "bedroomExtraNotes": "Wardrobe, underbed storage & overhead cupboards",
     "overview": null,
     "boatType": "Narrowboats",
-    "brochureUrl": "/uploads/brochures/miss-sassy-lady.pdf"
+    "brochureUrl": "/uploads/brochures/miss-sassy-lady.pdf",
+    "videoUrl": "https://youtu.be/P66bbp-Hni4",
+    "virtualTourUrl": "https://my.matterport.com/show/?m=NvBi8iJXWpY"
   },
   {
     "name": "MANORBIER",

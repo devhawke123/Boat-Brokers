@@ -42,15 +42,7 @@ export default function BoatSubNav({ boat }: BoatSubNavProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => setIsSaved((v) => !v)}
-          aria-pressed={isSaved}
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#6e6e6e] hover:text-navy-dark"
-        >
-          <IconHeart className={`size-3.5 ${isSaved ? 'fill-[#ef4444] text-[#ef4444]' : ''}`} />
-          {isSaved ? 'Saved' : 'Save'}
-        </button>
+       
         <button
           type="button"
           onClick={handleShare}

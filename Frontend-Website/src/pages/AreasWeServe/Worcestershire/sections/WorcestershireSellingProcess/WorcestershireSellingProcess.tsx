@@ -87,7 +87,7 @@ export default function WorcestershireSellingProcess() {
         </div>
       </div>
 
-      <div className="grid w-full max-w-[78.5rem] grid-cols-1 divide-y divide-[#e5e7eb] rounded-2xl border border-[#e5e7eb] sm:grid-cols-2 sm:divide-x">
+      <div className="grid w-full max-w-[78.5rem] grid-cols-1 divide-y divide-[#e5e7eb] rounded-2xl border border-[#e5e7eb] lg:grid-cols-2 lg:divide-x">
         {steps.map((step) => (
           <div
             key={step.number}
@@ -105,7 +105,7 @@ export default function WorcestershireSellingProcess() {
                   {step.description}
                 </p>
               </div>
-              <span className="font-display shrink-0 text-2xl leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:text-[7.5rem]">
+              <span className="font-display shrink-0 text-2xl leading-none text-blue-active transition-colors duration-200 group-hover:text-[#169acc] sm:text-5xl lg:text-[7.5rem]">
                 {step.number}
               </span>
             </div>
@@ -114,7 +114,7 @@ export default function WorcestershireSellingProcess() {
       </div>
 
       <a
-        href="/selling"
+        href="/book-a-viewing"
         className="inline-flex items-center gap-1.5 rounded-xl bg-[#0d5673] px-5 py-3 text-base font-semibold text-white shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
       >
         Book a Free Valuation

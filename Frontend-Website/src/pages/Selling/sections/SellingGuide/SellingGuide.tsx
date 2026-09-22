@@ -189,20 +189,17 @@ export default function SellingGuide() {
             type="button"
             onClick={() => setCurrent((c) => Math.max(0, c - 1))}
             disabled={isFirst}
-            className={`rounded-full border border-[#e5e7eb] px-8 py-3 text-base font-semibold tracking-[0.3px] ${
+            className={`min-w-[8rem] rounded-full border border-[#e5e7eb] px-6 py-2.5 text-sm font-semibold tracking-[0.3px] ${
               isFirst ? 'cursor-not-allowed text-[#d1d5db]' : 'text-[#9ca3af] hover:text-navy-dark'
             }`}
           >
             Back
           </button>
-          <span className="text-sm font-bold tracking-[-0.04px] text-[#64798c]">
-            {current + 1} / {steps.length}
-          </span>
           <button
             type="button"
             onClick={() => setCurrent((c) => Math.min(steps.length - 1, c + 1))}
             disabled={isLast}
-            className={`inline-flex items-center gap-3 rounded-full px-10 py-3 text-base font-semibold tracking-[0.25px] text-white ${
+            className={`inline-flex min-w-[8rem] items-center justify-center gap-3 rounded-full px-6 py-2.5 text-sm font-semibold tracking-[0.25px] text-white ${
               isLast ? 'cursor-not-allowed bg-[#9ca3af]' : 'bg-navy-dark hover:opacity-90'
             }`}
           >

@@ -43,7 +43,7 @@ export default function WestMidlandsListings() {
 
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="dark" label="Buy Boats Now" href="/boats-for-sale" />
-            <Button variant="outline-dark" label="Sell Your Boats" href="/sell" />
+            <Button variant="outline-dark" label="Sell Your Boats" href="/selling" />
           </div>
         </div>
 

@@ -46,7 +46,7 @@ export default function SurveyGuide() {
     >
       <div className="flex w-full max-w-[80rem] flex-col gap-16">
         <div className="flex flex-col gap-4">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-[linear-gradient(45deg,rgba(108,214,255,0.30)_0%,rgba(108,214,255,0.18)_50%,rgba(108,214,255,0.10)_100%)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
             <span className="size-2 rounded-full bg-blue-light" />
             Built on Commitment
           </span>

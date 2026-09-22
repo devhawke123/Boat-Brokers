@@ -24,10 +24,10 @@ export default function VirtualTour() {
 
   return (
     <section id="virtual-tour" className="scroll-mt-28 px-6 sm:px-16">
-      <div className="mx-auto flex w-full max-w-[80rem] flex-col items-center gap-12 rounded-2xl bg-navy-darkest px-6 py-16 sm:px-[3.75rem] sm:py-[7.5rem]">
-        <div className="flex w-full flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-[7.5rem]">
+      <div className="mx-auto flex w-full max-w-[90rem] flex-col items-center gap-12 rounded-2xl bg-navy-darkest px-6 py-16 sm:px-[3.75rem] sm:py-[7.5rem]">
+        <div className="flex w-full flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-[8.5rem]">
           <div className="flex flex-1 flex-col items-start gap-6">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[linear-gradient(45deg,rgba(108,214,255,0.30)_0%,rgba(108,214,255,0.18)_50%,rgba(108,214,255,0.10)_100%)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-blue-light uppercase">
               <span className="size-2 rounded-full bg-blue-light" />
               3D Tour
             </span>
@@ -46,7 +46,7 @@ export default function VirtualTour() {
               <h4 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-white capitalize sm:text-[2.125rem]">
                 Preview the boat without leaving your house
               </h4>
-              <p className="max-w-[36.5rem] text-base leading-[26px] text-[#c0c0c0]">
+              <p className="max-w-[41.5rem] text-base leading-[26px] text-[#c0c0c0]">
                 How many times have you seen pictures, travelled to view a boat and it was not how
                 you thought it would be?
               </p>
@@ -62,7 +62,7 @@ export default function VirtualTour() {
               <h4 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-white capitalize sm:text-[2.125rem]">
                 Stop! Pre-view the boat without leaving your house with our virtual tours.
               </h4>
-              <div className="flex max-w-[40.125rem] flex-col text-base leading-[26px] text-[#c0c0c0]">
+              <div className="flex max-w-[45rem] flex-col text-base leading-[26px] text-[#c0c0c0]">
                 <p>It&rsquo;s not always simple to find the time to view boats due to busy schedules.</p>
                 <p>
                   In order to make your life easier, we&rsquo;ve created virtual tours of the
@@ -78,9 +78,11 @@ export default function VirtualTour() {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="media-frame group flex aspect-[510/689] w-full max-w-[31.875rem] shrink-0 items-center justify-center rounded-xl lg:w-[31.875rem]"
+          <a
+            href="https://my.matterport.com/show/?m=Cxse2vYKxqS"
+            target="_blank"
+            rel="noreferrer"
+            className="media-frame group flex aspect-[510/689] w-full max-w-[35.875rem] shrink-0 items-center justify-center rounded-xl lg:w-[35.875rem]"
           >
             <img src={tourVideoThumb} alt="Narrowboat interior virtual tour preview" />
             <img
@@ -89,7 +91,7 @@ export default function VirtualTour() {
               aria-hidden="true"
               className="relative z-[1] size-24 transition-transform duration-150 group-hover:scale-105"
             />
-          </button>
+          </a>
         </div>
 
         <div className="flex w-full flex-col items-center gap-8 sm:flex-row sm:gap-[3.375rem]">
@@ -115,9 +117,12 @@ export default function VirtualTour() {
             </button>
           </div>
 
-          <div className="order-1 grid w-full flex-1 grid-cols-1 gap-10 sm:order-2 sm:grid-cols-3">
+          <div className="order-1 flex w-full flex-1 snap-x snap-mandatory gap-10 overflow-x-auto pb-2 sm:order-2 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
             {visible.map((item) => (
-              <div key={item.label} className="media-frame h-[15.1875rem] w-full rounded-[9px]">
+              <div
+                key={item.label}
+                className="media-frame h-[15.1875rem] w-[80%] shrink-0 snap-start rounded-[9px] sm:w-full"
+              >
                 <img src={item.src} alt={item.label} />
                 <span className="absolute top-[19px] right-[20px] z-[1] rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
                   {item.label}

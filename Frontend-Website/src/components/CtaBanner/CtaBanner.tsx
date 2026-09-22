@@ -18,7 +18,7 @@ export default function CtaBanner() {
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <Button variant="light" label="Buy Boats Now" href="/boats-for-sale" />
-          <Button variant="outline-white" label="Sell Your Boats" href="/sell" />
+          <Button variant="outline-white" label="Sell Your Boats" href="/selling" />
         </div>
       </div>
     </section>

@@ -28,6 +28,7 @@ import KeyDetailsForm, { initialKeyDetailsValues, type KeyDetailsValues } from '
 import ReviewForm from './sections/ReviewForm/ReviewForm'
 import ListingPreview from './sections/ListingPreview/ListingPreview'
 import WhyWeAskThis from './sections/WhyWeAskThis/WhyWeAskThis'
+import { computeListingScore, isBasicInfoComplete, isKeyDetailsComplete, isMediaComplete, PHOTOS_MIN } from './scoring'
 
 const TOTAL_STEPS = 5
 
@@ -69,6 +70,7 @@ export default function AddBoat() {
   const [specTab, setSpecTab] = useState<SpecTab>('history')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [stepError, setStepError] = useState<string | null>(null)
   const [isLoadingListing, setIsLoadingListing] = useState(isEditing)
   const [editBoatId, setEditBoatId] = useState<number | null>(null)
 
@@ -185,23 +187,55 @@ export default function AddBoat() {
   }
 
   async function handleContinue() {
+    if (currentStep === 1 && !isBasicInfoComplete(values)) {
+      setStepError('Please fill in all required fields (marked *) before continuing.')
+      return
+    }
+    if (currentStep === 3 && !isMediaComplete(mediaValues)) {
+      setStepError(`Please upload at least ${PHOTOS_MIN} photos before continuing.`)
+      return
+    }
+    if (currentStep === 4 && !isKeyDetailsComplete(keyDetailsValues)) {
+      setStepError('Please fill in all required fields (marked *) before continuing.')
+      return
+    }
+
     if (currentStep < TOTAL_STEPS) {
+      setStepError(null)
       setCurrentStep((step) => Math.min(step + 1, TOTAL_STEPS))
       return
     }
     if (!seller) return
 
+    const score = computeListingScore({
+      basicInfo: values,
+      specifications: specValues,
+      media: mediaValues,
+      keyDetails: keyDetailsValues,
+      customFields,
+    })
+    if (!score.readyToSubmit) {
+      setStepError(
+        'Please complete all mandatory fields across Basic Information, Media and Key Details before publishing.',
+      )
+      return
+    }
+
+    setStepError(null)
     setSubmitError(null)
     setIsSubmitting(true)
     try {
       const formData = new FormData()
       formData.set('sellerId', String(seller.id))
       formData.set('name', values.boatName)
-      if (values.price.trim()) formData.set('price', values.price.trim())
+      // Price is typed with thousands separators (the field's own placeholder is
+      // "e.g. 32,310"), but the backend column is numeric and rejects commas.
+      const sanitizedPrice = values.price.replace(/[^0-9]/g, '')
+      if (sanitizedPrice || isEditing) formData.set('price', sanitizedPrice)
 
       for (const [key, value] of Object.entries(values)) {
         if (key === 'boatName' || key === 'price' || (isEditing && key !== 'boatName')) {
-          if (isEditing && key !== 'boatName') {
+          if (isEditing && key !== 'boatName' && key !== 'price') {
             formData.set(BASIC_INFO_TO_BOAT_FIELD[key as keyof BasicInformationValues] ?? key, value.trim())
           }
           continue
@@ -258,6 +292,7 @@ export default function AddBoat() {
   }
 
   function handleBack() {
+    setStepError(null)
     setCurrentStep((step) => Math.max(step - 1, 1))
   }
 
@@ -333,9 +368,9 @@ export default function AddBoat() {
 
         <StepIndicator currentStep={currentStep} />
 
-        {submitError && (
+        {(submitError || stepError) && (
           <div className="rounded-lg border border-[#fecaca] bg-[#fef2f2] px-4 py-3 text-[14px] text-[#b91c1c]">
-            {submitError}
+            {submitError || stepError}
           </div>
         )}
 
@@ -386,7 +421,10 @@ export default function AddBoat() {
                 media={mediaValues}
                 keyDetails={keyDetailsValues}
                 customFields={customFields}
-                onEditStep={setCurrentStep}
+                onEditStep={(step) => {
+                  setStepError(null)
+                  setCurrentStep(step)
+                }}
               />
             )}
           </StepFormCard>

@@ -23,7 +23,7 @@ export default function WhereWeAdvertise() {
       </div>
 
       <div className="grid w-full max-w-[78.5rem] gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2">
-        <div className="flex flex-col items-start gap-3 rounded-[10px] border border-[#5fcaf0] bg-[#ddf6ff] p-6 sm:col-span-2 lg:col-span-1 lg:row-span-2">
+        <div className="flex flex-col items-start gap-3 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6 transition-colors duration-300 sm:col-span-2 lg:col-span-1 lg:row-span-2 lg:hover:border-[#5fcaf0] lg:hover:bg-[#ddf6ff]">
           <img src={onlineAdvertIcon} alt="" aria-hidden="true" className="size-12" />
           <h3 className="font-display text-xl leading-[1.3] tracking-[-1px] text-ink capitalize">
             Online Advertising
@@ -36,7 +36,7 @@ export default function WhereWeAdvertise() {
           </p>
         </div>
 
-        <div className="flex flex-col items-start gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6">
+        <div className="flex flex-col items-start gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6 transition-colors duration-300 lg:hover:border-[#5fcaf0] lg:hover:bg-[#ddf6ff]">
           <img src={partnershipsIcon} alt="" aria-hidden="true" className="h-12 w-[3.25rem]" />
           <h3 className="text-lg text-ink">Partnerships and Referrals</h3>
           <p className="text-sm leading-[22px] text-[rgba(115,115,115,0.78)]">
@@ -46,7 +46,7 @@ export default function WhereWeAdvertise() {
           </p>
         </div>
 
-        <div className="flex flex-col items-start justify-center gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6">
+        <div className="flex flex-col items-start justify-center gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6 transition-colors duration-300 lg:hover:border-[#5fcaf0] lg:hover:bg-[#ddf6ff]">
           <img src={sendEmailIcon} alt="" aria-hidden="true" className="size-12" />
           <h3 className="text-lg text-ink">Email Marketing</h3>
           <p className="text-sm leading-[22px] text-[rgba(115,115,115,0.78)]">
@@ -55,7 +55,7 @@ export default function WhereWeAdvertise() {
           </p>
         </div>
 
-        <div className="flex flex-col items-start gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6 sm:col-span-2 lg:col-span-2">
+        <div className="flex flex-col items-start gap-2 rounded-[10px] border border-[rgba(7,48,64,0.28)] bg-[#f5fcff] p-6 transition-colors duration-300 sm:col-span-2 lg:col-span-2 lg:hover:border-[#5fcaf0] lg:hover:bg-[#ddf6ff]">
           <img src={publicationsIcon} alt="" aria-hidden="true" className="size-12" />
           <h3 className="text-lg text-ink">Publications &amp; Marinas</h3>
           <p className="max-w-[43.5rem] text-sm leading-[22px] text-[rgba(115,115,115,0.78)]">

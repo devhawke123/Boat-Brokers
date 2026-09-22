@@ -53,7 +53,7 @@ export default function FeaturedBoats() {
   return (
     <section className="section flex flex-col items-center gap-12 short:gap-6 rounded-2xl bg-navy-darkest px-section-x">
       <div className="flex max-w-[39.25rem] flex-col items-center gap-4 short:gap-2 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(108,214,255,0.22)] px-4 py-1.5 text-label font-medium text-blue-light uppercase">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[linear-gradient(45deg,rgba(108,214,255,0.30)_0%,rgba(108,214,255,0.18)_50%,rgba(108,214,255,0.10)_100%)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md px-4 py-1.5 text-label font-medium text-blue-light uppercase">
           <span className="size-2 rounded-full bg-blue-light" />
           Featured Boats
         </span>

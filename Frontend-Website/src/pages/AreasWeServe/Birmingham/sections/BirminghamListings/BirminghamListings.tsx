@@ -43,7 +43,7 @@ export default function BirminghamListings() {
 
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="dark" label="Buy Boats Now" href="/boats-for-sale" />
-            <Button variant="outline-dark" label="Sell Your Boat" href="/sell" />
+            <Button variant="outline-dark" label="Sell Your Boat" href="/selling" />
           </div>
         </div>
 

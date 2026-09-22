@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react'
+import { PHOTOS_MIN } from '../../scoring'
 import anchorIcon from '../../../../assets/AddBoat/media/anchor-icon.svg'
 import uploadPhotosIcon from '../../../../assets/AddBoat/media/upload-photos-icon.svg'
 import photoEditIcon from '../../../../assets/AddBoat/media/photo-edit-icon.svg'
@@ -52,6 +53,7 @@ type MediaFormProps = {
   onVideoUrlChange: (value: string) => void
   onBrochureChange: (file: File | null) => void
   onVirtualTourUrlChange: (value: string) => void
+  photosError?: string | null
 }
 
 export default function MediaForm({
@@ -62,6 +64,7 @@ export default function MediaForm({
   onVideoUrlChange,
   onBrochureChange,
   onVirtualTourUrlChange,
+  photosError,
 }: MediaFormProps) {
   const photoInputRef = useRef<HTMLInputElement>(null)
   const brochureInputRef = useRef<HTMLInputElement>(null)
@@ -111,6 +114,14 @@ export default function MediaForm({
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-semibold text-[#0e2136]">
+          Photos <span className="text-red-500">*</span>
+          <span className="pl-1 font-normal text-[#64748b]">(minimum {PHOTOS_MIN} required)</span>
+        </span>
+        <span className="text-[12px] font-medium text-[#64748b]">{values.photos.length}/{PHOTOS_MIN} uploaded</span>
+      </div>
+      {photosError && <p className="text-[11px] font-medium text-[#ef4444]">{photosError}</p>}
       <div className="flex flex-col gap-4 lg:flex-row">
         <div
           onDragOver={(e) => {

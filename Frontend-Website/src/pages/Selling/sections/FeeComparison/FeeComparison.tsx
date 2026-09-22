@@ -31,7 +31,7 @@ export default function FeeComparison() {
           </div>
 
           <div className="flex w-full items-center gap-6">
-            <Button variant="dark" label="Book a Free Valuation" href="mailto:info@theboatbrokers.co.uk" />
+            <Button variant="dark" label="Book a Free Valuation" href="/book-a-viewing" />
             <span className="text-sm text-text-body italic">*Based on final sale price</span>
           </div>
 

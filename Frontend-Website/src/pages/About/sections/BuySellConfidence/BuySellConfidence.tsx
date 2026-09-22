@@ -88,7 +88,7 @@ export default function BuySellConfidence() {
 
             <div className="hidden flex-wrap items-center gap-3 lg:flex">
               <Button variant="dark" label="Buy Boats Now" href="/boats-for-sale" />
-              <Button variant="outline-dark" label="Sell Your Boat" href="/sell" />
+              <Button variant="outline-dark" label="Sell Your Boat" href="/selling" />
             </div>
           </div>
 

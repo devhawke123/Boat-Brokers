@@ -1,5 +1,5 @@
-import { Fragment } from 'react'
-import aboutBroker from '../../../../assets/people/about-broker.png'
+import { Fragment, useRef, useState } from 'react'
+import noelVideo from '../../../../assets/noel-video.mp4'
 import playIcon from '../../../../assets/icons/play.svg'
 import Button from '../../../../components/Button/Button'
 
@@ -11,28 +11,54 @@ const stats = [
 ]
 
 export default function AboutUs() {
+  const modalVideoRef = useRef<HTMLVideoElement>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const closeModal = () => {
+    modalVideoRef.current?.pause()
+    setIsModalOpen(false)
+  }
+
   return (
-    <section className="section content-center grid grid-cols-1 items-start justify-center gap-x-11 gap-y-10 short:gap-y-6 lg:grid-cols-[minmax(0,clamp(20rem,45%,36.75rem))_minmax(0,clamp(20rem,48%,39.25rem))]">
-      <div className="order-2 grid grid-cols-2 gap-2 lg:order-1">
-        <div className="media-frame col-span-2 aspect-[588/301] rounded-2xl">
-          <img src={aboutBroker} alt="The Boat Brokers team member beside a narrowboat" />
+    <section className="section content-center grid grid-cols-1 items-start justify-center gap-x-11 gap-y-10 short:gap-y-6 lg:grid-cols-[minmax(0,clamp(20rem,50%,40rem))_minmax(0,clamp(20rem,45%,37rem))]">
+      <div className="order-2 lg:order-1">
+        <div className="media-frame aspect-[640/560] rounded-2xl">
+          <video src={noelVideo} playsInline muted preload="metadata" />
           <button
             type="button"
+            onClick={() => setIsModalOpen(true)}
             className="absolute top-1/2 left-1/2 z-[1] size-14 -translate-x-1/2 -translate-y-1/2 border-none bg-transparent p-0 lg:size-24"
             aria-label="Play video"
           >
             <img src={playIcon} alt="" aria-hidden="true" className="size-full" />
           </button>
         </div>
-        <div className="col-span-2 grid grid-cols-[320fr_249fr] gap-2">
-          <div className="media-frame aspect-[16/11] rounded-2xl">
-            <img src={aboutBroker} alt="" style={{ objectPosition: '30% 70%' }} />
-          </div>
-          <div className="media-frame aspect-[7/6] rounded-2xl">
-            <img src={aboutBroker} alt="" style={{ objectPosition: '75% 40%' }} />
-          </div>
-        </div>
       </div>
+
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
+          onClick={closeModal}
+        >
+          <button
+            type="button"
+            onClick={closeModal}
+            aria-label="Close video"
+            className="absolute top-6 right-6 z-[1] size-10 border-none bg-transparent p-0 text-white text-h3 leading-none"
+          >
+            &times;
+          </button>
+          <video
+            ref={modalVideoRef}
+            src={noelVideo}
+            playsInline
+            controls
+            autoPlay
+            className="max-h-full max-w-full rounded-2xl"
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
 
       <div className="order-1 flex flex-col gap-6 lg:order-2">
         <div className="flex flex-col gap-3">

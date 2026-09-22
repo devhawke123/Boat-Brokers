@@ -1,9 +1,4 @@
 import heroBg from '../../../../assets/hero-bg.png'
-import customer1 from '../../../../assets/people/customer-1.png'
-import customer2 from '../../../../assets/people/customer-2.png'
-import customer3 from '../../../../assets/people/customer-3.png'
-import star from '../../../../assets/icons/star.svg'
-import starHalf from '../../../../assets/icons/star-half.svg'
 import xLogo from '../../../../assets/icons/x-logo.svg'
 import instagramLogo from '../../../../assets/icons/instagram-logo.svg'
 import facebookLogo from '../../../../assets/icons/facebook-logo.svg'
@@ -84,7 +79,7 @@ export default function Hero() {
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="light" label="Buy Boats Now" href="/boats-for-sale" />
-            <Button variant="outline-white" label="Sell Your Boats" href="/sell" />
+            <Button variant="outline-white" label="Sell Your Boats" href="/selling" />
           </div>
 
           <div className="flex items-center gap-3.5 short:hidden">

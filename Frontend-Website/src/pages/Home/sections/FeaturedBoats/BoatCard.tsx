@@ -19,9 +19,11 @@ type BoatCardProps = {
 export default function BoatCard({ boat }: BoatCardProps) {
   return (
     <article className="group flex flex-col gap-4 rounded-xl transition-colors duration-300 lg:gap-8 lg:hover:bg-[#e8f6ff] lg:hover:pb-8">
-      <div className="relative flex aspect-[608/650] max-h-[88vh] flex-col overflow-hidden rounded-xl border border-slate p-3 transition-colors duration-300 lg:p-5 lg:group-hover:border-transparent">
-        <img src={boat.image} alt={boat.name} className="absolute inset-0 size-full object-cover" />
-        <dl className="relative z-[1] mt-auto flex w-full max-w-[19.5rem] flex-col gap-1 self-start rounded-lg border border-white/15 bg-[linear-gradient(45deg,rgba(210,200,200,0.12)_0%,rgba(248,252,255,0.10)_50%,rgba(235,242,255,0.08)_100%)] px-3 py-2 text-[10px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background,box-shadow,border-color,backdrop-filter] duration-300 lg:gap-2 lg:px-6 lg:py-4 lg:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#EBF2FF0A] lg:group-hover:shadow-none lg:group-hover:backdrop-blur-[2px]">
+      <div className="relative flex aspect-[608/650] max-h-[88vh] flex-col overflow-hidden rounded-xl border border-slate p-3 transition-[padding,border-color] duration-300 lg:p-5 lg:group-hover:border-transparent lg:group-hover:p-10">
+        <div className="absolute inset-0 p-3 transition-[padding] duration-300 lg:p-5 lg:group-hover:p-10">
+          <img src={boat.image} alt={boat.name} className="size-full rounded-lg object-cover" />
+        </div>
+        <dl className="relative z-[1] mt-auto mb-3 ml-3 flex w-full max-w-[17.5rem] flex-col gap-1 self-start rounded-lg border border-white/15 bg-[linear-gradient(45deg,rgba(210,200,200,0.12)_0%,rgba(248,252,255,0.10)_50%,rgba(235,242,255,0.08)_100%)] px-3 py-2 text-[10px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background,box-shadow,border-color,backdrop-filter] duration-300 lg:mb-6 lg:ml-6 lg:gap-2 lg:px-5 lg:py-3 lg:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#EBF2FF0A] lg:group-hover:shadow-none lg:group-hover:backdrop-blur-[2px]">
           <div className="flex w-full items-center gap-2 lg:gap-3">
             <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] lg:w-[7.6875rem] lg:tracking-[0.84px]">Length/Beam:</dt>
             <dd className="m-0 w-[5.625rem] font-light text-taupe lg:w-[9.5625rem]">{boat.lengthBeam}</dd>

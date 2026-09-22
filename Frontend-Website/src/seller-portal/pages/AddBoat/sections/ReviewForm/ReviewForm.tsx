@@ -4,6 +4,7 @@ import type { SpecificationsValues } from '../SpecificationsForm/SpecificationsF
 import type { MediaValues } from '../MediaForm/MediaForm'
 import type { KeyDetailsValues } from '../KeyDetailsForm/KeyDetailsForm'
 import type { AdditionalFieldsValues } from '../AdditionalFieldsForm/AdditionalFieldsForm'
+import { computeListingScore } from '../../scoring'
 import editChevron from '../../../../assets/AddBoat/review/edit-chevron.svg'
 import videoIcon from '../../../../assets/AddBoat/review/video-icon.svg'
 import pdfIcon from '../../../../assets/AddBoat/review/pdf-icon.svg'
@@ -21,10 +22,6 @@ type ReviewFormProps = {
 
 function fallback(value: string) {
   return value.trim() ? value : '—'
-}
-
-function isFilled(value: string) {
-  return value.trim() !== ''
 }
 
 function Field({ label, value }: { label: string; value: string }) {
@@ -189,14 +186,6 @@ const SPEC_GROUPS: { title: string; fields: { key: keyof SpecificationsValues; l
   },
 ]
 
-const REQUIRED_BASIC_INFO_FIELDS: (keyof BasicInformationValues)[] = [
-  'boatName',
-  'stern',
-  'engine',
-  'hullBuilder',
-  'lastService',
-]
-
 export default function ReviewForm({
   basicInfo,
   specifications,
@@ -205,43 +194,16 @@ export default function ReviewForm({
   customFields,
   onEditStep,
 }: ReviewFormProps) {
-  const completedCustomFields = customFields.fields.filter((f) => isFilled(f.label) && isFilled(f.value))
-  const basicInfoValues = Object.values(basicInfo)
-  const specValues = Object.values(specifications)
-  const keyDetailsStrings = [
-    keyDetails.fullName,
-    keyDetails.email,
-    keyDetails.phone,
-    keyDetails.country,
-    keyDetails.sellTimeline,
-    keyDetails.contactTime,
-    keyDetails.listerType,
-    keyDetails.additionalNotes,
-  ]
-  const stringFields = [...basicInfoValues, ...specValues, ...keyDetailsStrings]
-  const filledStrings = stringFields.filter(isFilled).length
-  const mediaFieldsFilled =
-    (media.photos.length > 0 ? 1 : 0) +
-    (isFilled(media.videoUrl) ? 1 : 0) +
-    (media.brochure ? 1 : 0) +
-    (isFilled(media.virtualTourUrl) ? 1 : 0)
-  const totalFields = stringFields.length + 4
-  // Custom fields are optional extras, so they count toward the numerator only —
-  // leaving blank rows out of the denominator means they can't drag the score
-  // down. The clamp keeps the bonus from pushing the ring past 100%.
-  const percentComplete = Math.min(
-    100,
-    Math.round(((filledStrings + mediaFieldsFilled + completedCustomFields.length) / totalFields) * 100),
-  )
-
-  const strengthLabel =
-    percentComplete >= 90 ? 'Excellent Strength' : percentComplete >= 70 ? 'Good Strength' : percentComplete >= 40 ? 'Fair Strength' : 'Needs Work'
-  const readyToSubmit = percentComplete >= 90
-
-  const identityVerified = isFilled(keyDetails.fullName) && isFilled(keyDetails.email)
-  const mandatoryFieldsFilled = REQUIRED_BASIC_INFO_FIELDS.every((key) => isFilled(basicInfo[key]))
-  const photosCount = media.photos.length
-  const photosMinMet = photosCount >= 5
+  const {
+    percentComplete,
+    strengthLabel,
+    readyToSubmit,
+    identityVerified,
+    mandatoryFieldsFilled,
+    photosCount,
+    photosMinMet,
+    completedCustomFields,
+  } = computeListingScore({ basicInfo, specifications, media, keyDetails, customFields })
 
   const ringCircumference = 2 * Math.PI * 34
   const ringOffset = ringCircumference * (1 - percentComplete / 100)

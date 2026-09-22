@@ -1,9 +1,7 @@
 import { TextareaField } from '../../../../components/FormField/FormField'
 import nameIcon from '../../../../assets/AddBoat/key-details/name-icon.svg'
 import emailIcon from '../../../../assets/AddBoat/key-details/email-icon.svg'
-import chevronSmall from '../../../../assets/AddBoat/key-details/chevron-small.svg'
 import phoneIcon from '../../../../assets/AddBoat/key-details/phone-icon.svg'
-import chevronDown from '../../../../assets/AddBoat/key-details/chevron-down.svg'
 import morningIcon from '../../../../assets/AddBoat/key-details/morning-icon.svg'
 import afternoonIcon from '../../../../assets/AddBoat/key-details/afternoon-icon.svg'
 import eveningIcon from '../../../../assets/AddBoat/key-details/evening-icon.svg'
@@ -29,7 +27,7 @@ export type KeyDetailsValues = {
 export const initialKeyDetailsValues: KeyDetailsValues = {
   fullName: '',
   email: '',
-  countryCode: '🇬🇧 +44',
+  countryCode: '+44',
   phone: '',
   country: '',
   sellTimeline: '',
@@ -39,8 +37,6 @@ export const initialKeyDetailsValues: KeyDetailsValues = {
   agreedToContact: true,
 }
 
-const COUNTRY_CODE_OPTIONS = ['🇬🇧 +44', '🇺🇸 +1', '🇮🇪 +353', '🇫🇷 +33', '🇩🇪 +49']
-const COUNTRY_OPTIONS = ['United Kingdom', 'Ireland', 'United States', 'France', 'Germany']
 const SELL_TIMELINE_OPTIONS = ['ASAP', 'Within 1 month', '1-3 months', 'Just exploring']
 const CONTACT_TIME_OPTIONS = [
   { value: 'Morning', icon: morningIcon },
@@ -66,11 +62,14 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
       <div className="flex flex-col gap-4 rounded-lg bg-[#f5f8fb]/50 px-4 py-5">
         <div className="flex flex-col gap-4 md:flex-row">
           <div className="flex flex-1 flex-col gap-2">
-            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">Full name</span>
+            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+              Full name <span className="text-red-500">*</span>
+            </span>
             <div className="relative flex h-11 items-center rounded-lg border border-[#e4eef2] bg-white">
               <img src={nameIcon} alt="" aria-hidden="true" className="ml-4 h-3 w-2.5 shrink-0" />
               <input
                 type="text"
+                required
                 value={values.fullName}
                 onChange={(e) => onChange('fullName', e.target.value)}
                 placeholder="John Doe"
@@ -79,11 +78,14 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
             </div>
           </div>
           <div className="flex flex-1 flex-col gap-2">
-            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">Email address</span>
+            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+              Email address <span className="text-red-500">*</span>
+            </span>
             <div className="relative flex h-11 items-center rounded-lg border border-[#e4eef2] bg-white">
               <img src={emailIcon} alt="" aria-hidden="true" className="ml-4 size-3 shrink-0" />
               <input
                 type="email"
+                required
                 value={values.email}
                 onChange={(e) => onChange('email', e.target.value)}
                 placeholder="john@example.com"
@@ -95,26 +97,25 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
 
         <div className="flex flex-col gap-4 md:flex-row">
           <div className="flex flex-1 flex-col gap-2">
-            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">Phone number</span>
+            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+              Phone number <span className="text-red-500">*</span>
+            </span>
             <div className="flex h-11 gap-2">
               <div className="relative flex h-full w-[90px] shrink-0 items-center rounded-lg border border-[#e4eef2] bg-white">
-                <select
+                <input
+                  type="text"
+                  required
                   value={values.countryCode}
                   onChange={(e) => onChange('countryCode', e.target.value)}
-                  className="h-full w-full appearance-none rounded-lg bg-transparent pl-2.5 pr-6 text-[12px] text-[#64748b] focus:outline-none"
-                >
-                  {COUNTRY_CODE_OPTIONS.map((code) => (
-                    <option key={code} value={code}>
-                      {code}
-                    </option>
-                  ))}
-                </select>
-                <img src={chevronSmall} alt="" aria-hidden="true" className="pointer-events-none absolute right-2 size-2" />
+                  placeholder="+44"
+                  className="h-full w-full rounded-lg bg-transparent px-2.5 text-[12px] text-[#64748b] placeholder:text-[#c2c4c8] focus:outline-none"
+                />
               </div>
               <div className="relative flex h-full flex-1 items-center rounded-lg border border-[#e4eef2] bg-white">
                 <img src={phoneIcon} alt="" aria-hidden="true" className="ml-4 size-3 shrink-0" />
                 <input
                   type="tel"
+                  required
                   value={values.phone}
                   onChange={(e) => onChange('phone', e.target.value)}
                   placeholder="7123 456789"
@@ -124,23 +125,18 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
             </div>
           </div>
           <div className="flex flex-1 flex-col gap-2">
-            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">Country</span>
+            <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+              Country <span className="text-red-500">*</span>
+            </span>
             <div className="relative flex h-11 items-center rounded-lg border border-[#e4eef2] bg-white">
-              <select
+              <input
+                type="text"
+                required
                 value={values.country}
                 onChange={(e) => onChange('country', e.target.value)}
-                className="h-full w-full appearance-none rounded-lg bg-transparent px-3 pr-9 text-[14px] text-[#0f172a] focus:outline-none"
-              >
-                <option value="" disabled className="text-[#c2c4c8]">
-                  Select country
-                </option>
-                {COUNTRY_OPTIONS.map((country) => (
-                  <option key={country} value={country}>
-                    {country}
-                  </option>
-                ))}
-              </select>
-              <img src={chevronDown} alt="" aria-hidden="true" className="pointer-events-none absolute right-3 size-2.5" />
+                placeholder="United Kingdom"
+                className="h-full w-full rounded-lg bg-transparent px-3 text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
+              />
             </div>
           </div>
         </div>

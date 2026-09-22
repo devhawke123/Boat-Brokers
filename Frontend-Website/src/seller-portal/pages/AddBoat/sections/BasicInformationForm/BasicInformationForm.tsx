@@ -145,7 +145,8 @@ export default function BasicInformationForm({ values, onChange }: BasicInformat
       <FieldRow>
         <TextField
           label="Price"
-          placeholder="e.g. 32,310"
+          type="integer"
+          placeholder="e.g. 32310"
           prefix="$"
           value={values.price}
           onChange={(v) => onChange('price', v)}

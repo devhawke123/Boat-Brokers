@@ -17,6 +17,7 @@ export function TextField({
   onChange,
   suffix,
   prefix,
+  type = 'text',
 }: {
   label: string
   required?: boolean
@@ -25,7 +26,13 @@ export function TextField({
   onChange: (value: string) => void
   suffix?: string
   prefix?: string
+  type?: 'text' | 'integer'
 }) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const raw = e.target.value
+    onChange(type === 'integer' ? raw.replace(/[^0-9]/g, '') : raw)
+  }
+
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-2">
       <Label required={required}>{label}</Label>
@@ -33,9 +40,10 @@ export function TextField({
         {prefix && <span className="pl-4 text-[16px] text-[#94a3b8]">{prefix}</span>}
         <input
           type="text"
+          inputMode={type === 'integer' ? 'numeric' : undefined}
           value={value}
           placeholder={placeholder}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
+          onChange={handleChange}
           className={`h-full w-full rounded-lg bg-transparent text-[16px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none ${prefix ? 'pl-1' : 'px-4'} ${suffix ? 'pr-10' : ''}`}
         />
         {suffix && (
