@@ -18,8 +18,8 @@ spec'd module by module, immediately before that module is built.
   rebuilt from scratch here.
 - `Backend/prisma/schema.prisma` has: `Boat`, `BoatImage`, `BoatCustomField`,
   `BlogPost`, `Seller`, `BoatListing` (+ `ListingStatus` enum: PENDING/APPROVED/
-  REJECTED), `ListingComment`, `Admin` (Module 1), and `AvailabilitySlot` / `Buyer`
-  / `Booking` (Module 3). `Lead` and `Sale` don't exist yet.
+  REJECTED), `ListingComment`, `Admin` (Module 1), `AvailabilitySlot` / `Buyer` /
+  `Booking` (Module 3), and `Lead` / `Sale` (Modules 5–6).
 - Seller portal (`Frontend-Website/src/seller-portal`) already has: Add Boat, My
   Boats, Listing Review, Comment Thread / Comments, Profile, Help & Support, Login.
   The listing approval workflow (`boatListing.controller.ts`) already supports status
@@ -54,9 +54,10 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
   `status` field (New / Contacted / Listed / Lost) so admin can track vendor pipeline
   state directly on the account. This page is also home to: that vendor's boats,
   pending `BoatListing` approvals, and the `ListingComment` thread per listing.
-- **Leads** — vendor-side inquiry pipeline, tracked **separately** from `Seller`
+- **Leads** ✅ — vendor-side inquiry pipeline, tracked **separately** from `Seller`
   accounts (no automatic conversion/linking — admin manages both independently).
-  Status vocabulary: New / Contacted / Listed / Lost.
+  Fully manual entry: firstName/surname/email/phone/address/source/notes. Status
+  vocabulary: New / Contacted / Listed / Lost. Built.
 - **Boat Buyers** ✅ — `Buyer` model (added in Module 3). Created only two ways:
   (1) immediately when someone submits a viewing-booking request on the public
   site, via find-or-create by email (before admin approves the booking itself),
@@ -65,9 +66,11 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
   buyer's detail page shows their viewing-request history. Status vocabulary:
   New / Contacted / Viewing Booked / Won (purchased a boat) / Lost. "Won" is
   admin-set by hand, same as everything else — not automated off Sales. Built.
-- **Sale** — new model, manual entry only. Admin picks vendor + buyer + boat from
-  dropdowns, enters price/deposit/balance/commission. No automated side effects on
-  Buyer/Lead status.
+- **Sale** ✅ — manual entry only. Admin picks vendor + buyer + boat from dropdowns,
+  enters soldPrice/deposit/commission; `balance` is derived (soldPrice − deposit),
+  never stored. Status: Current / Completed / Cancelled. No automated side effects
+  on Buyer/Lead status. The dashboard's Total Sales / Completed Sales tiles (stubbed
+  since Module 1) now read from `Sale` instead of the `Boat.isSold` heuristic. Built.
 - **AvailabilitySlot / Booking** ✅ — new models. Admin availability is **global and
   single-track**: a 2-hour slot (e.g. 12–2pm) can only ever be attached to one boat
   at a time — booking it for Boat X makes it unavailable for Boat Y too, because it's
@@ -101,8 +104,10 @@ they'll be used day-to-day.
    approve/reject, Resend email notification on approval. Built.
 4. **Boat Buyers** ✅ — buyer list/detail (fed by bookings + manual add), full
    CRUD, editable status, per-buyer viewing-request history. Built.
-5. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).
-6. **Sales** — manual deal log.
+5. **Leads** ✅ — vendor-side inquiry pipeline (New/Contacted/Listed/Lost), full
+   CRUD, manual entry only. Built.
+6. **Sales** ✅ — manual deal log (Current/Completed/Cancelled), full CRUD,
+   derived balance, wired into the dashboard's Sales Overview tiles. Built.
 7. **Blogs** — admin CRUD over existing `BlogPost`.
 8. **Roles/Permissions** — last, as agreed.
 

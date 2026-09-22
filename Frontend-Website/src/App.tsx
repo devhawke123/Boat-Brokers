@@ -36,6 +36,12 @@ import Availability from './admin-portal/pages/Availability/Availability'
 import Buyers from './admin-portal/pages/Buyers/Buyers'
 import BuyerForm from './admin-portal/pages/BuyerForm/BuyerForm'
 import BuyerDetail from './admin-portal/pages/BuyerDetail/BuyerDetail'
+import Leads from './admin-portal/pages/Leads/Leads'
+import LeadForm from './admin-portal/pages/LeadForm/LeadForm'
+import LeadDetail from './admin-portal/pages/LeadDetail/LeadDetail'
+import Sales from './admin-portal/pages/Sales/Sales'
+import SaleForm from './admin-portal/pages/SaleForm/SaleForm'
+import SaleDetail from './admin-portal/pages/SaleDetail/SaleDetail'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
@@ -206,6 +212,42 @@ function App() {
   if (pathname.startsWith('/admin-portal/buyers/')) {
     const buyerId = Number(pathname.replace('/admin-portal/buyers/', ''))
     if (Number.isInteger(buyerId)) return <BuyerDetail buyerId={buyerId} />
+  }
+
+  if (pathname === '/admin-portal/leads') {
+    return <Leads />
+  }
+
+  if (pathname === '/admin-portal/leads/new') {
+    return <LeadForm />
+  }
+
+  if (pathname.startsWith('/admin-portal/leads/') && pathname.endsWith('/edit')) {
+    const leadId = Number(pathname.replace('/admin-portal/leads/', '').replace('/edit', ''))
+    if (Number.isInteger(leadId)) return <LeadForm leadId={leadId} />
+  }
+
+  if (pathname.startsWith('/admin-portal/leads/')) {
+    const leadId = Number(pathname.replace('/admin-portal/leads/', ''))
+    if (Number.isInteger(leadId)) return <LeadDetail leadId={leadId} />
+  }
+
+  if (pathname === '/admin-portal/sales') {
+    return <Sales />
+  }
+
+  if (pathname === '/admin-portal/sales/new') {
+    return <SaleForm />
+  }
+
+  if (pathname.startsWith('/admin-portal/sales/') && pathname.endsWith('/edit')) {
+    const saleId = Number(pathname.replace('/admin-portal/sales/', '').replace('/edit', ''))
+    if (Number.isInteger(saleId)) return <SaleForm saleId={saleId} />
+  }
+
+  if (pathname.startsWith('/admin-portal/sales/')) {
+    const saleId = Number(pathname.replace('/admin-portal/sales/', ''))
+    if (Number.isInteger(saleId)) return <SaleDetail saleId={saleId} />
   }
 
   // Scoped fallback for the admin portal, same reasoning as the seller

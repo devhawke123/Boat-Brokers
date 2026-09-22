@@ -29,6 +29,7 @@ model Boat {
   listings BoatListing[]
   customFields BoatCustomField[]
   bookings Booking[]
+  sales    Sale[]
 
   // History
   cinNumber              String?
@@ -208,6 +209,7 @@ model Seller {
   status      VendorStatus @default(NEW)
   boats       Boat[]
   listings    BoatListing[]
+  sales       Sale[]
 }
 
 enum VendorStatus {
@@ -313,6 +315,7 @@ model Buyer {
   source    String      @default("Booking")
   status    BuyerStatus @default(NEW)
   bookings  Booking[]
+  sales     Sale[]
   createdAt DateTime    @default(now())
 
   @@index([email])
@@ -338,5 +341,57 @@ model Booking {
 
   @@index([slotId])
   @@index([boatId])
+  @@index([buyerId])
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  LISTED
+  LOST
+}
+
+// Vendor-side inquiry pipeline — fully admin-driven (manual entry), tracked
+// separately from real Seller accounts (see VendorStatus on Seller). No
+// automatic conversion/linking between the two.
+model Lead {
+  id        Int        @id @default(autoincrement())
+  leadId    String     @unique @default(cuid())
+  firstName String
+  surname   String
+  email     String
+  phone     String?
+  address   String?
+  source    String?
+  status    LeadStatus @default(NEW)
+  notes     String?    @db.Text
+  createdAt DateTime   @default(now())
+}
+
+enum SaleStatus {
+  CURRENT
+  COMPLETED
+  CANCELLED
+}
+
+// Manual deal log — admin picks vendor + buyer + boat and enters the figures
+// by hand. No automated side effects on Buyer/Lead status (see overview spec).
+model Sale {
+  id         Int        @id @default(autoincrement())
+  saleId     String     @unique @default(cuid())
+  boatId     Int
+  boat       Boat       @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  sellerId   Int
+  seller     Seller     @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  buyerId    Int
+  buyer      Buyer      @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  soldPrice  Int
+  deposit    Int        @default(0)
+  commission Int        @default(0)
+  status     SaleStatus @default(CURRENT)
+  createdAt  DateTime   @default(now())
+
+  @@index([boatId])
+  @@index([sellerId])
   @@index([buyerId])
 }

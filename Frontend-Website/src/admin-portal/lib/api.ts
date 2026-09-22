@@ -200,3 +200,112 @@ export function deleteBuyer(id: number): Promise<void> {
 export function updateBuyerStatus(id: number, status: BuyerStatus): Promise<ApiBuyer> {
   return apiPatch<ApiBuyer>(`/buyers/${id}/status`, { status })
 }
+
+// Leads — vendor-side inquiry pipeline, fully manual/admin-driven.
+
+export type LeadStatus = 'NEW' | 'CONTACTED' | 'LISTED' | 'LOST'
+
+export type ApiLead = {
+  id: number
+  leadId: string
+  firstName: string
+  surname: string
+  email: string
+  phone: string | null
+  address: string | null
+  source: string | null
+  status: LeadStatus
+  notes: string | null
+  createdAt: string
+}
+
+export function fetchLeads(): Promise<ApiLead[]> {
+  return apiGet<ApiLead[]>('/leads')
+}
+
+export function fetchLead(id: number): Promise<ApiLead> {
+  return apiGet<ApiLead>(`/leads/${id}`)
+}
+
+export type CreateLeadPayload = {
+  firstName: string
+  surname: string
+  email: string
+  phone?: string
+  address?: string
+  source?: string
+  notes?: string
+}
+
+export function createLead(payload: CreateLeadPayload): Promise<ApiLead> {
+  return apiPost<ApiLead>('/leads', payload)
+}
+
+export type UpdateLeadPayload = Partial<CreateLeadPayload>
+
+export function updateLead(id: number, payload: UpdateLeadPayload): Promise<ApiLead> {
+  return apiPut<ApiLead>(`/leads/${id}`, payload)
+}
+
+export function deleteLead(id: number): Promise<void> {
+  return apiDelete(`/leads/${id}`)
+}
+
+export function updateLeadStatus(id: number, status: LeadStatus): Promise<ApiLead> {
+  return apiPatch<ApiLead>(`/leads/${id}/status`, { status })
+}
+
+// Sales — manual deal log. Admin picks vendor/buyer/boat from dropdowns
+// (reusing fetchSellers/fetchBuyers/fetchBoats — no dedicated lookup
+// endpoints needed) and enters the figures by hand.
+
+export type SaleStatus = 'CURRENT' | 'COMPLETED' | 'CANCELLED'
+
+export type ApiSale = {
+  id: number
+  saleId: string
+  status: SaleStatus
+  soldPrice: number
+  deposit: number
+  balance: number
+  commission: number
+  createdAt: string
+  boat: { id: number; name: string; imageUrl: string | null }
+  seller: { id: number; name: string; email: string }
+  buyer: { id: number; firstName: string; surname: string; email: string }
+}
+
+export function fetchSales(): Promise<ApiSale[]> {
+  return apiGet<ApiSale[]>('/sales')
+}
+
+export function fetchSale(id: number): Promise<ApiSale> {
+  return apiGet<ApiSale>(`/sales/${id}`)
+}
+
+export type CreateSalePayload = {
+  boatId: number
+  sellerId: number
+  buyerId: number
+  soldPrice: number
+  deposit?: number
+  commission?: number
+}
+
+export function createSale(payload: CreateSalePayload): Promise<ApiSale> {
+  return apiPost<ApiSale>('/sales', payload)
+}
+
+export type UpdateSalePayload = Partial<CreateSalePayload>
+
+export function updateSale(id: number, payload: UpdateSalePayload): Promise<ApiSale> {
+  return apiPut<ApiSale>(`/sales/${id}`, payload)
+}
+
+export function deleteSale(id: number): Promise<void> {
+  return apiDelete(`/sales/${id}`)
+}
+
+export function updateSaleStatus(id: number, status: SaleStatus): Promise<ApiSale> {
+  return apiPatch<ApiSale>(`/sales/${id}/status`, { status })
+}
