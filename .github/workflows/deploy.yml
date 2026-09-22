@@ -105,6 +105,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -euo pipefail
+            # node/npm/pm2 are installed via nvm, which only loads through
+            # ~/.bashrc in an interactive shell — this non-interactive SSH
+            # command needs to source it explicitly first.
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd "${{ secrets.DEPLOY_PATH }}/Backend"
             npm ci --omit=dev
             npx prisma generate
