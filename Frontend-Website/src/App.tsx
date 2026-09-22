@@ -28,6 +28,10 @@ import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
 import SellerPortalNotFound from './seller-portal/pages/NotFound/NotFound'
 import AdminLogin from './admin-portal/pages/Login/Login'
 import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
+import Vendors from './admin-portal/pages/Vendors/Vendors'
+import VendorForm from './admin-portal/pages/VendorForm/VendorForm'
+import VendorDetail from './admin-portal/pages/VendorDetail/VendorDetail'
+import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
@@ -153,6 +157,29 @@ function App() {
 
   if (pathname === '/admin-portal/dashboard') {
     return <AdminDashboard />
+  }
+
+  if (pathname === '/admin-portal/vendors') {
+    return <Vendors />
+  }
+
+  if (pathname === '/admin-portal/vendors/new') {
+    return <VendorForm />
+  }
+
+  if (pathname.startsWith('/admin-portal/vendors/') && pathname.endsWith('/edit')) {
+    const vendorId = Number(pathname.replace('/admin-portal/vendors/', '').replace('/edit', ''))
+    if (Number.isInteger(vendorId)) return <VendorForm vendorId={vendorId} />
+  }
+
+  if (pathname.startsWith('/admin-portal/listings/')) {
+    const listingId = Number(pathname.replace('/admin-portal/listings/', ''))
+    if (Number.isInteger(listingId)) return <ListingComments listingId={listingId} />
+  }
+
+  if (pathname.startsWith('/admin-portal/vendors/')) {
+    const vendorId = Number(pathname.replace('/admin-portal/vendors/', ''))
+    if (Number.isInteger(vendorId)) return <VendorDetail vendorId={vendorId} />
   }
 
   // Scoped fallback for the admin portal, same reasoning as the seller

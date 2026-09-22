@@ -82,8 +82,9 @@ they'll be used day-to-day.
 1. **Admin Auth + Dashboard shell** ✅ — login, layout/nav, the metrics dashboard
    (People Metrics: Total Vendors/Total Buyers; Sales Overview: Listings/Under
    Offer/Total Sales/Completed Sales). Foundation for everything else. Built.
-2. **Boat Vendors** — Seller account list/detail, their boats, listing
-   approve/reject, comment threads, editable vendor status.
+2. **Boat Vendors** ✅ — Seller account list/detail, their boats, listing
+   approve/reject, comment threads, editable vendor status, full account
+   CRUD (create/edit/delete). Built.
 3. **Availability & Bookings** — admin slot calendar, public booking flow (replacing
    the Cal.com embed with a custom component), approve/reject, email notification,
    dashboard visibility.

@@ -7,6 +7,7 @@ import {
   listSellers,
   sellerLoginHandler,
   updateSellerHandler,
+  updateSellerStatusHandler,
   uploadSellerAvatarHandler,
 } from "../controllers/seller.controller";
 import { uploadSellerAvatar } from "../lib/upload";
@@ -20,6 +21,7 @@ sellersRouter.post("/", createSellerHandler);
 sellersRouter.put("/:id", updateSellerHandler);
 sellersRouter.delete("/:id", deleteSellerHandler);
 sellersRouter.put("/:id/password", changeSellerPasswordHandler);
+sellersRouter.patch("/:id/status", updateSellerStatusHandler);
 
 sellersRouter.post("/:id/avatar", (req, res, next) => {
   uploadSellerAvatar(req, res, (err: unknown) => {

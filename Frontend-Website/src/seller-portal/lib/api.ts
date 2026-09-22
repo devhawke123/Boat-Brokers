@@ -1,3 +1,5 @@
+export type VendorStatus = 'NEW' | 'CONTACTED' | 'LISTED' | 'LOST'
+
 export type ApiSeller = {
   id: number
   sellerId: string
@@ -7,6 +9,7 @@ export type ApiSeller = {
   location: string | null
   avatarUrl: string | null
   joiningDate: string
+  status: VendorStatus
 }
 
 export type ApiListingComment = {

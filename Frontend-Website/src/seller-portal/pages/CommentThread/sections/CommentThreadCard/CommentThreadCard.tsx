@@ -8,6 +8,10 @@ type CommentThreadCardProps = {
   comments: ApiListingComment[]
   sellerName: string
   onCommentPosted: () => void
+  // True (default) when the person replying is the seller — used by the
+  // seller portal. The admin portal reuses this same card for its own
+  // comment thread and passes false so its replies are attributed correctly.
+  fromSeller?: boolean
 }
 
 function initials(name: string) {
@@ -19,7 +23,13 @@ function initials(name: string) {
     .toUpperCase()
 }
 
-export default function CommentThreadCard({ listingId, comments, sellerName, onCommentPosted }: CommentThreadCardProps) {
+export default function CommentThreadCard({
+  listingId,
+  comments,
+  sellerName,
+  onCommentPosted,
+  fromSeller = true,
+}: CommentThreadCardProps) {
   const [draft, setDraft] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -36,7 +46,7 @@ export default function CommentThreadCard({ listingId, comments, sellerName, onC
     setSubmitting(true)
     setError(null)
     try {
-      await addListingComment(listingId, content, sellerName, { fromSeller: true })
+      await addListingComment(listingId, content, sellerName, { fromSeller })
       setDraft('')
       onCommentPosted()
     } catch (err) {

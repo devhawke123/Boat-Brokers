@@ -203,8 +203,17 @@ model Seller {
   // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
   avatarUrl   String?
   joiningDate DateTime @default(now())
+  // Admin-managed vendor pipeline stage — independent of BoatListing status.
+  status      VendorStatus @default(NEW)
   boats       Boat[]
   listings    BoatListing[]
+}
+
+enum VendorStatus {
+  NEW
+  CONTACTED
+  LISTED
+  LOST
 }
 
 model Admin {

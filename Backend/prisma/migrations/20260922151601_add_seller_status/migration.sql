@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Seller` ADD COLUMN `status` ENUM('NEW', 'CONTACTED', 'LISTED', 'LOST') NOT NULL DEFAULT 'NEW';

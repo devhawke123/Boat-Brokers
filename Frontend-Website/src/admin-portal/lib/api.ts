@@ -1,3 +1,5 @@
+import type { ApiSeller, VendorStatus } from '../../seller-portal/lib/api'
+
 export type ApiAdmin = {
   id: number
   adminId: string
@@ -70,6 +72,10 @@ function apiPost<T>(path: string, body: unknown): Promise<T> {
   return apiRequest<T>(path, { method: 'POST', body: JSON.stringify(body) })
 }
 
+function apiPatch<T>(path: string, body: unknown): Promise<T> {
+  return apiRequest<T>(path, { method: 'PATCH', body: JSON.stringify(body) })
+}
+
 // Admin
 
 export function loginAdmin(email: string, password: string): Promise<ApiAdmin> {
@@ -78,4 +84,12 @@ export function loginAdmin(email: string, password: string): Promise<ApiAdmin> {
 
 export function fetchDashboardStats(): Promise<DashboardStats> {
   return apiGet<DashboardStats>('/admin/dashboard-stats')
+}
+
+// Vendors (Seller CRUD/session logic is reused directly from seller-portal's
+// lib/api.ts and data/useSellers.ts — it's portal-agnostic resource data, not
+// duplicated here. This file only adds the one admin-only mutation.)
+
+export function updateSellerStatus(id: number, status: VendorStatus): Promise<ApiSeller> {
+  return apiPatch<ApiSeller>(`/sellers/${id}/status`, { status })
 }
