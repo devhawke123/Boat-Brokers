@@ -26,6 +26,9 @@ import CommentThread from './seller-portal/pages/CommentThread/CommentThread'
 import Profile from './seller-portal/pages/Profile/Profile'
 import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
 import SellerPortalNotFound from './seller-portal/pages/NotFound/NotFound'
+import AdminLogin from './admin-portal/pages/Login/Login'
+import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
+import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 function App() {
   const { pathname } = window.location
@@ -142,6 +145,21 @@ function App() {
   // Home — see CLAUDE.md — this doesn't change that.
   if (pathname.startsWith('/seller-portal/')) {
     return <SellerPortalNotFound />
+  }
+
+  if (pathname === '/admin-portal/login') {
+    return <AdminLogin />
+  }
+
+  if (pathname === '/admin-portal/dashboard') {
+    return <AdminDashboard />
+  }
+
+  // Scoped fallback for the admin portal, same reasoning as the seller
+  // portal one above — nav items for not-yet-built modules land here
+  // instead of the public 404.
+  if (pathname.startsWith('/admin-portal/')) {
+    return <AdminPortalNotFound />
   }
 
   return <Home />

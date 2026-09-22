@@ -8,6 +8,8 @@ import { boatsRouter } from "./routes/boats";
 import { blogsRouter } from "./routes/blogs";
 import { sellersRouter } from "./routes/sellers";
 import { boatListingsRouter } from "./routes/boatListings";
+import { adminRouter } from "./routes/admin";
+import { dashboardStatsRouter } from "./routes/dashboardStats";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -36,6 +38,8 @@ app.use("/api/boats", boatsRouter);
 app.use("/api/blogs", blogsRouter);
 app.use("/api/sellers", sellersRouter);
 app.use("/api/listings", boatListingsRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/admin", dashboardStatsRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 app.use("/uploads", express.static(uploadsRoot));

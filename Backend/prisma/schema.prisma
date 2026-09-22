@@ -207,6 +207,20 @@ model Seller {
   listings    BoatListing[]
 }
 
+model Admin {
+  id          Int      @id @default(autoincrement())
+  // Unique, system-generated public identifier (e.g. shown in the admin UI)
+  adminId     String   @unique @default(cuid())
+  name        String
+  email       String   @unique
+  // Hashed password (scrypt, see src/lib/password.ts) used for admin-portal login
+  password    String?
+  phone       String?
+  // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
+  avatarUrl   String?
+  joiningDate DateTime @default(now())
+}
+
 enum ListingStatus {
   PENDING
   APPROVED

@@ -28,7 +28,7 @@ spec'd module by module, immediately before that module is built.
 - Public site's "Book a Viewing" page currently embeds a third-party **Cal.com**
   widget — a generic consultation calendar, not tied to a specific boat, and not
   connected to our backend/database. This will be **removed and replaced** with a
-  custom-built, boat-specific availability/booking component (see Module 4).
+  custom-built, boat-specific availability/booking component (see Module 3).
 
 ## Reference screenshots vs. final scope
 
@@ -39,8 +39,11 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
 - **Sales and Marketing are simple manual logs** — admin manually enters rows
   (no automated linkage to Leads/Bookings/Sales — e.g. creating a Sale does **not**
   automatically flip a Buyer's status; admin sets everything by hand).
-- New asks added on top: **Add Boat (admin)**, **Blog management**, **Availability &
-  Bookings**, **Roles/Permissions** (explicitly last).
+- New asks added on top: **Blog management**, **Availability & Bookings**,
+  **Roles/Permissions** (explicitly last).
+- **Add Boat (admin) was dropped from scope entirely** — admin will not get a
+  parallel boat-add flow; boat creation stays seller-submitted only, reviewed via
+  the Boat Vendors module.
 
 ## Core concepts & data model shape
 
@@ -69,10 +72,6 @@ Boat Buyers, Sales, Marketing, Groups, Reports, and Buyer Email. After discussio
   admin approves/rejects → on approval: slot is marked taken, buyer gets an email,
   booking shows on the admin dashboard/calendar.
 - **BlogPost** — already exists, just needs an admin CRUD UI. No schema change.
-- **Add Boat (admin)** — reuses the seller's Add Boat form/shape. Vendor is optional
-  (dropdown of existing Sellers, or none). Goes live immediately — no `PENDING`
-  review step, since admin is the source of truth here (unlike seller-submitted
-  listings, which still go through approval).
 
 ## Module build order
 
@@ -85,21 +84,20 @@ they'll be used day-to-day.
    else.
 2. **Boat Vendors** — Seller account list/detail, their boats, listing
    approve/reject, comment threads, editable vendor status.
-3. **Add Boat (admin)** — admin version of the add-boat form; optional vendor;
-   instant-live.
-4. **Availability & Bookings** — admin slot calendar, public booking flow (replacing
+3. **Availability & Bookings** — admin slot calendar, public booking flow (replacing
    the Cal.com embed with a custom component), approve/reject, email notification,
    dashboard visibility.
-5. **Boat Buyers** — buyer list (fed by bookings + manual add), editable
+4. **Boat Buyers** — buyer list (fed by bookings + manual add), editable
    status/details.
-6. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).
-7. **Sales** — manual deal log.
-8. **Marketing** — manual campaign log.
-9. **Blogs** — admin CRUD over existing `BlogPost`.
-10. **Roles/Permissions** — last, as agreed.
+5. **Leads** — vendor-side inquiry pipeline (New/Contacted/Listed/Lost).
+6. **Sales** — manual deal log.
+7. **Marketing** — manual campaign log.
+8. **Blogs** — admin CRUD over existing `BlogPost`.
+9. **Roles/Permissions** — last, as agreed.
 
 ## Out of scope
 
 - Groups, Reports, Buyer Email (dropped from the reference system).
+- Add Boat (admin) — dropped; boat creation stays seller-submitted only.
 - Any automation linking Leads → Buyers/Vendors, Bookings → Buyer status, or
   Sales → Buyer status. Everything is admin-driven, by hand.
