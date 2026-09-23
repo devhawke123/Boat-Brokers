@@ -1,5 +1,8 @@
 import { useMemo, useState } from 'react'
 import type { ApiSale, SaleStatus } from '../../../../lib/api'
+import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
+import ActionButton from '../../../../components/ActionButton/ActionButton'
+import { EyeIcon, PlusIcon, TrashIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -27,10 +30,10 @@ const statusLabels: Record<SaleStatus, string> = {
   CANCELLED: 'Cancelled',
 }
 
-const statusBadgeClasses: Record<SaleStatus, string> = {
-  CURRENT: 'bg-[#dbeafe] text-[#1d4ed8]',
-  COMPLETED: 'bg-[#dcfce7] text-[#15803d]',
-  CANCELLED: 'bg-[#ffeae9] text-[#dc2626]',
+const statusTones: Record<SaleStatus, BadgeTone> = {
+  CURRENT: 'info',
+  COMPLETED: 'success',
+  CANCELLED: 'danger',
 }
 
 const pageSizeOptions = [5, 10, 20]
@@ -102,12 +105,7 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
             placeholder="Search sales..."
             className="h-8 w-48 rounded-md border border-[#e5e7eb] bg-[#f8fafc] px-3 text-xs text-ink placeholder:text-[#9ca3af] focus:border-navy-dark focus:outline-none"
           />
-          <a
-            href="/admin-portal/sales/new"
-            className="inline-flex h-8 items-center rounded-md bg-navy-dark px-3 text-xs font-bold text-white transition-opacity duration-300 hover:opacity-90"
-          >
-            Add New Sale
-          </a>
+          <ActionButton href="/admin-portal/sales/new" label="Add New Sale" variant="primary" icon={PlusIcon} />
         </div>
       </div>
 
@@ -152,11 +150,7 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
               <tr key={sale.id} className="border-t border-[#f3f4f6]">
                 <td className="px-5 py-2.5 text-xs text-[#64748b]">{pageStart + index + 1}</td>
                 <td className="px-5 py-2.5">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[sale.status]}`}
-                  >
-                    {statusLabels[sale.status]}
-                  </span>
+                  <StatusBadge label={statusLabels[sale.status]} tone={statusTones[sale.status]} />
                 </td>
                 <td className="px-5 py-2.5 font-display text-sm text-[#0a192f]">{sale.boat.name}</td>
                 <td className="px-5 py-2.5 text-xs text-[#64748b]">{sale.seller.name}</td>
@@ -169,19 +163,8 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
                 <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatAmount(sale.commission)}</td>
                 <td className="px-5 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <a
-                      href={`/admin-portal/sales/${sale.id}`}
-                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                    >
-                      View Details
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(sale)}
-                      className="inline-flex items-center justify-center rounded-md border border-[#fecaca] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
-                    >
-                      Delete
-                    </button>
+                    <ActionButton href={`/admin-portal/sales/${sale.id}`} label="View Details" icon={EyeIcon} />
+                    <ActionButton label="Delete" variant="delete" icon={TrashIcon} onClick={() => onDelete(sale)} />
                   </div>
                 </td>
               </tr>
@@ -230,7 +213,7 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
                   onClick={() => setPage(pageNumber)}
                   className={
                     pageNumber === currentPage
-                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white'
+                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white shadow-[0_1px_2px_rgba(10,67,89,0.35)]'
                       : 'flex size-9 items-center justify-center rounded-lg text-sm font-medium text-[#0f172a] transition-colors duration-300 hover:bg-[#f8fafc]'
                   }
                 >

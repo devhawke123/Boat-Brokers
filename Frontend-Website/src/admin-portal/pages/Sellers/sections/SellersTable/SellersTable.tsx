@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import type { ApiSeller, SellerStatus } from '../../../../../seller-portal/lib/api'
 import { formatDate } from '../../../../../seller-portal/lib/formatDate'
+import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
+import ActionButton from '../../../../components/ActionButton/ActionButton'
+import { EyeIcon, PlusIcon, TrashIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -25,11 +28,11 @@ const statusLabels: Record<SellerStatus, string> = {
   LOST: 'Lost',
 }
 
-const statusBadgeClasses: Record<SellerStatus, string> = {
-  NEW: 'bg-[#dbeafe] text-[#1d4ed8]',
-  CONTACTED: 'bg-[#fef9c3] text-[#a16207]',
-  LISTED: 'bg-[#dcfce7] text-[#15803d]',
-  LOST: 'bg-[#ffeae9] text-[#dc2626]',
+const statusTones: Record<SellerStatus, BadgeTone> = {
+  NEW: 'info',
+  CONTACTED: 'progress',
+  LISTED: 'success',
+  LOST: 'danger',
 }
 
 const pageSizeOptions = [5, 10, 20]
@@ -98,12 +101,7 @@ export default function SellersTable({ sellers, boatCounts, onDelete }: SellersT
             placeholder="Search sellers..."
             className="h-8 w-48 rounded-md border border-[#e5e7eb] bg-[#f8fafc] px-3 text-xs text-ink placeholder:text-[#9ca3af] focus:border-navy-dark focus:outline-none"
           />
-          <a
-            href="/admin-portal/sellers/new"
-            className="inline-flex h-8 items-center rounded-md bg-navy-dark px-3 text-xs font-bold text-white transition-opacity duration-300 hover:opacity-90"
-          >
-            Add New Seller
-          </a>
+          <ActionButton href="/admin-portal/sellers/new" label="Add New Seller" variant="primary" icon={PlusIcon} />
         </div>
       </div>
 
@@ -142,28 +140,13 @@ export default function SellersTable({ sellers, boatCounts, onDelete }: SellersT
                 <td className="px-5 py-2.5 text-xs text-[#64748b]">{seller.phone ?? '—'}</td>
                 <td className="px-5 py-2.5 text-xs font-semibold text-[#0f172a]">{boatCounts[seller.id] ?? 0}</td>
                 <td className="px-5 py-2.5">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[seller.status]}`}
-                  >
-                    {statusLabels[seller.status]}
-                  </span>
+                  <StatusBadge label={statusLabels[seller.status]} tone={statusTones[seller.status]} />
                 </td>
                 <td className="px-5 py-2.5 text-xs text-[#64748b]">{formatDate(seller.joiningDate)}</td>
                 <td className="px-5 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <a
-                      href={`/admin-portal/sellers/${seller.id}`}
-                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                    >
-                      View Details
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(seller)}
-                      className="inline-flex items-center justify-center rounded-md border border-[#fecaca] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
-                    >
-                      Delete
-                    </button>
+                    <ActionButton href={`/admin-portal/sellers/${seller.id}`} label="View Details" icon={EyeIcon} />
+                    <ActionButton label="Delete" variant="delete" icon={TrashIcon} onClick={() => onDelete(seller)} />
                   </div>
                 </td>
               </tr>
@@ -212,7 +195,7 @@ export default function SellersTable({ sellers, boatCounts, onDelete }: SellersT
                   onClick={() => setPage(pageNumber)}
                   className={
                     pageNumber === currentPage
-                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white'
+                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white shadow-[0_1px_2px_rgba(10,67,89,0.35)]'
                       : 'flex size-9 items-center justify-center rounded-lg text-sm font-medium text-[#0f172a] transition-colors duration-300 hover:bg-[#f8fafc]'
                   }
                 >

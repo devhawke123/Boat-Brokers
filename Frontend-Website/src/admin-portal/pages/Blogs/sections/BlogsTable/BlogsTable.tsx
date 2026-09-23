@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { ApiBlogPostAdmin } from '../../../../lib/api'
+import ActionButton from '../../../../components/ActionButton/ActionButton'
+import { EditIcon, EyeIcon, PlusIcon, TrashIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -48,12 +50,7 @@ export default function BlogsTable({ posts, onDelete }: BlogsTableProps) {
           placeholder="Search blog posts..."
           className="h-8 w-56 rounded-md border border-[#e5e7eb] bg-[#f8fafc] px-3 text-xs text-ink placeholder:text-[#9ca3af] focus:border-navy-dark focus:outline-none"
         />
-        <a
-          href="/admin-portal/blogs/new"
-          className="inline-flex h-8 items-center rounded-md bg-navy-dark px-3 text-xs font-bold text-white transition-opacity duration-300 hover:opacity-90"
-        >
-          Add New Post
-        </a>
+        <ActionButton href="/admin-portal/blogs/new" label="Add New Post" variant="primary" icon={PlusIcon} />
       </div>
 
       <div className="overflow-x-auto">
@@ -97,27 +94,9 @@ export default function BlogsTable({ posts, onDelete }: BlogsTableProps) {
                 <td className="px-5 py-2 text-xs text-[#64748b]">{post.readTime}</td>
                 <td className="px-5 py-2 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <a
-                      href={`/blog/${post.slug}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                    >
-                      View
-                    </a>
-                    <a
-                      href={`/admin-portal/blogs/${post.id}/edit`}
-                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                    >
-                      Edit
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => onDelete(post)}
-                      className="inline-flex items-center justify-center rounded-md border border-[#fecaca] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
-                    >
-                      Delete
-                    </button>
+                    <ActionButton href={`/blog/${post.slug}`} target="_blank" rel="noreferrer" label="View" icon={EyeIcon} />
+                    <ActionButton href={`/admin-portal/blogs/${post.id}/edit`} label="Edit" icon={EditIcon} />
+                    <ActionButton label="Delete" variant="delete" icon={TrashIcon} onClick={() => onDelete(post)} />
                   </div>
                 </td>
               </tr>
@@ -162,7 +141,7 @@ export default function BlogsTable({ posts, onDelete }: BlogsTableProps) {
                   onClick={() => setPage(pageNumber)}
                   className={
                     pageNumber === currentPage
-                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white'
+                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white shadow-[0_1px_2px_rgba(10,67,89,0.35)]'
                       : 'flex size-9 items-center justify-center rounded-lg text-sm font-medium text-[#0f172a] transition-colors duration-300 hover:bg-[#f8fafc]'
                   }
                 >

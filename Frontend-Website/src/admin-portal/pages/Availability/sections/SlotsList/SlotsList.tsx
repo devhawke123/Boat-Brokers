@@ -1,6 +1,9 @@
 import type { ApiAvailabilitySlot } from '../../../../../lib/api'
 import type { ApiAdminBooking } from '../../../../lib/api'
 import { formatDateTime } from '../../../../../seller-portal/lib/formatDate'
+import StatusBadge from '../../../../components/StatusBadge/StatusBadge'
+import ActionButton from '../../../../components/ActionButton/ActionButton'
+import { CheckIcon, CrossIcon, TrashIcon } from '../../../../components/ActionButton/icons'
 
 type SlotsListProps = {
   slots: ApiAvailabilitySlot[]
@@ -44,20 +47,13 @@ export default function SlotsList({ slots, bookings, onApprove, onReject, onDele
                   </td>
                   <td className="px-5 py-2.5 text-sm">
                     {!booking ? (
-                      <span className="inline-flex items-center rounded-full bg-[#f1f5f9] px-2 py-[3px] text-[9.5px] font-bold text-[#64748b]">
-                        Open
-                      </span>
+                      <StatusBadge label="Open" tone="neutral" />
                     ) : (
-                      <div className="flex flex-col gap-0.5">
-                        <span
-                          className={`inline-flex w-fit items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${
-                            booking.status === 'APPROVED'
-                              ? 'bg-[#dcfce7] text-[#15803d]'
-                              : 'bg-[#fef9c3] text-[#a16207]'
-                          }`}
-                        >
-                          {booking.status === 'APPROVED' ? 'Booked' : 'Pending'}
-                        </span>
+                      <div className="flex flex-col gap-1">
+                        <StatusBadge
+                          label={booking.status === 'APPROVED' ? 'Booked' : 'Pending'}
+                          tone={booking.status === 'APPROVED' ? 'success' : 'progress'}
+                        />
                         <span className="text-xs text-[#334155]">
                           {booking.buyer.firstName} {booking.buyer.surname} — {booking.boat.name}
                         </span>
@@ -67,32 +63,24 @@ export default function SlotsList({ slots, bookings, onApprove, onReject, onDele
                   </td>
                   <td className="px-5 py-2.5 text-right">
                     {!booking && (
-                      <button
-                        type="button"
-                        onClick={() => onDelete(slot.id)}
-                        className="inline-flex items-center justify-center rounded-md border border-[#fecaca] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
-                      >
-                        Delete
-                      </button>
+                      <ActionButton label="Delete" variant="delete" icon={TrashIcon} onClick={() => onDelete(slot.id)} />
                     )}
                     {booking && booking.status === 'PENDING' && (
                       <div className="flex items-center justify-end gap-2">
-                        <button
-                          type="button"
+                        <ActionButton
+                          label="Approve"
+                          variant="approve"
+                          icon={CheckIcon}
                           disabled={busyBookingId === booking.id}
                           onClick={() => onApprove(booking.id)}
-                          className="inline-flex items-center justify-center rounded-md border border-[#86efac] bg-[#f0fdf4] px-3 py-1 text-[9.5px] font-bold text-[#15803d] transition-colors duration-300 hover:bg-[#dcfce7] disabled:opacity-50"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          label="Reject"
+                          variant="reject"
+                          icon={CrossIcon}
                           disabled={busyBookingId === booking.id}
                           onClick={() => onReject(booking.id)}
-                          className="inline-flex items-center justify-center rounded-md border border-[#fca5a5] bg-[#fef2f2] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#ffeae9] disabled:opacity-50"
-                        >
-                          Reject
-                        </button>
+                        />
                       </div>
                     )}
                   </td>

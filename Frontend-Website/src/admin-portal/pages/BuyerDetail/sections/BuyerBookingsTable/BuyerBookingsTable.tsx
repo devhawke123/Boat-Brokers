@@ -1,5 +1,6 @@
 import type { ApiBuyerBooking, BookingStatus } from '../../../../lib/api'
 import { formatDateTime } from '../../../../../seller-portal/lib/formatDate'
+import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 
 type BuyerBookingsTableProps = {
   bookings: ApiBuyerBooking[]
@@ -11,10 +12,10 @@ const statusLabels: Record<BookingStatus, string> = {
   REJECTED: 'Rejected',
 }
 
-const statusBadgeClasses: Record<BookingStatus, string> = {
-  APPROVED: 'bg-[#dcfce7] text-[#15803d]',
-  PENDING: 'bg-[#fef9c3] text-[#a16207]',
-  REJECTED: 'bg-[#ffeae9] text-[#dc2626]',
+const statusTones: Record<BookingStatus, BadgeTone> = {
+  APPROVED: 'success',
+  PENDING: 'progress',
+  REJECTED: 'danger',
 }
 
 export default function BuyerBookingsTable({ bookings }: BuyerBookingsTableProps) {
@@ -62,11 +63,7 @@ export default function BuyerBookingsTable({ bookings }: BuyerBookingsTableProps
                 </td>
                 <td className="px-5 py-2.5 text-xs text-[#64748b]">{formatDateTime(booking.createdAt)}</td>
                 <td className="px-5 py-2.5">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[booking.status]}`}
-                  >
-                    {statusLabels[booking.status]}
-                  </span>
+                  <StatusBadge label={statusLabels[booking.status]} tone={statusTones[booking.status]} />
                 </td>
               </tr>
             ))}

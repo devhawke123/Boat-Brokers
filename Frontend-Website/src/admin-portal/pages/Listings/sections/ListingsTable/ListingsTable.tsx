@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import type { ApiBoatListing, ListingStatus } from '../../../../../seller-portal/lib/api'
 import { formatDateTime, formatPrice } from '../../../../../seller-portal/lib/formatDate'
+import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
+import ActionButton from '../../../../components/ActionButton/ActionButton'
+import { CheckIcon, CommentIcon, CrossIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -23,10 +26,10 @@ const statusLabels: Record<ListingStatus, string> = {
   REJECTED: 'Rejected',
 }
 
-const statusBadgeClasses: Record<ListingStatus, string> = {
-  APPROVED: 'bg-[#dcfce7] text-[#15803d]',
-  PENDING: 'bg-[#fef9c3] text-[#a16207]',
-  REJECTED: 'bg-[#ffeae9] text-[#dc2626]',
+const statusTones: Record<ListingStatus, BadgeTone> = {
+  APPROVED: 'success',
+  PENDING: 'progress',
+  REJECTED: 'danger',
 }
 
 const pageSizeOptions = [5, 10, 20]
@@ -145,40 +148,33 @@ export default function ListingsTable({ listings, onStatusChange, updatingId }: 
                 <td className="px-5 py-2 text-xs text-[#64748b]">{formatDateTime(listing.createdAt)}</td>
                 <td className="px-5 py-2 text-xs font-bold text-[#0a192f]">{formatPrice(listing.boat.price)}</td>
                 <td className="px-5 py-2">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[listing.status]}`}
-                  >
-                    {statusLabels[listing.status]}
-                  </span>
+                  <StatusBadge label={statusLabels[listing.status]} tone={statusTones[listing.status]} />
                 </td>
                 <td className="px-5 py-2 text-right">
                   <div className="flex items-center justify-end gap-2">
                     {listing.status === 'PENDING' && (
                       <>
-                        <button
-                          type="button"
+                        <ActionButton
+                          label="Approve"
+                          variant="approve"
+                          icon={CheckIcon}
                           disabled={updatingId === listing.id}
                           onClick={() => onStatusChange(listing.id, 'APPROVED')}
-                          className="inline-flex items-center justify-center rounded-md border border-[#86efac] bg-[#f0fdf4] px-3 py-1 text-[9.5px] font-bold text-[#15803d] transition-colors duration-300 hover:bg-[#dcfce7] disabled:opacity-50"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          label="Reject"
+                          variant="reject"
+                          icon={CrossIcon}
                           disabled={updatingId === listing.id}
                           onClick={() => onStatusChange(listing.id, 'REJECTED')}
-                          className="inline-flex items-center justify-center rounded-md border border-[#fca5a5] bg-[#fef2f2] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#ffeae9] disabled:opacity-50"
-                        >
-                          Reject
-                        </button>
+                        />
                       </>
                     )}
-                    <a
+                    <ActionButton
                       href={`/admin-portal/listings/${listing.id}`}
-                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                    >
-                      Comments ({listing.comments.length})
-                    </a>
+                      label={`Comments (${listing.comments.length})`}
+                      icon={CommentIcon}
+                    />
                   </div>
                 </td>
               </tr>
@@ -227,7 +223,7 @@ export default function ListingsTable({ listings, onStatusChange, updatingId }: 
                   onClick={() => setPage(pageNumber)}
                   className={
                     pageNumber === currentPage
-                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white'
+                      ? 'flex size-9 items-center justify-center rounded-lg bg-navy-dark text-sm font-bold text-white shadow-[0_1px_2px_rgba(10,67,89,0.35)]'
                       : 'flex size-9 items-center justify-center rounded-lg text-sm font-medium text-[#0f172a] transition-colors duration-300 hover:bg-[#f8fafc]'
                   }
                 >
