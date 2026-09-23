@@ -6,9 +6,12 @@ type CreateSlotFormProps = {
   onCreated: () => void
 }
 
+const durationOptions = [2, 4, 6, 8, 10, 12]
+
 export default function CreateSlotForm({ onCreated }: CreateSlotFormProps) {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
+  const [durationHours, setDurationHours] = useState(2)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,9 +30,10 @@ export default function CreateSlotForm({ onCreated }: CreateSlotFormProps) {
     setSaving(true)
     setError(null)
     try {
-      await createAvailabilitySlot(startsAt.toISOString())
+      await createAvailabilitySlot(startsAt.toISOString(), durationHours)
       setDate('')
       setTime('')
+      setDurationHours(2)
       onCreated()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create slot.')
@@ -60,7 +64,20 @@ export default function CreateSlotForm({ onCreated }: CreateSlotFormProps) {
           className="h-10 rounded-md border border-[#e2e8f0] bg-white px-3 text-sm text-[#0f172a] focus:border-navy-dark focus:outline-none"
         />
       </label>
-      <p className="pb-2.5 text-xs text-[#94a3b8]">2-hour block</p>
+      <label className="flex flex-col gap-1">
+        <span className="text-xs font-semibold text-[#64748b]">Duration</span>
+        <select
+          value={durationHours}
+          onChange={(e) => setDurationHours(Number(e.target.value))}
+          className="h-10 rounded-md border border-[#e2e8f0] bg-white px-3 text-sm text-[#0f172a] focus:border-navy-dark focus:outline-none"
+        >
+          {durationOptions.map((hours) => (
+            <option key={hours} value={hours}>
+              {hours} hours
+            </option>
+          ))}
+        </select>
+      </label>
       <Button type="submit" variant="dark" label={saving ? 'Adding…' : 'Add Slot'} icon="none" disabled={saving} />
       {error && <p className="w-full text-xs font-medium text-[#dc2626]">{error}</p>}
     </form>

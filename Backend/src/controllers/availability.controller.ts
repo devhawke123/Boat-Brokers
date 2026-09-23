@@ -3,8 +3,6 @@ import { createSlot, deleteSlot, findAllSlots, findSlotById } from "../models/av
 import { createAvailabilitySlotSchema } from "../schemas/availability.schema";
 import { serializeSlot } from "../views/availability.view";
 
-const SLOT_DURATION_MS = 2 * 60 * 60 * 1000;
-
 export async function listSlots(_req: Request, res: Response) {
   const slots = await findAllSlots();
   res.json(slots.map(serializeSlot));
@@ -15,7 +13,7 @@ export async function createSlotHandler(req: Request, res: Response) {
   if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
   const startsAt = new Date(parsed.data.startsAt);
-  const endsAt = new Date(startsAt.getTime() + SLOT_DURATION_MS);
+  const endsAt = new Date(startsAt.getTime() + parsed.data.durationHours * 60 * 60 * 1000);
   const slot = await createSlot(startsAt, endsAt);
   res.status(201).json(serializeSlot({ ...slot, bookings: [] }));
 }
