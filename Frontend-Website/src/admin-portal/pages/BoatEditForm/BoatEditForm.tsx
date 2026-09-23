@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
 import { fetchListing, updateBoat, updateListingPreferences, type ApiBoatListing } from '../../../seller-portal/lib/api'
+import { fetchBoat, type ApiBoat } from '../../../lib/api'
 import StepIndicator from '../../../seller-portal/pages/AddBoat/sections/StepIndicator/StepIndicator'
 import StepFormCard from '../../../seller-portal/components/StepFormCard/StepFormCard'
 import BasicInformationForm, {
@@ -27,9 +28,11 @@ import KeyDetailsForm, {
 } from '../../../seller-portal/pages/AddBoat/sections/KeyDetailsForm/KeyDetailsForm'
 import ReviewForm from '../../../seller-portal/pages/AddBoat/sections/ReviewForm/ReviewForm'
 
-type BoatEditFormProps = {
-  listingId: number
-}
+// A boat can be edited two ways: via its listing (the seller-submission
+// flow — Listings/SellerListingsTable) or directly by boat id (the Boats
+// catalog, which also covers the ~49 legacy boats that were seeded straight
+// onto the site with no BoatListing row at all).
+type BoatEditFormProps = { listingId: number } | { boatId: number }
 
 const TOTAL_STEPS = 5
 
@@ -60,7 +63,10 @@ const STEP_META: Record<number, { title: string; subtitle: string }> = {
   5: { title: 'Review', subtitle: 'Review the listing before saving.' },
 }
 
-export default function BoatEditForm({ listingId }: BoatEditFormProps) {
+type SellerInfo = { name: string; email: string; phone: string | null }
+
+export default function BoatEditForm(props: BoatEditFormProps) {
+  const hasListing = 'listingId' in props
   const { checkedSession } = useAdminSession()
   const [currentStep, setCurrentStep] = useState(1)
   const [values, setValues] = useState<BasicInformationValues>(initialBasicInformationValues)
@@ -77,15 +83,14 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
   const [boatId, setBoatId] = useState<number | null>(null)
   const [sellerName, setSellerName] = useState('')
 
-  function valueOf(boat: ApiBoatListing['boat'], key: string) {
-    const value = boat[key]
+  function valueOf(boat: ApiBoat | ApiBoatListing['boat'], key: string) {
+    const value = (boat as Record<string, unknown>)[key]
     return typeof value === 'string' ? value : value == null ? '' : String(value)
   }
 
-  function populateFromListing(listing: ApiBoatListing) {
-    const boat = listing.boat
+  function populateFromBoat(boat: ApiBoat | ApiBoatListing['boat'], seller: SellerInfo, listing?: ApiBoatListing) {
     setBoatId(boat.id)
-    setSellerName(listing.seller.name)
+    setSellerName(seller.name)
     setValues({
       boatName: boat.name,
       length: valueOf(boat, 'lengthBeam'),
@@ -119,29 +124,29 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
     })
     setKeyDetailsValues({
       ...initialKeyDetailsValues,
-      fullName: listing.seller.name,
-      email: listing.seller.email,
-      phone: listing.seller.phone ?? '',
-      sellTimeline: listing.sellTimeline ?? '',
-      contactTime: listing.contactTime ?? '',
-      listerType: listing.listerType ?? '',
-      additionalNotes: listing.additionalNotes ?? '',
-      agreedToContact: listing.agreedToContact,
+      fullName: seller.name,
+      email: seller.email,
+      phone: seller.phone ?? '',
+      sellTimeline: listing?.sellTimeline ?? '',
+      contactTime: listing?.contactTime ?? '',
+      listerType: listing?.listerType ?? '',
+      additionalNotes: listing?.additionalNotes ?? '',
+      agreedToContact: listing?.agreedToContact ?? false,
     })
     setCustomFields({
-      fields: boat.customFields.map((field) => ({ id: String(field.id), label: field.label, value: field.value })),
+      fields: (boat.customFields ?? []).map((field) => ({ id: String(field.id), label: field.label, value: field.value })),
     })
   }
 
   useEffect(() => {
     let cancelled = false
     setIsLoading(true)
-    fetchListing(listingId)
-      .then((listing) => {
-        if (!cancelled) populateFromListing(listing)
-      })
+    const request = hasListing
+      ? fetchListing(props.listingId).then((listing) => populateFromBoat(listing.boat, listing.seller, listing))
+      : fetchBoat(props.boatId).then((boat) => populateFromBoat(boat, boat.seller))
+    request
       .catch((err: unknown) => {
-        if (!cancelled) setSubmitError(err instanceof Error ? err.message : 'Failed to load listing.')
+        if (!cancelled) setSubmitError(err instanceof Error ? err.message : 'Failed to load boat.')
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false)
@@ -149,7 +154,8 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
     return () => {
       cancelled = true
     }
-  }, [listingId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasListing, hasListing ? props.listingId : props.boatId])
 
   if (!checkedSession) return null
 
@@ -181,7 +187,7 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
   }
 
   function handleCancel() {
-    window.location.href = '/admin-portal/listings'
+    window.location.href = hasListing ? '/admin-portal/listings' : '/admin-portal/boats'
   }
 
   async function handleContinue() {
@@ -233,14 +239,16 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
       formData.set('agreedToContact', String(keyDetailsValues.agreedToContact))
 
       await updateBoat(boatId, formData)
-      await updateListingPreferences(listingId, {
-        sellTimeline: keyDetailsValues.sellTimeline,
-        contactTime: keyDetailsValues.contactTime,
-        listerType: keyDetailsValues.listerType,
-        additionalNotes: keyDetailsValues.additionalNotes,
-        agreedToContact: keyDetailsValues.agreedToContact,
-      })
-      window.location.href = '/admin-portal/listings'
+      if (hasListing) {
+        await updateListingPreferences(props.listingId, {
+          sellTimeline: keyDetailsValues.sellTimeline,
+          contactTime: keyDetailsValues.contactTime,
+          listerType: keyDetailsValues.listerType,
+          additionalNotes: keyDetailsValues.additionalNotes,
+          agreedToContact: keyDetailsValues.agreedToContact,
+        })
+      }
+      window.location.href = hasListing ? '/admin-portal/listings' : '/admin-portal/boats'
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Failed to save boat. Please try again.')
     } finally {
@@ -382,7 +390,14 @@ export default function BoatEditForm({ listingId }: BoatEditFormProps) {
                 photosError={mediaError}
               />
             ) : currentStep === 4 ? (
-              <KeyDetailsForm values={keyDetailsValues} onChange={handleKeyDetailsChange} />
+              <div className="flex flex-col gap-3">
+                {!hasListing && (
+                  <p className="rounded-lg border border-[#fde68a] bg-[#fffbeb] px-4 py-2 text-[13px] text-[#92400e]">
+                    This boat has no seller submission attached, so timeline/contact preferences below won&rsquo;t be saved.
+                  </p>
+                )}
+                <KeyDetailsForm values={keyDetailsValues} onChange={handleKeyDetailsChange} />
+              </div>
             ) : (
               <ReviewForm
                 basicInfo={values}

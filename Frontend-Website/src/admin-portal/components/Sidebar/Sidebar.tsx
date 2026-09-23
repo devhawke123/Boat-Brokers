@@ -3,6 +3,7 @@ import sidebarLogo from '../../../seller-portal/assets/Sidebar/sidebar-logo.png'
 import {
   AvailabilityIcon,
   BlogsIcon,
+  BoatsIcon,
   BuyersIcon,
   CloseIcon,
   DashboardIcon,
@@ -41,6 +42,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         { label: 'Leads', href: '/admin-portal/leads', icon: LeadsIcon },
         { label: 'Boat Sellers', href: '/admin-portal/sellers', icon: SellersIcon },
         { label: 'Boat Buyers', href: '/admin-portal/buyers', icon: BuyersIcon },
+        { label: 'Boats', href: '/admin-portal/boats', icon: BoatsIcon },
         { label: 'Listings', href: '/admin-portal/listings', icon: ListingsIcon },
       ],
     },

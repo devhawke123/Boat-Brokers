@@ -27,6 +27,21 @@ export function ListingsIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+export function BoatsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M3 12.5L4.5 16.5H15.5L17 12.5H3Z"
+        stroke="currentColor"
+        strokeWidth="1.6667"
+        strokeLinejoin="round"
+      />
+      <path d="M5.5 12.5V5.5H12.5L14.5 12.5" stroke="currentColor" strokeWidth="1.6667" strokeLinejoin="round" />
+      <path d="M8 5.5V3.5" stroke="currentColor" strokeWidth="1.6667" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 export function SellersIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

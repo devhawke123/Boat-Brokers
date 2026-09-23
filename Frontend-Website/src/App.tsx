@@ -4,6 +4,7 @@ import Buying from './pages/Buying/Buying'
 import Selling from './pages/Selling/Selling'
 import BoatForSale from './pages/BoatForSale/BoatForSale'
 import BoatDetail from './pages/BoatDetail/BoatDetail'
+import BoatViewing from './pages/BoatViewing/BoatViewing'
 import JargonBuster from './pages/JargonBuster/JargonBuster'
 import NoelCreary from './pages/NoelCreary/NoelCreary'
 import Faq from './pages/Faq/Faq'
@@ -31,6 +32,7 @@ import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
 import Sellers from './admin-portal/pages/Sellers/Sellers'
 import SellerForm from './admin-portal/pages/SellerForm/SellerForm'
 import SellerDetail from './admin-portal/pages/SellerDetail/SellerDetail'
+import Boats from './admin-portal/pages/Boats/Boats'
 import Listings from './admin-portal/pages/Listings/Listings'
 import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
 import BoatEditForm from './admin-portal/pages/BoatEditForm/BoatEditForm'
@@ -65,6 +67,10 @@ function App() {
 
   if (pathname === '/boats-for-sale') {
     return <BoatForSale />
+  }
+
+  if (pathname.startsWith('/boats/') && pathname.endsWith('/book-viewing')) {
+    return <BoatViewing slug={pathname.replace('/boats/', '').replace('/book-viewing', '')} />
   }
 
   if (pathname.startsWith('/boats/')) {
@@ -184,6 +190,15 @@ function App() {
   if (pathname.startsWith('/admin-portal/sellers/') && pathname.endsWith('/edit')) {
     const sellerId = Number(pathname.replace('/admin-portal/sellers/', '').replace('/edit', ''))
     if (Number.isInteger(sellerId)) return <SellerForm sellerId={sellerId} />
+  }
+
+  if (pathname === '/admin-portal/boats') {
+    return <Boats />
+  }
+
+  if (pathname.startsWith('/admin-portal/boats/') && pathname.endsWith('/edit')) {
+    const boatId = Number(pathname.replace('/admin-portal/boats/', '').replace('/edit', ''))
+    if (Number.isInteger(boatId)) return <BoatEditForm boatId={boatId} />
   }
 
   if (pathname === '/admin-portal/listings') {
