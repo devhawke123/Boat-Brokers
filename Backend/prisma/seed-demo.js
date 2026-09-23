@@ -54,7 +54,10 @@ async function createDemoBoat(seller, name, price, isSold = false, isUnderOffer 
       isUnderOffer,
       sellerId: seller.id,
       builder: 'Demo Boatyard',
-      boatType: 'Narrowboat',
+      // Must match the storefront's default fallback/filter value exactly
+      // (see Frontend-Website/src/data/boats.ts) — plural, not singular —
+      // or these boats get silently filtered out of the default view.
+      boatType: 'Narrowboats',
       overview: `A lovely demo listing for ${name}, seeded for testing the admin dashboard.`,
     },
   });
