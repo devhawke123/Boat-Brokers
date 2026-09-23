@@ -205,14 +205,14 @@ model Seller {
   // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
   avatarUrl   String?
   joiningDate DateTime @default(now())
-  // Admin-managed vendor pipeline stage — independent of BoatListing status.
-  status      VendorStatus @default(NEW)
+  // Admin-managed seller pipeline stage — independent of BoatListing status.
+  status      SellerStatus @default(NEW)
   boats       Boat[]
   listings    BoatListing[]
   sales       Sale[]
 }
 
-enum VendorStatus {
+enum SellerStatus {
   NEW
   CONTACTED
   LISTED
@@ -351,8 +351,8 @@ enum LeadStatus {
   LOST
 }
 
-// Vendor-side inquiry pipeline — fully admin-driven (manual entry), tracked
-// separately from real Seller accounts (see VendorStatus on Seller). No
+// Seller-side inquiry pipeline — fully admin-driven (manual entry), tracked
+// separately from real Seller accounts (see SellerStatus on Seller). No
 // automatic conversion/linking between the two.
 model Lead {
   id        Int        @id @default(autoincrement())
@@ -374,7 +374,7 @@ enum SaleStatus {
   CANCELLED
 }
 
-// Manual deal log — admin picks vendor + buyer + boat and enters the figures
+// Manual deal log — admin picks seller + buyer + boat and enters the figures
 // by hand. No automated side effects on Buyer/Lead status (see overview spec).
 model Sale {
   id         Int        @id @default(autoincrement())

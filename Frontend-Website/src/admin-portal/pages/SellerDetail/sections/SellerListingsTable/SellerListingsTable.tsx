@@ -1,7 +1,7 @@
 import type { ApiBoatListing, ListingStatus } from '../../../../../seller-portal/lib/api'
 import { formatDateTime, formatPrice } from '../../../../../seller-portal/lib/formatDate'
 
-type VendorListingsTableProps = {
+type SellerListingsTableProps = {
   listings: ApiBoatListing[]
   onStatusChange: (listingId: number, status: ListingStatus) => void
   updatingId: number | null
@@ -19,7 +19,7 @@ const statusBadgeClasses: Record<ListingStatus, string> = {
   REJECTED: 'bg-[#ffeae9] text-[#dc2626]',
 }
 
-export default function VendorListingsTable({ listings, onStatusChange, updatingId }: VendorListingsTableProps) {
+export default function SellerListingsTable({ listings, onStatusChange, updatingId }: SellerListingsTableProps) {
   return (
     <div className="w-full overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
       <div className="border-b border-[#f3f4f6] px-5 py-3">
@@ -107,7 +107,7 @@ export default function VendorListingsTable({ listings, onStatusChange, updating
             {listings.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-5 py-8 text-center text-sm text-[#64748b]">
-                  This vendor hasn&rsquo;t listed any boats yet.
+                  This seller hasn&rsquo;t listed any boats yet.
                 </td>
               </tr>
             )}

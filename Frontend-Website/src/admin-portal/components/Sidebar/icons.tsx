@@ -18,7 +18,16 @@ export function LeadsIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
-export function VendorsIcon(props: SVGProps<SVGSVGElement>) {
+export function ListingsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M4 3.5L16 3.5V16.5L4 16.5V3.5Z" stroke="currentColor" strokeWidth="1.6667" strokeLinejoin="round" />
+      <path d="M7.5 8L12.5 8M7.5 11.5L10.5 11.5" stroke="currentColor" strokeWidth="1.6667" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+export function SellersIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <circle cx="10" cy="6.5" r="3.3" stroke="currentColor" strokeWidth="1.6667" />

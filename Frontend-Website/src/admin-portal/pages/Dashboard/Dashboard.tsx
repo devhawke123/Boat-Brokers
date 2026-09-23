@@ -30,7 +30,7 @@ export default function Dashboard() {
         ) : (
           <div className="grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
             <PeopleMetrics
-              totalVendors={data.peopleMetrics.totalVendors}
+              totalSellers={data.peopleMetrics.totalSellers}
               totalBuyers={data.peopleMetrics.totalBuyers}
             />
             <SalesOverview

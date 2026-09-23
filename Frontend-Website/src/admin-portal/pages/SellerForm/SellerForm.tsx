@@ -6,14 +6,14 @@ import { createSeller, updateSeller } from '../../../seller-portal/lib/api'
 import { TextField, FieldRow } from '../../../seller-portal/components/FormField/FormField'
 import Button from '../../../components/Button/Button'
 
-type VendorFormProps = {
-  vendorId?: number
+type SellerFormProps = {
+  sellerId?: number
 }
 
-export default function VendorForm({ vendorId }: VendorFormProps) {
+export default function SellerForm({ sellerId }: SellerFormProps) {
   const { checkedSession } = useAdminSession()
-  const isEdit = vendorId !== undefined
-  const { seller, loading } = useSellerById(vendorId ?? -1)
+  const isEdit = sellerId !== undefined
+  const { seller, loading } = useSellerById(sellerId ?? -1)
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -24,7 +24,7 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Populate the form once the existing vendor loads (edit mode only).
+  // Populate the form once the existing seller loads (edit mode only).
   if (isEdit && seller && !initialized) {
     setName(seller.name)
     setEmail(seller.email)
@@ -38,10 +38,10 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
     setSaving(true)
     setError(null)
     try {
-      if (isEdit && vendorId !== undefined) {
-        await updateSeller(vendorId, { name, email, phone: phone || undefined, location: location || undefined })
+      if (isEdit && sellerId !== undefined) {
+        await updateSeller(sellerId, { name, email, phone: phone || undefined, location: location || undefined })
         invalidateSellersCache()
-        window.location.href = `/admin-portal/vendors/${vendorId}`
+        window.location.href = `/admin-portal/sellers/${sellerId}`
       } else {
         const created = await createSeller({
           name,
@@ -51,10 +51,10 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
           location: location || undefined,
         })
         invalidateSellersCache()
-        window.location.href = `/admin-portal/vendors/${created.id}`
+        window.location.href = `/admin-portal/sellers/${created.id}`
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save vendor.')
+      setError(err instanceof Error ? err.message : 'Failed to save seller.')
       setSaving(false)
     }
   }
@@ -73,9 +73,9 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
     return (
       <AdminShell mainClassName="bg-frost">
         <div className="flex flex-col items-center gap-2 p-8 text-center text-[#64748b]">
-          <p>This vendor couldn&rsquo;t be found.</p>
-          <a href="/admin-portal/vendors" className="text-sm font-semibold text-[#2563eb]">
-            Back to Boat Vendors
+          <p>This seller couldn&rsquo;t be found.</p>
+          <a href="/admin-portal/sellers" className="text-sm font-semibold text-[#2563eb]">
+            Back to Boat Sellers
           </a>
         </div>
       </AdminShell>
@@ -85,7 +85,7 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
   return (
     <AdminShell mainClassName="bg-frost">
       <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8">
-        <h1 className="text-2xl font-bold text-[#0f172a]">{isEdit ? 'Edit Vendor' : 'Add New Vendor'}</h1>
+        <h1 className="text-2xl font-bold text-[#0f172a]">{isEdit ? 'Edit Seller' : 'Add New Seller'}</h1>
 
         <form
           onSubmit={handleSubmit}
@@ -114,8 +114,8 @@ export default function VendorForm({ vendorId }: VendorFormProps) {
           {error && <p className="text-sm font-medium text-[#dc2626]">{error}</p>}
 
           <div className="flex items-center gap-3">
-            <Button type="submit" variant="dark" label={saving ? 'Saving…' : 'Save Vendor'} icon="none" disabled={saving} />
-            <a href="/admin-portal/vendors" className="text-sm font-semibold text-[#64748b] hover:text-[#0f172a]">
+            <Button type="submit" variant="dark" label={saving ? 'Saving…' : 'Save Seller'} icon="none" disabled={saving} />
+            <a href="/admin-portal/sellers" className="text-sm font-semibold text-[#64748b] hover:text-[#0f172a]">
               Cancel
             </a>
           </div>

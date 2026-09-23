@@ -1,10 +1,10 @@
 type ListingCommentsHeaderProps = {
   boatName: string
   boatImageUrl: string | null
-  vendorId: number
+  sellerId: number
 }
 
-export default function ListingCommentsHeader({ boatName, boatImageUrl, vendorId }: ListingCommentsHeaderProps) {
+export default function ListingCommentsHeader({ boatName, boatImageUrl, sellerId }: ListingCommentsHeaderProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-[#e5e7eb] bg-white px-6 py-6 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
       <div className="flex items-center gap-4">
@@ -19,10 +19,10 @@ export default function ListingCommentsHeader({ boatName, boatImageUrl, vendorId
       </div>
 
       <a
-        href={`/admin-portal/vendors/${vendorId}`}
+        href={`/admin-portal/sellers/${sellerId}`}
         className="flex items-center gap-2 text-base font-medium text-[#243b53] transition-colors duration-300 hover:text-[#0b3a58]"
       >
-        ← Back to Vendor
+        ← Back to Seller
       </a>
     </div>
   )

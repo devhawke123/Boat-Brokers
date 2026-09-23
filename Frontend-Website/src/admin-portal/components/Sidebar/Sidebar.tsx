@@ -7,9 +7,10 @@ import {
   CloseIcon,
   DashboardIcon,
   LeadsIcon,
+  ListingsIcon,
   LogoutIcon,
   SalesIcon,
-  VendorsIcon,
+  SellersIcon,
 } from './icons'
 import { clearStoredAdmin } from '../../lib/session'
 
@@ -38,8 +39,9 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       items: [
         { label: 'Dashboard', href: '/admin-portal/dashboard', icon: DashboardIcon },
         { label: 'Leads', href: '/admin-portal/leads', icon: LeadsIcon },
-        { label: 'Boat Vendors', href: '/admin-portal/vendors', icon: VendorsIcon },
+        { label: 'Boat Sellers', href: '/admin-portal/sellers', icon: SellersIcon },
         { label: 'Boat Buyers', href: '/admin-portal/buyers', icon: BuyersIcon },
+        { label: 'Listings', href: '/admin-portal/listings', icon: ListingsIcon },
       ],
     },
     {

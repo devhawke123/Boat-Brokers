@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 
 export async function getDashboardStats(_req: Request, res: Response) {
-  const [totalVendors, totalBuyers, listings, underOffer, totalSales, completedSales] = await Promise.all([
+  const [totalSellers, totalBuyers, listings, underOffer, totalSales, completedSales] = await Promise.all([
     prisma.seller.count(),
     prisma.buyer.count(),
     prisma.boatListing.count(),
@@ -13,7 +13,7 @@ export async function getDashboardStats(_req: Request, res: Response) {
 
   res.json({
     peopleMetrics: {
-      totalVendors,
+      totalSellers,
       totalBuyers,
     },
     salesOverview: {

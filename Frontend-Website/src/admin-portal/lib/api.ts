@@ -1,4 +1,4 @@
-import type { ApiSeller, VendorStatus } from '../../seller-portal/lib/api'
+import type { ApiSeller, SellerStatus } from '../../seller-portal/lib/api'
 
 export type ApiAdmin = {
   id: number
@@ -12,7 +12,7 @@ export type ApiAdmin = {
 
 export type DashboardStats = {
   peopleMetrics: {
-    totalVendors: number
+    totalSellers: number
     totalBuyers: number
   }
   salesOverview: {
@@ -113,11 +113,11 @@ export function fetchDashboardStats(): Promise<DashboardStats> {
   return apiGet<DashboardStats>('/admin/dashboard-stats')
 }
 
-// Vendors (Seller CRUD/session logic is reused directly from seller-portal's
+// Sellers (Seller CRUD/session logic is reused directly from seller-portal's
 // lib/api.ts and data/useSellers.ts — it's portal-agnostic resource data, not
 // duplicated here. This file only adds the one admin-only mutation.)
 
-export function updateSellerStatus(id: number, status: VendorStatus): Promise<ApiSeller> {
+export function updateSellerStatus(id: number, status: SellerStatus): Promise<ApiSeller> {
   return apiPatch<ApiSeller>(`/sellers/${id}/status`, { status })
 }
 
@@ -220,7 +220,7 @@ export function updateBuyerStatus(id: number, status: BuyerStatus): Promise<ApiB
   return apiPatch<ApiBuyer>(`/buyers/${id}/status`, { status })
 }
 
-// Leads — vendor-side inquiry pipeline, fully manual/admin-driven.
+// Leads — seller-side inquiry pipeline, fully manual/admin-driven.
 
 export type LeadStatus = 'NEW' | 'CONTACTED' | 'LISTED' | 'LOST'
 
@@ -274,7 +274,7 @@ export function updateLeadStatus(id: number, status: LeadStatus): Promise<ApiLea
   return apiPatch<ApiLead>(`/leads/${id}/status`, { status })
 }
 
-// Sales — manual deal log. Admin picks vendor/buyer/boat from dropdowns
+// Sales — manual deal log. Admin picks seller/buyer/boat from dropdowns
 // (reusing fetchSellers/fetchBuyers/fetchBoats — no dedicated lookup
 // endpoints needed) and enters the figures by hand.
 

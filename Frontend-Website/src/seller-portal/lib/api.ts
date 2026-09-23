@@ -1,4 +1,4 @@
-export type VendorStatus = 'NEW' | 'CONTACTED' | 'LISTED' | 'LOST'
+export type SellerStatus = 'NEW' | 'CONTACTED' | 'LISTED' | 'LOST'
 
 export type ApiSeller = {
   id: number
@@ -9,7 +9,7 @@ export type ApiSeller = {
   location: string | null
   avatarUrl: string | null
   joiningDate: string
-  status: VendorStatus
+  status: SellerStatus
 }
 
 export type ApiListingComment = {

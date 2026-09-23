@@ -3,16 +3,16 @@ import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useSellers, invalidateSellersCache } from '../../../seller-portal/data/useSellers'
 import { useBoatListings, invalidateListingsCache } from '../../../seller-portal/data/useBoatListings'
-import { deleteSeller, updateListingStatus, type ListingStatus, type VendorStatus } from '../../../seller-portal/lib/api'
+import { deleteSeller, updateListingStatus, type ListingStatus, type SellerStatus } from '../../../seller-portal/lib/api'
 import { updateSellerStatus } from '../../lib/api'
-import VendorInfoCard from './sections/VendorInfoCard/VendorInfoCard'
-import VendorListingsTable from './sections/VendorListingsTable/VendorListingsTable'
+import SellerInfoCard from './sections/SellerInfoCard/SellerInfoCard'
+import SellerListingsTable from './sections/SellerListingsTable/SellerListingsTable'
 
-type VendorDetailProps = {
-  vendorId: number
+type SellerDetailProps = {
+  sellerId: number
 }
 
-export default function VendorDetail({ vendorId }: VendorDetailProps) {
+export default function SellerDetail({ sellerId }: SellerDetailProps) {
   const { checkedSession } = useAdminSession()
   const { sellers, loading, error, refetch } = useSellers()
   const { listings, loading: listingsLoading, refetch: refetchListings } = useBoatListings()
@@ -20,14 +20,14 @@ export default function VendorDetail({ vendorId }: VendorDetailProps) {
   const [updatingListingId, setUpdatingListingId] = useState<number | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
 
-  const vendor = sellers.find((s) => s.id === vendorId) ?? null
-  const vendorListings = listings.filter((l) => l.seller.id === vendorId)
+  const seller = sellers.find((s) => s.id === sellerId) ?? null
+  const sellerListings = listings.filter((l) => l.seller.id === sellerId)
 
-  async function handleStatusChange(status: VendorStatus) {
+  async function handleStatusChange(status: SellerStatus) {
     setUpdatingStatus(true)
     setActionError(null)
     try {
-      await updateSellerStatus(vendorId, status)
+      await updateSellerStatus(sellerId, status)
       invalidateSellersCache()
       refetch()
     } catch (err) {
@@ -52,14 +52,14 @@ export default function VendorDetail({ vendorId }: VendorDetailProps) {
   }
 
   async function handleDelete() {
-    if (!vendor) return
-    if (!window.confirm(`Delete vendor "${vendor.name}"? This can't be undone.`)) return
+    if (!seller) return
+    if (!window.confirm(`Delete seller "${seller.name}"? This can't be undone.`)) return
     try {
-      await deleteSeller(vendor.id)
+      await deleteSeller(seller.id)
       invalidateSellersCache()
-      window.location.href = '/admin-portal/vendors'
+      window.location.href = '/admin-portal/sellers'
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete vendor.')
+      window.alert(err instanceof Error ? err.message : 'Failed to delete seller.')
     }
   }
 
@@ -68,22 +68,22 @@ export default function VendorDetail({ vendorId }: VendorDetailProps) {
   return (
     <AdminShell mainClassName="bg-frost">
       <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8">
-        <a href="/admin-portal/vendors" className="w-fit text-sm font-semibold text-[#64748b] hover:text-[#0f172a]">
-          ← Back to Boat Vendors
+        <a href="/admin-portal/sellers" className="w-fit text-sm font-semibold text-[#64748b] hover:text-[#0f172a]">
+          ← Back to Boat Sellers
         </a>
 
         {error ? (
           <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
-            <p>Couldn&rsquo;t load this vendor from the server: {error}</p>
+            <p>Couldn&rsquo;t load this seller from the server: {error}</p>
           </div>
         ) : loading || listingsLoading ? (
           <div className="flex flex-col gap-6">
             <div className="h-56 w-full animate-pulse rounded-lg border border-[#e2e8f0] bg-[#f8fafc]" />
             <div className="h-64 w-full animate-pulse rounded-lg border border-[#e2e8f0] bg-[#f8fafc]" />
           </div>
-        ) : !vendor ? (
+        ) : !seller ? (
           <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#e2e8f0] bg-white py-16 text-center text-[#64748b]">
-            <p>This vendor couldn&rsquo;t be found.</p>
+            <p>This seller couldn&rsquo;t be found.</p>
           </div>
         ) : (
           <>
@@ -92,14 +92,14 @@ export default function VendorDetail({ vendorId }: VendorDetailProps) {
                 {actionError}
               </p>
             )}
-            <VendorInfoCard
-              vendor={vendor}
+            <SellerInfoCard
+              seller={seller}
               onStatusChange={handleStatusChange}
               onDelete={handleDelete}
               updatingStatus={updatingStatus}
             />
-            <VendorListingsTable
-              listings={vendorListings}
+            <SellerListingsTable
+              listings={sellerListings}
               onStatusChange={handleListingStatusChange}
               updatingId={updatingListingId}
             />

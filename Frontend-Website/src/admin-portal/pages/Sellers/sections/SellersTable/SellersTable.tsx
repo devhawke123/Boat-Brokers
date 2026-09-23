@@ -1,60 +1,61 @@
 import { useMemo, useState } from 'react'
-import type { ApiSale, SaleStatus } from '../../../../lib/api'
-import { formatPrice } from '../../../../../seller-portal/lib/formatDate'
+import type { ApiSeller, SellerStatus } from '../../../../../seller-portal/lib/api'
+import { formatDate } from '../../../../../seller-portal/lib/formatDate'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
-type SalesTableProps = {
-  sales: ApiSale[]
-  onDelete: (sale: ApiSale) => void
+type SellersTableProps = {
+  sellers: ApiSeller[]
+  boatCounts: Record<number, number>
+  onDelete: (seller: ApiSeller) => void
 }
 
-const tabs: { label: string; status: SaleStatus | 'All' }[] = [
+const tabs: { label: string; status: SellerStatus | 'All' }[] = [
   { label: 'All', status: 'All' },
-  { label: 'Current', status: 'CURRENT' },
-  { label: 'Completed', status: 'COMPLETED' },
-  { label: 'Cancelled', status: 'CANCELLED' },
+  { label: 'New', status: 'NEW' },
+  { label: 'Contacted', status: 'CONTACTED' },
+  { label: 'Listed', status: 'LISTED' },
+  { label: 'Lost', status: 'LOST' },
 ]
 
-const statusLabels: Record<SaleStatus, string> = {
-  CURRENT: 'Current',
-  COMPLETED: 'Completed',
-  CANCELLED: 'Cancelled',
+const statusLabels: Record<SellerStatus, string> = {
+  NEW: 'New',
+  CONTACTED: 'Contacted',
+  LISTED: 'Listed',
+  LOST: 'Lost',
 }
 
-const statusBadgeClasses: Record<SaleStatus, string> = {
-  CURRENT: 'bg-[#dbeafe] text-[#1d4ed8]',
-  COMPLETED: 'bg-[#dcfce7] text-[#15803d]',
-  CANCELLED: 'bg-[#ffeae9] text-[#dc2626]',
+const statusBadgeClasses: Record<SellerStatus, string> = {
+  NEW: 'bg-[#dbeafe] text-[#1d4ed8]',
+  CONTACTED: 'bg-[#fef9c3] text-[#a16207]',
+  LISTED: 'bg-[#dcfce7] text-[#15803d]',
+  LOST: 'bg-[#ffeae9] text-[#dc2626]',
 }
 
 const pageSizeOptions = [5, 10, 20]
 
-export default function SalesTable({ sales, onDelete }: SalesTableProps) {
-  const [activeTab, setActiveTab] = useState<SaleStatus | 'All'>('All')
+export default function SellersTable({ sellers, boatCounts, onDelete }: SellersTableProps) {
+  const [activeTab, setActiveTab] = useState<SellerStatus | 'All'>('All')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
-    return sales.filter((sale) => {
-      const matchesTab = activeTab === 'All' || sale.status === activeTab
+    return sellers.filter((seller) => {
+      const matchesTab = activeTab === 'All' || seller.status === activeTab
       const matchesSearch =
-        query === '' ||
-        sale.boat.name.toLowerCase().includes(query) ||
-        sale.seller.name.toLowerCase().includes(query) ||
-        `${sale.buyer.firstName} ${sale.buyer.surname}`.toLowerCase().includes(query)
+        query === '' || seller.name.toLowerCase().includes(query) || seller.email.toLowerCase().includes(query)
       return matchesTab && matchesSearch
     })
-  }, [sales, activeTab, search])
+  }, [sellers, activeTab, search])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const currentPage = Math.min(page, totalPages)
   const pageStart = (currentPage - 1) * pageSize
   const paginated = filtered.slice(pageStart, pageStart + pageSize)
 
-  function selectTab(status: SaleStatus | 'All') {
+  function selectTab(status: SellerStatus | 'All') {
     setActiveTab(status)
     setPage(1)
   }
@@ -94,45 +95,39 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
             type="search"
             value={search}
             onChange={(event) => updateSearch(event.target.value)}
-            placeholder="Search sales..."
+            placeholder="Search sellers..."
             className="h-8 w-48 rounded-md border border-[#e5e7eb] bg-[#f8fafc] px-3 text-xs text-ink placeholder:text-[#9ca3af] focus:border-navy-dark focus:outline-none"
           />
           <a
-            href="/admin-portal/sales/new"
+            href="/admin-portal/sellers/new"
             className="inline-flex h-8 items-center rounded-md bg-navy-dark px-3 text-xs font-bold text-white transition-opacity duration-300 hover:opacity-90"
           >
-            Add New Sale
+            Add New Seller
           </a>
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[60rem] border-collapse">
+        <table className="w-full min-w-[56rem] border-collapse">
           <thead>
             <tr className="bg-[#f8fafc]">
-              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Boat
-              </th>
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Seller
               </th>
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Buyer
+                Email
               </th>
-              <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Sold Price
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Phone
               </th>
-              <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Deposit
-              </th>
-              <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Balance
-              </th>
-              <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Comm.
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Boats
               </th>
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Status
+              </th>
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Joined
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Actions
@@ -140,35 +135,31 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
             </tr>
           </thead>
           <tbody>
-            {paginated.map((sale) => (
-              <tr key={sale.id} className="border-t border-[#f3f4f6]">
-                <td className="px-5 py-2.5 font-display text-sm text-[#0a192f]">{sale.boat.name}</td>
-                <td className="px-5 py-2.5 text-xs text-[#64748b]">{sale.seller.name}</td>
-                <td className="px-5 py-2.5 text-xs text-[#64748b]">
-                  {sale.buyer.firstName} {sale.buyer.surname}
-                </td>
-                <td className="px-5 py-2.5 text-right text-xs font-bold text-[#0a192f]">{formatPrice(sale.soldPrice)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.deposit)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.balance)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.commission)}</td>
+            {paginated.map((seller) => (
+              <tr key={seller.id} className="border-t border-[#f3f4f6]">
+                <td className="px-5 py-2.5 font-display text-sm text-[#0a192f]">{seller.name}</td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">{seller.email}</td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">{seller.phone ?? '—'}</td>
+                <td className="px-5 py-2.5 text-xs font-semibold text-[#0f172a]">{boatCounts[seller.id] ?? 0}</td>
                 <td className="px-5 py-2.5">
                   <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[sale.status]}`}
+                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[seller.status]}`}
                   >
-                    {statusLabels[sale.status]}
+                    {statusLabels[seller.status]}
                   </span>
                 </td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">{formatDate(seller.joiningDate)}</td>
                 <td className="px-5 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <a
-                      href={`/admin-portal/sales/${sale.id}`}
+                      href={`/admin-portal/sellers/${seller.id}`}
                       className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
                     >
                       View Details
                     </a>
                     <button
                       type="button"
-                      onClick={() => onDelete(sale)}
+                      onClick={() => onDelete(seller)}
                       className="inline-flex items-center justify-center rounded-md border border-[#fecaca] px-3 py-1 text-[9.5px] font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
                     >
                       Delete
@@ -180,12 +171,12 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
 
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-5 py-8 text-center text-sm text-[#64748b]">
-                  {sales.length === 0
-                    ? 'No sales yet.'
+                <td colSpan={7} className="px-5 py-8 text-center text-sm text-[#64748b]">
+                  {sellers.length === 0
+                    ? 'No sellers yet.'
                     : search
-                      ? `No sales match "${search}".`
-                      : 'No sales in this category.'}
+                      ? `No sellers match "${search}".`
+                      : 'No sellers in this category.'}
                 </td>
               </tr>
             )}
@@ -198,7 +189,7 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
           <p className="text-sm text-[#64748b]">
             Showing <span className="font-semibold text-[#0f172a]">{pageStart + 1}</span> to{' '}
             <span className="font-semibold text-[#0f172a]">{Math.min(pageStart + pageSize, filtered.length)}</span>{' '}
-            of <span className="font-semibold text-[#0f172a]">{filtered.length}</span> sales
+            of <span className="font-semibold text-[#0f172a]">{filtered.length}</span> sellers
           </p>
 
           <div className="flex items-center gap-1">

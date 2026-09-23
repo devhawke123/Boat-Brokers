@@ -3,6 +3,18 @@
 Status: approved (overview level — each module gets its own detailed spec before build)
 Date: 2026-09-22
 
+> **2026-09-23 terminology update:** "Vendor" was renamed to "Seller"
+> throughout the admin (module name, routes, UI labels, the `VendorStatus`
+> enum → `SellerStatus`, the dashboard's `totalVendors` field →
+> `totalSellers`) since Seller *is* the Vendor — they were never two
+> different things, and using both words was confusing. The mentions of
+> "Vendor" below are left as-is since they're a dated record of the module
+> as originally scoped; read them as "Seller." A standalone **Listings**
+> module/sidebar item was also added — a cross-seller view of every
+> `BoatListing` with status tabs and inline approve/reject, since the
+> per-seller listings table alone made it hard to review approvals across
+> all sellers at once.
+
 ## Purpose
 
 Boat Brokers has a public site and a seller portal, but no admin system at all today.

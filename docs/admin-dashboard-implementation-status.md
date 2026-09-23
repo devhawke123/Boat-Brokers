@@ -27,18 +27,18 @@ verified" record, module by module)
 - New `Admin` Prisma model, `POST /api/admin/login`.
 - Admin portal shell: sidebar nav, login page, session handling via
   `localStorage` (mirrors the seller portal exactly).
-- Dashboard (`/admin-portal/dashboard`): People Metrics (Total Vendors, Total
+- Dashboard (`/admin-portal/dashboard`): People Metrics (Total Sellers, Total
   Buyers) and Sales Overview (Listings, Under Offer, Total Sales, Completed
   Sales) stat tiles, backed by `GET /api/admin/dashboard-stats`.
-- Dropped after initial review: the "Vendors Won"/"Buyers Won" tiles and the
+- Dropped after initial review: the "Sellers Won"/"Buyers Won" tiles and the
   dashboard date-range filter (both were either meaningless before later
   modules existed, or never asked to be wired up).
 
-### 2. Boat Vendors
-- `Seller` gets a new `status` field (`VendorStatus`: New/Contacted/Listed/Lost)
+### 2. Boat Sellers
+- `Seller` gets a new `status` field (`SellerStatus`: New/Contacted/Listed/Lost)
   — an admin-managed pipeline stage independent of anything seller-facing.
-- Full vendor CRUD (create/edit/delete), status editing.
-- Vendor detail page also surfaces: that vendor's boats/listings, listing
+- Full seller CRUD (create/edit/delete), status editing.
+- Seller detail page also surfaces: that seller's boats/listings, listing
   approve/reject (reusing the seller portal's existing `BoatListing` status
   workflow), and the comment thread per listing (reused seller portal's
   `CommentThreadCard`, generalized with a `fromSeller` prop so both portals
@@ -83,14 +83,14 @@ verified" record, module by module)
   `Booking`).
 
 ### 5. Leads
-- New `Lead` model — vendor-side inquiry pipeline, tracked **separately**
+- New `Lead` model — seller-side inquiry pipeline, tracked **separately**
   from real `Seller` accounts (no automatic conversion/linking between them).
 - Fully manual entry: first/last name, email, phone, address, source (dropdown:
   Referral/Website/Apollo Duck/Other), notes.
 - Status: New/Contacted/Listed/Lost. Full CRUD + status endpoint.
 
 ### 6. Sales
-- New `Sale` model — a manual deal log. Admin picks vendor + buyer + boat
+- New `Sale` model — a manual deal log. Admin picks seller + buyer + boat
   from dropdowns and enters `soldPrice`/`deposit`/`commission` by hand;
   `balance` is **derived** (`soldPrice − deposit`), never stored.
 - Status: Current/Completed/Cancelled. Full CRUD + status endpoint.
@@ -137,6 +137,27 @@ verified" record, module by module)
   UI.
 - Both `Backend` and `Frontend-Website` build clean (`tsc`, `vite build`,
   `oxlint`) after every module.
+
+## Post-launch fixes and additions (2026-09-23)
+
+- **"Vendor" renamed to "Seller" everywhere in the admin** — module/page/file
+  names, routes (`/admin-portal/sellers*`), UI labels, the `VendorStatus`
+  enum → `SellerStatus`, and the dashboard's `totalVendors` field →
+  `totalSellers`. Seller and Vendor were the same entity from the start;
+  using both words in the UI was genuinely confusing, so this was a real
+  fix, not just cosmetic.
+- **New Listings module** (`/admin-portal/listings`, its own sidebar item) —
+  a cross-seller view of every `BoatListing` (status tabs, search by boat/
+  seller, inline Approve/Reject, comment-thread link), so reviewing
+  approvals no longer requires clicking into each seller individually. Reuses
+  the same `updateListingStatus` endpoint the per-seller table already used.
+- **Fixed a real error-handling bug**: `readResponse()` in all three
+  `lib/api.ts` files (public site, seller portal, admin portal) only ever
+  surfaced the backend's error message when it was a plain string. Every
+  validation failure sends zod's `{ fieldErrors, formErrors }` shape
+  instead, which fell through to an opaque "Request to /x failed with 400"
+  — caught via a real repro (a too-short vendor/seller password). Now
+  extracts and shows the actual field error.
 
 ## What is NOT completed
 

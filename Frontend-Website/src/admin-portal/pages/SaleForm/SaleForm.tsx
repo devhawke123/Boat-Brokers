@@ -44,7 +44,7 @@ export default function SaleForm({ saleId }: SaleFormProps) {
         }
       })
       .catch((err: unknown) => {
-        if (!cancelled) setLookupsError(err instanceof Error ? err.message : 'Failed to load boats/vendors.')
+        if (!cancelled) setLookupsError(err instanceof Error ? err.message : 'Failed to load boats/sellers.')
       })
       .finally(() => {
         if (!cancelled) setLookupsLoading(false)
@@ -150,7 +150,7 @@ export default function SaleForm({ saleId }: SaleFormProps) {
 
           <FieldRow>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <Label required>Vendor</Label>
+              <Label required>Seller</Label>
               <select
                 value={sellerId}
                 onChange={(e) => setSellerId(e.target.value)}
@@ -158,7 +158,7 @@ export default function SaleForm({ saleId }: SaleFormProps) {
                 className="h-11 w-full rounded-lg border border-[#e2e8f0] bg-white px-4 text-[16px] text-[#0f172a] focus:outline-none"
               >
                 <option value="" disabled>
-                  Select vendor
+                  Select seller
                 </option>
                 {sellers.map((seller) => (
                   <option key={seller.id} value={seller.id}>

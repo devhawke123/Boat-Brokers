@@ -110,7 +110,7 @@ export default function SaleDetail({ saleId }: SaleDetailProps) {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
-                  <span className="text-xs font-semibold text-[#64748b]">Vendor</span>
+                  <span className="text-xs font-semibold text-[#64748b]">Seller</span>
                   <span className="text-sm text-[#0f172a]">
                     {sale.seller.name} ({sale.seller.email})
                   </span>

@@ -28,9 +28,10 @@ import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
 import SellerPortalNotFound from './seller-portal/pages/NotFound/NotFound'
 import AdminLogin from './admin-portal/pages/Login/Login'
 import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
-import Vendors from './admin-portal/pages/Vendors/Vendors'
-import VendorForm from './admin-portal/pages/VendorForm/VendorForm'
-import VendorDetail from './admin-portal/pages/VendorDetail/VendorDetail'
+import Sellers from './admin-portal/pages/Sellers/Sellers'
+import SellerForm from './admin-portal/pages/SellerForm/SellerForm'
+import SellerDetail from './admin-portal/pages/SellerDetail/SellerDetail'
+import Listings from './admin-portal/pages/Listings/Listings'
 import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
 import Availability from './admin-portal/pages/Availability/Availability'
 import Buyers from './admin-portal/pages/Buyers/Buyers'
@@ -171,17 +172,21 @@ function App() {
     return <AdminDashboard />
   }
 
-  if (pathname === '/admin-portal/vendors') {
-    return <Vendors />
+  if (pathname === '/admin-portal/sellers') {
+    return <Sellers />
   }
 
-  if (pathname === '/admin-portal/vendors/new') {
-    return <VendorForm />
+  if (pathname === '/admin-portal/sellers/new') {
+    return <SellerForm />
   }
 
-  if (pathname.startsWith('/admin-portal/vendors/') && pathname.endsWith('/edit')) {
-    const vendorId = Number(pathname.replace('/admin-portal/vendors/', '').replace('/edit', ''))
-    if (Number.isInteger(vendorId)) return <VendorForm vendorId={vendorId} />
+  if (pathname.startsWith('/admin-portal/sellers/') && pathname.endsWith('/edit')) {
+    const sellerId = Number(pathname.replace('/admin-portal/sellers/', '').replace('/edit', ''))
+    if (Number.isInteger(sellerId)) return <SellerForm sellerId={sellerId} />
+  }
+
+  if (pathname === '/admin-portal/listings') {
+    return <Listings />
   }
 
   if (pathname.startsWith('/admin-portal/listings/')) {
@@ -189,9 +194,9 @@ function App() {
     if (Number.isInteger(listingId)) return <ListingComments listingId={listingId} />
   }
 
-  if (pathname.startsWith('/admin-portal/vendors/')) {
-    const vendorId = Number(pathname.replace('/admin-portal/vendors/', ''))
-    if (Number.isInteger(vendorId)) return <VendorDetail vendorId={vendorId} />
+  if (pathname.startsWith('/admin-portal/sellers/')) {
+    const sellerId = Number(pathname.replace('/admin-portal/sellers/', ''))
+    if (Number.isInteger(sellerId)) return <SellerDetail sellerId={sellerId} />
   }
 
   if (pathname === '/admin-portal/availability') {

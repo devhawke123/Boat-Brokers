@@ -30,8 +30,8 @@ export default function ListingComments({ listingId }: ListingCommentsProps) {
         ) : !listing ? (
           <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#e2e8f0] bg-white py-16 text-center text-[#64748b]">
             <p>This listing couldn&rsquo;t be found.</p>
-            <a href="/admin-portal/vendors" className="text-sm font-semibold text-[#2563eb]">
-              Back to Boat Vendors
+            <a href="/admin-portal/sellers" className="text-sm font-semibold text-[#2563eb]">
+              Back to Boat Sellers
             </a>
           </div>
         ) : (
@@ -39,7 +39,7 @@ export default function ListingComments({ listingId }: ListingCommentsProps) {
             <ListingCommentsHeader
               boatName={listing.boat.name}
               boatImageUrl={listing.boat.imageUrl}
-              vendorId={listing.seller.id}
+              sellerId={listing.seller.id}
             />
             <CommentThreadCard
               listingId={listing.id}
