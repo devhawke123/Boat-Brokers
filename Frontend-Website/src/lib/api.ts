@@ -158,15 +158,26 @@ async function fetchWithTimeout(input: string, init?: RequestInit, timeoutMs = R
   }
 }
 
+// Controllers respond with { error: string } (plain message) or
+// { error: { fieldErrors, formErrors } } (zod .flatten()) — extract a
+// human-readable message from either shape so callers can show it directly
+// instead of falling back to an opaque "Request failed with 400".
+function extractErrorMessage(body: unknown): string | null {
+  if (!body || typeof body !== 'object' || !('error' in body)) return null
+  const err = (body as { error: unknown }).error
+  if (typeof err === 'string') return err
+  if (err && typeof err === 'object') {
+    const flat = err as { fieldErrors?: Record<string, string[] | undefined>; formErrors?: string[] }
+    const firstFieldMessage = Object.values(flat.fieldErrors ?? {}).find((msgs) => msgs && msgs.length > 0)?.[0]
+    return firstFieldMessage ?? flat.formErrors?.[0] ?? null
+  }
+  return null
+}
+
 async function readResponse<T>(res: Response, path: string): Promise<T> {
   if (!res.ok) {
-    // Controllers respond with { error: string } (plain message) or
-    // { error: { fieldErrors, formErrors } } (zod .flatten()) — surface the
-    // plain-message case so callers can show it directly.
     const body: unknown = await res.json().catch(() => null)
-    const message =
-      body && typeof body === 'object' && 'error' in body && typeof body.error === 'string' ? body.error : null
-    throw new Error(message ?? `Request to ${path} failed with ${res.status}`)
+    throw new Error(extractErrorMessage(body) ?? `Request to ${path} failed with ${res.status}`)
   }
   return res.json() as Promise<T>
 }
