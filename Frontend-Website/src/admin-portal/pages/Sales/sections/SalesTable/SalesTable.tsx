@@ -1,8 +1,13 @@
 import { useMemo, useState } from 'react'
 import type { ApiSale, SaleStatus } from '../../../../lib/api'
-import { formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
+
+// Column headers already state "(£)", so cells here are plain grouped
+// numbers rather than repeating a currency symbol per row.
+function formatAmount(value: number) {
+  return value.toLocaleString('en-GB')
+}
 
 type SalesTableProps = {
   sales: ApiSale[]
@@ -107,11 +112,17 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[60rem] border-collapse">
+        <table className="w-full min-w-[64rem] border-collapse">
           <thead>
             <tr className="bg-[#f8fafc]">
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Boat
+                #
+              </th>
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Status
+              </th>
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Boat Name
               </th>
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Seller
@@ -120,19 +131,16 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
                 Buyer
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Sold Price
+                Sold Price (£)
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Deposit
+                Deposit (£)
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Balance
+                Balance (£)
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Comm.
-              </th>
-              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
-                Status
+                Comm (£)
               </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Actions
@@ -140,17 +148,9 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
             </tr>
           </thead>
           <tbody>
-            {paginated.map((sale) => (
+            {paginated.map((sale, index) => (
               <tr key={sale.id} className="border-t border-[#f3f4f6]">
-                <td className="px-5 py-2.5 font-display text-sm text-[#0a192f]">{sale.boat.name}</td>
-                <td className="px-5 py-2.5 text-xs text-[#64748b]">{sale.seller.name}</td>
-                <td className="px-5 py-2.5 text-xs text-[#64748b]">
-                  {sale.buyer.firstName} {sale.buyer.surname}
-                </td>
-                <td className="px-5 py-2.5 text-right text-xs font-bold text-[#0a192f]">{formatPrice(sale.soldPrice)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.deposit)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.balance)}</td>
-                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatPrice(sale.commission)}</td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">{pageStart + index + 1}</td>
                 <td className="px-5 py-2.5">
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[sale.status]}`}
@@ -158,6 +158,15 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
                     {statusLabels[sale.status]}
                   </span>
                 </td>
+                <td className="px-5 py-2.5 font-display text-sm text-[#0a192f]">{sale.boat.name}</td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">{sale.seller.name}</td>
+                <td className="px-5 py-2.5 text-xs text-[#64748b]">
+                  {sale.buyer.firstName} {sale.buyer.surname}
+                </td>
+                <td className="px-5 py-2.5 text-right text-xs font-bold text-[#0a192f]">{formatAmount(sale.soldPrice)}</td>
+                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatAmount(sale.deposit)}</td>
+                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatAmount(sale.balance)}</td>
+                <td className="px-5 py-2.5 text-right text-xs text-[#64748b]">{formatAmount(sale.commission)}</td>
                 <td className="px-5 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <a
@@ -180,7 +189,7 @@ export default function SalesTable({ sales, onDelete }: SalesTableProps) {
 
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={9} className="px-5 py-8 text-center text-sm text-[#64748b]">
+                <td colSpan={10} className="px-5 py-8 text-center text-sm text-[#64748b]">
                   {sales.length === 0
                     ? 'No sales yet.'
                     : search
