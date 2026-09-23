@@ -33,6 +33,7 @@ import SellerForm from './admin-portal/pages/SellerForm/SellerForm'
 import SellerDetail from './admin-portal/pages/SellerDetail/SellerDetail'
 import Listings from './admin-portal/pages/Listings/Listings'
 import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
+import BoatEditForm from './admin-portal/pages/BoatEditForm/BoatEditForm'
 import Availability from './admin-portal/pages/Availability/Availability'
 import Buyers from './admin-portal/pages/Buyers/Buyers'
 import BuyerForm from './admin-portal/pages/BuyerForm/BuyerForm'
@@ -187,6 +188,11 @@ function App() {
 
   if (pathname === '/admin-portal/listings') {
     return <Listings />
+  }
+
+  if (pathname.startsWith('/admin-portal/listings/') && pathname.endsWith('/edit')) {
+    const listingId = Number(pathname.replace('/admin-portal/listings/', '').replace('/edit', ''))
+    if (Number.isInteger(listingId)) return <BoatEditForm listingId={listingId} />
   }
 
   if (pathname.startsWith('/admin-portal/listings/')) {

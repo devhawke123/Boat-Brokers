@@ -2,7 +2,7 @@ import type { ApiBoatListing, ListingStatus } from '../../../../../seller-portal
 import { formatDateTime, formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
-import { CheckIcon, CommentIcon, CrossIcon } from '../../../../components/ActionButton/icons'
+import { CheckIcon, CommentIcon, CrossIcon, EditIcon } from '../../../../components/ActionButton/icons'
 
 type SellerListingsTableProps = {
   listings: ApiBoatListing[]
@@ -90,6 +90,7 @@ export default function SellerListingsTable({ listings, onStatusChange, updating
                         />
                       </>
                     )}
+                    <ActionButton href={`/admin-portal/listings/${listing.id}/edit`} label="Edit" icon={EditIcon} />
                     <ActionButton
                       href={`/admin-portal/listings/${listing.id}`}
                       label={`Comments (${listing.comments.length})`}

@@ -3,7 +3,7 @@ import type { ApiBoatListing, ListingStatus } from '../../../../../seller-portal
 import { formatDateTime, formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
-import { CheckIcon, CommentIcon, CrossIcon } from '../../../../components/ActionButton/icons'
+import { CheckIcon, CommentIcon, CrossIcon, EditIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -170,6 +170,7 @@ export default function ListingsTable({ listings, onStatusChange, updatingId }: 
                         />
                       </>
                     )}
+                    <ActionButton href={`/admin-portal/listings/${listing.id}/edit`} label="Edit" icon={EditIcon} />
                     <ActionButton
                       href={`/admin-portal/listings/${listing.id}`}
                       label={`Comments (${listing.comments.length})`}
