@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useBoatListings, type BoatListing, type BoatStatus } from '../../../../data/boats'
 import BoatListingCard from './BoatListingCard'
 import Pagination from './Pagination'
@@ -113,19 +113,15 @@ function sortBoats(boats: BoatListing[], sortBy: SortValue): BoatListing[] {
   })
 }
 
-const SAVED_SEARCH_KEY = 'boatbrokers:saved-search'
-
 type FilterPanelProps = {
   filters: Filters
   onChange: (next: Filters) => void
   onClear: () => void
   onApply: () => void
-  onSave: () => void
-  justSaved: boolean
   boatTypeCounts: Record<string, number>
 }
 
-function FilterPanel({ filters, onChange, onClear, onApply, onSave, justSaved, boatTypeCounts }: FilterPanelProps) {
+function FilterPanel({ filters, onChange, onClear, onApply, boatTypeCounts }: FilterPanelProps) {
   function toggleBoatType(type: string) {
     const has = filters.boatTypes.includes(type)
     onChange({
@@ -250,13 +246,6 @@ function FilterPanel({ filters, onChange, onClear, onApply, onSave, justSaved, b
         >
           Apply Filters
         </button>
-        <button
-          type="button"
-          onClick={onSave}
-          className="w-full rounded-[10px] border border-navy-dark py-3 text-base font-medium text-navy-dark"
-        >
-          {justSaved ? 'Search Saved!' : 'Save Search'}
-        </button>
       </div>
     </>
   )
@@ -268,16 +257,6 @@ export default function BoatsListing() {
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  const [justSaved, setJustSaved] = useState(false)
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SAVED_SEARCH_KEY)
-      if (raw) setFilters({ ...DEFAULT_FILTERS, ...JSON.parse(raw) })
-    } catch {
-      // ignore unavailable/corrupt localStorage
-    }
-  }, [])
 
   const tabCounts = useMemo(
     () =>
@@ -366,16 +345,6 @@ export default function BoatsListing() {
     setShowMobileFilters(false)
   }
 
-  function handleSaveSearch() {
-    try {
-      localStorage.setItem(SAVED_SEARCH_KEY, JSON.stringify(filters))
-      setJustSaved(true)
-      setTimeout(() => setJustSaved(false), 2000)
-    } catch {
-      // localStorage unavailable — nothing more we can do
-    }
-  }
-
   return (
     <section className="flex flex-col gap-8 px-6 py-14 sm:px-16 sm:py-20">
       <div className="flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between">
@@ -418,8 +387,6 @@ export default function BoatsListing() {
             onChange={setFilters}
             onClear={handleClearAll}
             onApply={handleApplyFilters}
-            onSave={handleSaveSearch}
-            justSaved={justSaved}
             boatTypeCounts={boatTypeCounts}
           />
         </aside>
@@ -454,8 +421,6 @@ export default function BoatsListing() {
                   onChange={setFilters}
                   onClear={handleClearAll}
                   onApply={handleApplyFilters}
-                  onSave={handleSaveSearch}
-                  justSaved={justSaved}
                   boatTypeCounts={boatTypeCounts}
                 />
               </div>
