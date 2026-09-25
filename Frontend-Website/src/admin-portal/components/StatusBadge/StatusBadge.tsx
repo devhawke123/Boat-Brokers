@@ -25,10 +25,10 @@ export default function StatusBadge({ label, tone }: StatusBadgeProps) {
   const c = TONES[tone]
   return (
     <span
-      className="inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-[3px] text-[11px] font-semibold whitespace-nowrap"
+      className="inline-flex w-fit items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold whitespace-nowrap"
       style={{ backgroundColor: c.bg, color: c.text, borderColor: c.border }}
     >
-      <span className="size-[5px] shrink-0 rounded-full" style={{ backgroundColor: c.dot }} />
+      <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: c.dot }} />
       {label}
     </span>
   )

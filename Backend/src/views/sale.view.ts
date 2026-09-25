@@ -1,4 +1,5 @@
 import type { Sale } from "@prisma/client";
+import { toMediaUrl } from "../lib/media";
 
 type SaleWithRelations = Sale & {
   boat: { id: number; name: string; imageUrl: string | null };
@@ -17,7 +18,7 @@ export function serializeSale(sale: SaleWithRelations) {
     balance: sale.soldPrice - sale.deposit,
     commission: sale.commission,
     createdAt: sale.createdAt,
-    boat: sale.boat,
+    boat: { ...sale.boat, imageUrl: toMediaUrl(sale.boat.imageUrl) },
     seller: sale.seller,
     buyer: sale.buyer,
   };

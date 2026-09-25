@@ -9,5 +9,6 @@ deploy_key.pub
 *.log
 .DS_Store
 coverage/
+.playwright-mcp/
 .vscode/*
 !.vscode/extensions.json

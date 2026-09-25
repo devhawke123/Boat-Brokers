@@ -4,7 +4,6 @@ import BoatSubNav from './sections/BoatSubNav/BoatSubNav'
 import BoatGallery from './sections/BoatGallery/BoatGallery'
 import BoatDetailContent from './sections/BoatDetailContent/BoatDetailContent'
 import BoatDetailTabs from './sections/BoatDetailTabs/BoatDetailTabs'
-import BoatBookViewing from './sections/BoatBookViewing/BoatBookViewing'
 import Button from '../../components/Button/Button'
 import Navbar from '../../components/Navbar/Navbar'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -57,7 +56,9 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
         bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-base sm:leading-[26px]"
         overlayClassName="bg-[linear-gradient(37deg,rgba(0,0,0,0.2)_19%,rgba(102,102,102,0)_31%),linear-gradient(0deg,rgba(0,0,0,0.08),rgba(0,0,0,0.08))]"
         contentClassName="mt-20 sm:mt-0"
-      />
+      >
+        <Button variant="light" label="Book A Viewing" href={`/boats/${boat.slug}/book-viewing`} />
+      </PageHero>
 
       <div className="overflow-hidden rounded-3xl border border-[#e5e7eb]">
         <BoatSubNav boat={boat} />
@@ -67,11 +68,13 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
         <BoatGallery boat={boat} />
         <BoatDetailContent boat={boat} />
         <BoatDetailTabs boat={boat} />
-        <BoatBookViewing boatId={boat.id} boatName={boat.name} />
       </section>
 
       <section className="flex flex-col items-center gap-6 border-t border-[#e5e7eb] px-6 py-4 text-center">
-        <Button variant="dark" label="Back to Boats for Sale" href="/boats-for-sale" />
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <Button variant="dark" label="Book A Viewing" href={`/boats/${boat.slug}/book-viewing`} />
+          <Button variant="outline-dark" label="Back to Boats for Sale" href="/boats-for-sale" />
+        </div>
         <p className="max-w-2xl text-xs leading-[1.6] text-[#6e6e6e]">
           Disclaimer: The details provided are intended to give a fair description of the vessel but
           their accuracy cannot be guaranteed. These details do not constitute part of any contract. A

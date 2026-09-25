@@ -75,32 +75,39 @@ export default function Availability() {
   return (
     <AdminShell mainClassName="bg-frost">
       <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8">
-        <h1 className="text-2xl font-bold text-[#0f172a]">Availability</h1>
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-2xl font-bold text-[#0f172a]">Availability</h1>
+          <p className="text-sm text-[#64748b]">Open viewing slots and manage buyer requests against them.</p>
+        </div>
 
         <CreateSlotForm onCreated={load} />
 
         {actionError && (
-          <p className="rounded-md border border-[#fecaca] bg-[#fef2f2] px-4 py-2 text-sm font-medium text-[#dc2626]">
+          <p className="rounded-lg border border-[#fecaca] bg-[#fef2f2] px-4 py-2 text-sm font-medium text-[#dc2626]">
             {actionError}
           </p>
         )}
 
-        {error ? (
-          <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
-            <p>Couldn&rsquo;t load availability from the server: {error}</p>
-          </div>
-        ) : loading ? (
-          <div className="h-64 w-full animate-pulse rounded-lg border border-[#e2e8f0] bg-[#f8fafc]" />
-        ) : (
-          <SlotsList
-            slots={upcomingSlots}
-            bookings={bookings}
-            onApprove={handleApprove}
-            onReject={handleReject}
-            onDelete={handleDelete}
-            busyBookingId={busyBookingId}
-          />
-        )}
+        <div className="flex flex-col gap-3">
+          <h2 className="text-base font-bold text-[#0f172a]">Slots &amp; Requests</h2>
+
+          {error ? (
+            <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
+              <p>Couldn&rsquo;t load availability from the server: {error}</p>
+            </div>
+          ) : loading ? (
+            <div className="h-64 w-full animate-pulse rounded-2xl border border-[#e2e8f0] bg-[#f8fafc]" />
+          ) : (
+            <SlotsList
+              slots={upcomingSlots}
+              bookings={bookings}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              onDelete={handleDelete}
+              busyBookingId={busyBookingId}
+            />
+          )}
+        </div>
       </div>
     </AdminShell>
   )

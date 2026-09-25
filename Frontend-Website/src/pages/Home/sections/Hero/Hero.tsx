@@ -1,4 +1,4 @@
-import heroBg from '../../../../assets/hero-bg.png'
+import heroBg from '../../../../assets/test.png'
 import xLogo from '../../../../assets/icons/x-logo.svg'
 import instagramLogo from '../../../../assets/icons/instagram-logo.svg'
 import facebookLogo from '../../../../assets/icons/facebook-logo.svg'

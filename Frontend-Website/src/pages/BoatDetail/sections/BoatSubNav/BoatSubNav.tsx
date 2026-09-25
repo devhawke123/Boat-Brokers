@@ -41,7 +41,13 @@ export default function BoatSubNav({ boat }: BoatSubNavProps) {
       </div>
 
       <div className="flex items-center gap-4">
-       
+        <a
+          href={`/boats/${boat.slug}/book-viewing`}
+          className="inline-flex items-center gap-2 rounded-lg border-2 border-navy-dark bg-navy-dark px-4 py-2 text-sm font-semibold text-white transition-colors duration-300 hover:bg-white hover:text-navy-dark"
+        >
+          Book A Viewing
+        </a>
+
         <button
           type="button"
           onClick={handleShare}

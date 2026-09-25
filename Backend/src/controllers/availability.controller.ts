@@ -1,5 +1,12 @@
 import type { Request, Response } from "express";
-import { createSlot, deleteSlot, findAllSlots, findSlotById } from "../models/availability.model";
+import { Prisma } from "@prisma/client";
+import {
+  createSlot,
+  deleteSlot,
+  findAllSlots,
+  findOverlappingSlot,
+  findSlotById,
+} from "../models/availability.model";
 import { createAvailabilitySlotSchema } from "../schemas/availability.schema";
 import { serializeSlot } from "../views/availability.view";
 
@@ -14,8 +21,21 @@ export async function createSlotHandler(req: Request, res: Response) {
 
   const startsAt = new Date(parsed.data.startsAt);
   const endsAt = new Date(startsAt.getTime() + parsed.data.durationHours * 60 * 60 * 1000);
-  const slot = await createSlot(startsAt, endsAt);
-  res.status(201).json(serializeSlot({ ...slot, bookings: [] }));
+
+  const overlap = await findOverlappingSlot(startsAt, endsAt);
+  if (overlap) {
+    return res.status(409).json({ error: "This overlaps an existing slot." });
+  }
+
+  try {
+    const slot = await createSlot(startsAt, endsAt);
+    res.status(201).json(serializeSlot({ ...slot, bookings: [] }));
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+      return res.status(409).json({ error: "A slot already exists at that date and time." });
+    }
+    throw err;
+  }
 }
 
 export async function deleteSlotHandler(req: Request, res: Response) {

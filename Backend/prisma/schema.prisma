@@ -291,7 +291,8 @@ model AvailabilitySlot {
   bookings  Booking[]
   createdAt DateTime  @default(now())
 
-  @@index([startsAt])
+  // No two slots may start at the same instant — one slot per day+hour.
+  @@unique([startsAt])
 }
 
 enum BuyerStatus {

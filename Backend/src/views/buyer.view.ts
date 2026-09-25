@@ -1,4 +1,5 @@
 import type { AvailabilitySlot, Booking, Buyer } from "@prisma/client";
+import { toMediaUrl } from "../lib/media";
 
 type BoatSummary = { id: number; name: string; imageUrl: string | null };
 
@@ -22,7 +23,7 @@ export function serializeBuyer(buyer: BuyerWithBookings) {
       status: booking.status,
       createdAt: booking.createdAt,
       slot: { id: booking.slot.id, startsAt: booking.slot.startsAt, endsAt: booking.slot.endsAt },
-      boat: booking.boat,
+      boat: { ...booking.boat, imageUrl: toMediaUrl(booking.boat.imageUrl) },
     })),
   };
 }

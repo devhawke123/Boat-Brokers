@@ -21,7 +21,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
     { icon: steelIcon, label: 'Steel', value: boat.detail.hullThickness },
   ].filter((chip) => chip.value && chip.value !== 'N/A')
 
-  const viewingHref = `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Viewing enquiry: ${boat.name}`)}`
+  const viewingHref = `/boats/${boat.slug}/book-viewing`
 
   // Only real, hosted brochure files (served from /uploads) can be downloaded
   // directly — the mailto fallback used when a boat has no PDF on file must
@@ -95,7 +95,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
                 {...(hasDownloadableBrochure
                   ? { download: `${boat.name} - Brochure.pdf` }
                   : { target: '_blank', rel: 'noreferrer' })}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-navy-dark px-4 py-3.5 text-base font-semibold text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-transparent bg-navy-dark px-4 py-3.5 text-base font-semibold text-white transition-colors duration-300 hover:border-navy-dark hover:bg-white hover:text-navy-dark"
               >
                 <IconDownload className="size-4" />
                 Download PDF Brochure
@@ -109,7 +109,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
                     href={boat.detail.videoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white"
                   >
                     <IconPlay className="size-3.5 text-blue" />
                     Video
@@ -120,7 +120,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
                     href={boat.detail.virtualTourUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white"
                   >
                     <IconCube className="size-3.5 text-blue" />
                     Virtual
@@ -131,7 +131,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
 
             <a
               href={viewingHref}
-              className="inline-flex items-center justify-center rounded-xl bg-[rgba(28,192,255,0.1)] px-4 py-3.5 text-base font-semibold text-navy-dark"
+              className="inline-flex items-center justify-center rounded-xl bg-[rgba(28,192,255,0.1)] px-4 py-3.5 text-base font-semibold text-navy-dark transition-colors duration-300 hover:bg-navy-dark hover:text-white"
             >
               Book A Viewing
             </a>

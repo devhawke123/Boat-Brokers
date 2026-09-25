@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const SLOT_DURATION_HOURS = [2, 4, 6, 8, 10, 12] as const;
+// Viewing slots are always 2 hours — no admin-facing control for it.
+export const SLOT_DURATION_HOURS = [2] as const;
 
 export const createAvailabilitySlotSchema = z.object({
   // ISO datetime for the start of the block; endsAt is derived server-side

@@ -29,10 +29,10 @@ const arrowByVariant: Record<ButtonVariant, string> = {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  dark: 'border-none bg-navy-dark text-white',
-  light: 'border-none bg-white text-black',
-  'outline-white': 'border-2 border-white bg-transparent text-white',
-  'outline-dark': 'border-2 border-navy-dark bg-transparent text-navy-dark',
+  dark: 'border-2 border-transparent bg-navy-dark text-white hover:border-navy-dark hover:bg-white hover:text-navy-dark',
+  light: 'border-2 border-transparent bg-white text-black hover:border-black hover:bg-black hover:text-white',
+  'outline-white': 'border-2 border-white bg-transparent text-white hover:bg-white hover:text-navy-dark',
+  'outline-dark': 'border-2 border-navy-dark bg-transparent text-navy-dark hover:bg-navy-dark hover:text-white',
 }
 
 export default function Button({
@@ -44,7 +44,7 @@ export default function Button({
   ...rest
 }: ButtonProps) {
   const classes = [
-    'inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 whitespace-nowrap shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]',
+    'inline-flex items-center justify-center gap-1.5 rounded-xl px-5 py-3 whitespace-nowrap shadow-btn transition-[transform,background-color,color,border-color] duration-300 ease-out active:scale-[0.98]',
     variantClasses[variant],
     className,
   ]
