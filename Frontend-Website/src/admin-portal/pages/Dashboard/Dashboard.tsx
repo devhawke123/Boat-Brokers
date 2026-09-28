@@ -1,13 +1,23 @@
+import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useDashboardStats } from '../../data/useDashboardStats'
+import { fetchSales, type ApiSale } from '../../lib/api'
 import DashboardHeader from './sections/DashboardHeader/DashboardHeader'
 import PeopleMetrics from './sections/PeopleMetrics/PeopleMetrics'
 import SalesOverview from './sections/SalesOverview/SalesOverview'
+import RecentSales from './sections/RecentSales/RecentSales'
 
 export default function Dashboard() {
   const { admin, checkedSession } = useAdminSession()
   const { data, loading, error } = useDashboardStats()
+  const [sales, setSales] = useState<ApiSale[]>([])
+
+  useEffect(() => {
+    fetchSales()
+      .then(setSales)
+      .catch(() => {})
+  }, [])
 
   // Redirecting — render nothing rather than flashing dashboard content.
   if (!checkedSession) return null
@@ -39,6 +49,7 @@ export default function Dashboard() {
               totalSales={data.salesOverview.totalSales}
               completedSales={data.salesOverview.completedSales}
             />
+            <RecentSales sales={sales} />
           </div>
         )}
       </div>

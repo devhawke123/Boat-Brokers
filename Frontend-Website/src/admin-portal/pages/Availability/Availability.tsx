@@ -14,6 +14,7 @@ export default function Availability() {
   const [error, setError] = useState<string | null>(null)
   const [busyBookingId, setBusyBookingId] = useState<number | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [tab, setTab] = useState<'All' | 'Approved'>('All')
 
   const load = useCallback(() => {
     setLoading(true)
@@ -71,6 +72,10 @@ export default function Availability() {
   if (!checkedSession) return null
 
   const upcomingSlots = [...slots].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+  const visibleSlots =
+    tab === 'All'
+      ? upcomingSlots
+      : upcomingSlots.filter((slot) => bookings.some((b) => b.slot.id === slot.id && b.status === 'APPROVED'))
 
   return (
     <AdminShell mainClassName="bg-frost">
@@ -89,7 +94,25 @@ export default function Availability() {
         )}
 
         <div className="flex flex-col gap-3">
-          <h2 className="text-base font-bold text-[#0f172a]">Slots &amp; Requests</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-base font-bold text-[#0f172a]">Slots &amp; Requests</h2>
+            <div className="flex items-center gap-1 rounded-lg border border-[#e5e7eb] bg-white p-1">
+              {(['All', 'Approved'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTab(t)}
+                  className={
+                    tab === t
+                      ? 'rounded-md bg-[#eff6ff] px-3 py-1.5 text-xs font-bold text-[#2563eb]'
+                      : 'rounded-md px-3 py-1.5 text-xs font-semibold text-[#6b7280] transition-colors duration-300 hover:text-[#2563eb]'
+                  }
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {error ? (
             <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
@@ -99,7 +122,7 @@ export default function Availability() {
             <div className="h-64 w-full animate-pulse rounded-2xl border border-[#e2e8f0] bg-[#f8fafc]" />
           ) : (
             <SlotsList
-              slots={upcomingSlots}
+              slots={visibleSlots}
               bookings={bookings}
               onApprove={handleApprove}
               onReject={handleReject}
