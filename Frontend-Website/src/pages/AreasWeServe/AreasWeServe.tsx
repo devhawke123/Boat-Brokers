@@ -1,5 +1,4 @@
-import heroBg from '../../assets/areas-we-serve-hero-bg.png'
-import heroBgMobile from '../../assets/areas-we-serve-hero-bg-mobile.png'
+import heroBg from '../../assets/areasweserve2.png'
 import PageHero from '../../components/PageHero/PageHero'
 import AreasWeServeAbout from './sections/AreasWeServeAbout/AreasWeServeAbout'
 import AreasWeServeCoverage from './sections/AreasWeServeCoverage/AreasWeServeCoverage'
@@ -12,15 +11,16 @@ import Footer from '../../components/Footer/Footer'
 
 export default function AreasWeServe() {
   return (
-    <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+    <main className="flex flex-col gap-6 px-6 pt-6 pb-10">
       <PageHero
         image={heroBg}
-        imageMobile={heroBgMobile}
         activeLabel="Areas We Serve"
         title="Areas We Serve"
-        overlayClassName="bg-[linear-gradient(37.5deg,rgba(0,0,0,0.2)_19%,rgba(102,102,102,0)_31%)]"
+        align="left"
+        overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]"
+        contentClassName="mb-[5px]"
       >
-        <p className="hidden max-w-[35rem] text-base leading-[26px] tracking-[-0.32px] text-[#ededed] sm:block">
+        <p className="hidden max-w-[28rem] text-[#ededed] sm:block">
           Specialist Narrowboat &amp; Canal Boat Brokerage Across the Midlands. The Boat Brokers
           provides professional narrowboat and canal boat brokerage across the West Midlands,
           Worcestershire and Warwickshire. Whether you are buying or selling, if you are based in

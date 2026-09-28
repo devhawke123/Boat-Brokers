@@ -20,6 +20,20 @@ const titleFontClassNames = {
   accent: 'font-accent',
 } as const
 
+type PageHeroAlign = 'center' | 'left'
+
+// 'left' matches Home's bespoke Hero (pages/Home/sections/Hero/Hero.tsx):
+// content anchored bottom-left instead of centered.
+const alignSectionClassNames: Record<PageHeroAlign, string> = {
+  center: 'items-center justify-center text-center',
+  left: 'items-start justify-end text-left',
+}
+
+const alignContentClassNames: Record<PageHeroAlign, string> = {
+  center: 'items-center',
+  left: 'items-start',
+}
+
 type PageHeroProps = {
   /** Desktop (or only) background image. */
   image: string
@@ -28,6 +42,8 @@ type PageHeroProps = {
   /** Navbar link to highlight as active. */
   activeLabel?: string
   size?: PageHeroSize
+  /** Content alignment — 'center' (default) or 'left' (matches Home's hero). */
+  align?: PageHeroAlign
   /** Content rendered above the title, e.g. a meta row or eyebrow badge. */
   eyebrow?: ReactNode
   title: ReactNode
@@ -47,6 +63,7 @@ export default function PageHero({
   imageMobile,
   activeLabel,
   size = 'sm',
+  align = 'center',
   eyebrow,
   title,
   titleFont = 'display',
@@ -60,7 +77,7 @@ export default function PageHero({
 }: PageHeroProps) {
   return (
     <section
-      className={`relative flex ${sectionSizeClassNames[size]} flex-col items-center justify-center overflow-hidden rounded-3xl bg-cover bg-center p-8 text-center max-[900px]:p-5`}
+      className={`relative flex ${sectionSizeClassNames[size]} flex-col ${alignSectionClassNames[align]} overflow-hidden rounded-3xl bg-cover bg-center p-8 max-[900px]:p-5`}
       style={imageMobile ? undefined : { backgroundImage: `url(${image})` }}
     >
       {imageMobile && (
@@ -80,7 +97,7 @@ export default function PageHero({
       <Navbar activeLabel={activeLabel} />
 
       <div
-        className={`relative z-[5] flex ${maxWidthClassName} flex-col items-center ${gapClassName} ${contentClassName}`}
+        className={`relative z-[5] flex ${maxWidthClassName} flex-col ${alignContentClassNames[align]} ${gapClassName} ${contentClassName}`}
       >
         {eyebrow}
         <h1
