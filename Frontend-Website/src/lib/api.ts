@@ -271,3 +271,30 @@ export type ApiBooking = {
 export function createBooking(payload: CreateBookingPayload): Promise<ApiBooking> {
   return apiPost<ApiBooking>('/bookings', payload)
 }
+
+// Contact
+
+export type SendContactMessagePayload = {
+  name: string
+  email: string
+  phone?: string
+  message: string
+}
+
+export function sendContactMessage(payload: SendContactMessagePayload): Promise<{ sent: true }> {
+  return apiPost<{ sent: true }>('/contact', payload)
+}
+
+// Valuation
+
+export type SendValuationRequestPayload = {
+  name: string
+  email: string
+  phone?: string
+  boatName: string
+  message: string
+}
+
+export function sendValuationRequest(payload: SendValuationRequestPayload): Promise<{ sent: true }> {
+  return apiPost<{ sent: true }>('/valuation', payload)
+}

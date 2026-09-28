@@ -19,33 +19,33 @@ type BoatCardProps = {
 export default function BoatCard({ boat }: BoatCardProps) {
   return (
     <article className="group flex flex-col gap-4 rounded-xl transition-colors duration-300 lg:gap-8 lg:hover:bg-[#e8f6ff] lg:hover:pb-8">
-      <div className="relative flex aspect-[608/650] max-h-[88vh] flex-col overflow-hidden rounded-xl border border-slate p-3 transition-[padding,border-color] duration-300 lg:p-5 lg:group-hover:border-transparent lg:group-hover:p-10">
+      <div className="relative flex aspect-[16/9] max-h-[88vh] flex-col overflow-hidden rounded-xl border border-slate p-3 transition-[padding,border-color] duration-300 lg:p-5 lg:group-hover:border-transparent lg:group-hover:p-10">
         <div className="absolute inset-0 p-3 transition-[padding] duration-300 lg:p-5 lg:group-hover:p-10">
           <img src={boat.image} alt={boat.name} className="size-full rounded-lg object-cover" />
         </div>
-        <dl className="relative z-[1] mt-auto mb-3 ml-3 flex w-full max-w-[17.5rem] flex-col gap-1 self-start rounded-lg border border-white/15 bg-[linear-gradient(45deg,rgba(210,200,200,0.12)_0%,rgba(248,252,255,0.10)_50%,rgba(235,242,255,0.08)_100%)] px-3 py-2 text-[10px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background,box-shadow,border-color,backdrop-filter] duration-300 lg:mb-6 lg:ml-6 lg:gap-2 lg:px-5 lg:py-3 lg:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#EBF2FF0A] lg:group-hover:shadow-none lg:group-hover:backdrop-blur-[2px]">
-          <div className="flex w-full items-center gap-2 lg:gap-3">
-            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] lg:w-[7.6875rem] lg:tracking-[0.84px]">Length/Beam:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe lg:w-[9.5625rem]">{boat.lengthBeam}</dd>
+        <dl className="relative z-[1] mt-auto mb-3 ml-3 mr-3 flex max-w-[17.5rem] flex-col gap-1 self-stretch rounded-lg border border-white/15 bg-[linear-gradient(45deg,rgba(210,200,200,0.12)_0%,rgba(248,252,255,0.10)_50%,rgba(235,242,255,0.08)_100%)] px-3 py-2 text-[10px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background,box-shadow,border-color,backdrop-filter] duration-300 lg:mb-2 lg:ml-2 lg:mr-2 lg:max-w-[12.5rem] lg:gap-0.5 lg:px-2 lg:py-1.5 xl:mr-0 xl:mb-6 xl:ml-6 xl:max-w-[17.5rem] xl:gap-2 xl:px-5 xl:py-3 xl:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#EBF2FF0A] lg:group-hover:shadow-none lg:group-hover:backdrop-blur-[2px]">
+          <div className="flex w-full items-center gap-2 xl:gap-3">
+            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Length/Beam:</dt>
+            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.lengthBeam}</dd>
           </div>
-          <div className="flex w-full items-center gap-2 lg:gap-3">
-            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] lg:w-[7.6875rem] lg:tracking-[0.84px]">Stern:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe lg:w-[9.5625rem]">{boat.stern}</dd>
+          <div className="flex w-full items-center gap-2 xl:gap-3">
+            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Stern:</dt>
+            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.stern}</dd>
           </div>
-          <div className="flex w-full items-center gap-2 lg:gap-3">
-            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] lg:w-[7.6875rem] lg:tracking-[0.84px]">Year Built:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe lg:w-[9.5625rem]">{boat.yearBuilt}</dd>
+          <div className="flex w-full items-center gap-2 xl:gap-3">
+            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Year Built:</dt>
+            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.yearBuilt}</dd>
           </div>
-          <div className="flex w-full items-center gap-2 lg:gap-3">
-            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] lg:w-[7.6875rem] lg:tracking-[0.84px]">Builder:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe lg:w-[9.5625rem]">{boat.builder}</dd>
+          <div className="flex w-full items-center gap-2 xl:gap-3">
+            <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Builder:</dt>
+            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.builder}</dd>
           </div>
         </dl>
       </div>
 
       <div className="flex items-end justify-between px-0 transition-[padding] duration-300 lg:group-hover:px-7">
         <div className="flex flex-col gap-1 lg:gap-2">
-          <h3 className="font-display text-h3 text-frost capitalize transition-colors duration-300 lg:group-hover:text-[2.125rem] lg:group-hover:text-ink">
+          <h3 className="font-display text-h4 text-frost capitalize transition-colors duration-300 lg:group-hover:text-[1.75rem] lg:group-hover:text-ink">
             {boat.name}
           </h3>
           <p className="text-base text-gold transition-colors duration-300 lg:text-2xl lg:group-hover:text-[#0a5928]">

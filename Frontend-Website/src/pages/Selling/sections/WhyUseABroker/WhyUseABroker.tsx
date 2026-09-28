@@ -37,7 +37,7 @@ export default function WhyUseABroker() {
             </p>
           </div>
 
-          <Button variant="dark" label="Book a Free Valuation" href="/book-a-viewing" />
+          <Button variant="dark" label="Book a Free Valuation" href="/valuation" />
         </div>
       </div>
     </section>

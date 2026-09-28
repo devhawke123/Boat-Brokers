@@ -6,6 +6,7 @@ import {
   fetchListing,
   updateBoat,
   updateListingPreferences,
+  updateSeller,
   type ApiBoatListing,
 } from '../../lib/api'
 import StepIndicator from './sections/StepIndicator/StepIndicator'
@@ -26,6 +27,7 @@ import {
 import MediaForm, { initialMediaValues, type MediaValues } from './sections/MediaForm/MediaForm'
 import KeyDetailsForm, { initialKeyDetailsValues, type KeyDetailsValues } from './sections/KeyDetailsForm/KeyDetailsForm'
 import ReviewForm from './sections/ReviewForm/ReviewForm'
+import PublishSuccessModal from '../../components/PublishSuccessModal/PublishSuccessModal'
 import ListingPreview from './sections/ListingPreview/ListingPreview'
 import WhyWeAskThis from './sections/WhyWeAskThis/WhyWeAskThis'
 import { computeListingScore, isBasicInfoComplete, isKeyDetailsComplete, isMediaComplete, PHOTOS_MIN } from './scoring'
@@ -90,6 +92,7 @@ export default function AddBoat() {
   const [mediaError, setMediaError] = useState<string | null>(null)
   const [isLoadingListing, setIsLoadingListing] = useState(isEditing)
   const [editBoatId, setEditBoatId] = useState<number | null>(null)
+  const [showPublishSuccess, setShowPublishSuccess] = useState(false)
 
   function valueOf(boat: ApiBoatListing['boat'], key: string) {
     const value = boat[key]
@@ -137,6 +140,7 @@ export default function AddBoat() {
       fullName: listing.seller.name,
       email: listing.seller.email,
       phone: listing.seller.phone ?? '',
+      city: listing.seller.location ?? '',
       sellTimeline: listing.sellTimeline ?? '',
       contactTime: listing.contactTime ?? '',
       listerType: listing.listerType ?? '',
@@ -301,7 +305,16 @@ export default function AddBoat() {
       } else {
         await createBoat(formData)
       }
-      window.location.href = '/seller-portal/dashboard'
+
+      // Phone/city live on the seller record, not the boat — persist them here so
+      // they're still there the next time this seller edits a listing instead of
+      // coming back blank and blocking Continue until re-typed.
+      await updateSeller(seller.id, {
+        phone: keyDetailsValues.phone.trim(),
+        location: keyDetailsValues.city.trim(),
+      })
+
+      setShowPublishSuccess(true)
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Failed to publish listing. Please try again.')
     } finally {
@@ -480,6 +493,8 @@ export default function AddBoat() {
           )}
         </div>
       </div>
+
+      {showPublishSuccess && <PublishSuccessModal isEditing={isEditing} />}
     </SellerPortalShell>
   )
 }

@@ -1,4 +1,4 @@
-import aboutHeroBg from '../../assets/about-hero-bg.png'
+import aboutHeroBg from '../../assets/aboutus2.png'
 import PageHero from '../../components/PageHero/PageHero'
 import OurStory from './sections/OurStory/OurStory'
 import BuySellConfidence from './sections/BuySellConfidence/BuySellConfidence'

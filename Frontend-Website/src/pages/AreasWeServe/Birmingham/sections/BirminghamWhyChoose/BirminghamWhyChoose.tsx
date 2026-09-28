@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import image1 from '../../../../../assets/birmingham pic1 (3).jpg'
 import image2 from '../../../../../assets/birminghamabout.jpg'
 import arrowRight from '../../../../../assets/ArrowRight2.png'
-import bulletIcon from '../../../../../assets/Rectangle 11912.png'
 
 const rows: { items: ReactNode[]; image: string; imageAlt: string; textFirst: boolean }[] = [
   {
@@ -68,7 +67,7 @@ export default function BirminghamWhyChoose() {
             >
               {row.items.map((item, itemIndex) => (
                 <li key={itemIndex} className="flex items-start gap-3">
-                  <img src={bulletIcon} alt="" aria-hidden="true" className="mt-1 size-4 shrink-0" />
+                  <span className="mt-2 size-2 shrink-0 rounded-full bg-blue-light" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
               ))}

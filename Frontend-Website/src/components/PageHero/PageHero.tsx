@@ -78,17 +78,17 @@ export default function PageHero({
   return (
     <section
       className={`relative flex ${sectionSizeClassNames[size]} flex-col ${alignSectionClassNames[align]} overflow-hidden rounded-3xl bg-cover bg-center p-8 max-[900px]:p-5`}
-      style={imageMobile ? undefined : { backgroundImage: `url(${image})` }}
+      style={imageMobile ? undefined : { backgroundImage: `url("${image}")` }}
     >
       {imageMobile && (
         <>
           <div
             className="absolute inset-0 bg-cover bg-center sm:hidden"
-            style={{ backgroundImage: `url(${imageMobile})` }}
+            style={{ backgroundImage: `url("${imageMobile}")` }}
           />
           <div
             className="absolute inset-0 hidden bg-cover bg-center sm:block"
-            style={{ backgroundImage: `url(${image})` }}
+            style={{ backgroundImage: `url("${image}")` }}
           />
         </>
       )}

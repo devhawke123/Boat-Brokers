@@ -1,5 +1,6 @@
 import { Fragment, useRef, useState } from 'react'
 import noelVideo from '../../../../assets/noel-video.mp4'
+import noelPortrait from '../../../../assets/noel-creary-portrait.png'
 import playIcon from '../../../../assets/icons/play.svg'
 import Button from '../../../../components/Button/Button'
 
@@ -23,7 +24,7 @@ export default function AboutUs() {
     <section className="section content-center grid grid-cols-1 items-start justify-center gap-x-11 gap-y-10 short:gap-y-6 lg:grid-cols-[minmax(0,clamp(20rem,50%,40rem))_minmax(0,clamp(20rem,45%,37rem))]">
       <div className="order-2 lg:order-1">
         <div className="media-frame aspect-[640/560] rounded-2xl">
-          <video src={noelVideo} playsInline muted preload="metadata" />
+          <img src={noelPortrait} alt="Noel Creary of The Boat Brokers on a canal towpath" />
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}

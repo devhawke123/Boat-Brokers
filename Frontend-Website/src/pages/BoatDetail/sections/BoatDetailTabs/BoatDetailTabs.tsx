@@ -77,9 +77,6 @@ export default function BoatDetailTabs({ boat }: BoatDetailTabsProps) {
       ) : (
         <div className="flex flex-col items-center gap-2 py-10 text-center text-[#6e6e6e]">
           <p>{activeTab} details for {boat.name} are available on request.</p>
-          <a href="mailto:info@theboatbrokers.co.uk" className="text-sm font-medium text-navy-dark hover:underline">
-            Contact the broker
-          </a>
         </div>
       )}
     </div>

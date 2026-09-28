@@ -4,7 +4,7 @@ export default function NoelCrearyAbout() {
   return (
     <section className="mx-auto max-w-[90rem] px-6 pt-10 pb-5 sm:px-20">
       <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-12">
-        <div className="h-[280px] shrink-0 overflow-hidden rounded-[20px] sm:h-[24rem] lg:h-[35.4375rem] lg:w-[35.25rem]">
+        <div className="h-[280px] shrink-0 overflow-hidden rounded-[20px] sm:h-[24rem] lg:h-[26rem] lg:w-[30rem]">
           <img
             src={portrait}
             alt="Noel Creary standing beside a canal, arms crossed"
@@ -12,7 +12,7 @@ export default function NoelCrearyAbout() {
           />
         </div>
 
-        <div className="flex flex-col items-start justify-end gap-[26px]">
+        <div className="flex flex-col items-start justify-end gap-3">
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
             <span className="size-2 rounded-full bg-blue" />
             A Few Words About Me
@@ -22,11 +22,11 @@ export default function NoelCrearyAbout() {
             Noel Creary
           </h1>
 
-          <h2 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-[#020f17] capitalize sm:text-[1.75rem]">
+          <h2 className="font-display text-[1.25rem] leading-[1.3] tracking-[-1px] text-[#020f17] capitalize sm:text-[1.5rem]">
             Managing Director at Boat Brokers
           </h2>
 
-          <p className="max-w-[36.3125rem] text-xl leading-[30px] text-text-body">
+          <p className="max-w-[36.3125rem] text-base leading-[26px] text-text-body">
             {'Hi, I’m Noel, '}
             <br />
             My love for canal boats began quite unexpectedly. Growing up in Birmingham, I was

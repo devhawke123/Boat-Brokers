@@ -5,6 +5,7 @@ import { createBoatSchema, updateBoatSchema } from "../schemas/boat.schema";
 import { serializeBoat } from "../views/boat.view";
 import { serializeListing } from "../views/boatListing.view";
 import { Resend } from "resend";
+import { sendListingSubmittedEmail } from "../lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -92,6 +93,13 @@ Listing ID: ${listing.id}`,
   } catch (err) {
     console.error("Exception during publish email send:", err);
   }
+
+  await sendListingSubmittedEmail({
+    to: boat.seller.email,
+    sellerName: boat.seller.name,
+    boatName: boat.name,
+    status: listing.status,
+  });
 
   res.status(201).json({ boat: serializeBoat(boat), listing: serializeListing(listing) });
 }

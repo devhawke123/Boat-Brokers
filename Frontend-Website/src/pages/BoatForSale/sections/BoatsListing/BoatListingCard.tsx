@@ -9,7 +9,7 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
   const status = boat.status ? boatStatusStyles[boat.status] : null
 
   return (
-    <article className="flex w-full flex-col overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-1px_rgba(0,0,0,0.06)]">
+    <article className="relative flex w-full flex-col overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-1px_rgba(0,0,0,0.06)]">
       <div className="relative h-[200px] w-full shrink-0 overflow-hidden">
         <img src={boat.image} alt={boat.name} className="size-full object-cover" />
         {status && (
@@ -58,7 +58,11 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
 
         <div className="flex items-center justify-between">
           <p className="font-body text-2xl font-bold text-navy-dark">{boat.price}</p>
-          <a href={`/boats/${boat.slug}`} className="text-base font-medium text-navy-dark hover:underline">
+          <a
+            href={`/boats/${boat.slug}`}
+            className="text-base font-medium text-navy-dark hover:underline after:absolute after:inset-0"
+            aria-label={`View details for ${boat.name}`}
+          >
             View Details
           </a>
         </div>

@@ -351,7 +351,7 @@ export default function ReviewForm({
           <Field label="Full name" value={keyDetails.fullName} />
           <Field label="Email address" value={keyDetails.email} />
           <Field label="Phone number" value={keyDetails.phone.trim() ? `${keyDetails.countryCode} ${keyDetails.phone}` : ''} />
-          <Field label="Country" value={keyDetails.country} />
+          <Field label="City" value={keyDetails.city} />
           <Field label="How soon do you want to sell?" value={keyDetails.sellTimeline} />
           <Field label="When's the best time to reach you?" value={keyDetails.contactTime} />
           <Field label="Who's listing this boat?" value={keyDetails.listerType} />

@@ -20,7 +20,7 @@ export default function AreasWeServe() {
         overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]"
         contentClassName="mb-[100px]"
       >
-        <p className="hidden max-w-[28rem] text-[#ededed] sm:block">
+        <p className="hidden max-w-[35rem] text-[#ededed] sm:block">
           Specialist Narrowboat &amp; Canal Boat Brokerage Across the Midlands. The Boat Brokers
           provides professional narrowboat and canal boat brokerage across the West Midlands,
           Worcestershire and Warwickshire. Whether you are buying or selling, if you are based in

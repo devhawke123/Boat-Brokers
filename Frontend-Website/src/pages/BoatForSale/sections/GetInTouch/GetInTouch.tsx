@@ -35,7 +35,7 @@ export default function GetInTouch() {
             our team.
           </p>
 
-          <Button variant="dark" label="Contact Now" href="/book-a-viewing" />
+          <Button variant="dark" label="Contact Now" href="/contact" />
         </div>
 
         <div className="flex flex-col justify-end gap-6">

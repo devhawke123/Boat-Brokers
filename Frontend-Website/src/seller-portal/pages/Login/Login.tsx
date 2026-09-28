@@ -5,6 +5,7 @@ import loginHero from '../../assets/Login/login-hero.png'
 import emailIcon from '../../assets/Login/email-icon.svg'
 import lockIcon from '../../assets/Login/lock-icon.svg'
 import eyeIcon from '../../assets/Login/eye-icon.svg'
+import logo from '../../../assets/The_Boat_Brokers_Blue_Logo.png'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
@@ -25,23 +26,44 @@ export default function Login() {
 
   return (
     <main className="flex h-svh items-center justify-center overflow-hidden bg-[#fcfcfc] px-6 py-6 short:py-4 nav:gap-10 nav:px-16">
-      <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 short:gap-4">
+      <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 rounded-2xl border border-border p-6 short:gap-4 short:p-4 sm:p-8">
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="The Boat Brokers" className="h-12 w-auto" />
+          <span className="h-9 w-px bg-border" />
+          <span className="text-label font-semibold tracking-[2px] text-gold uppercase">Seller Portal</span>
+        </div>
+
         <div className="flex w-full flex-col gap-4 short:gap-2">
-          <h1 className="font-display text-h3 capitalize text-ink">Welcome To The Boat Brokers 👋</h1>
-          <p className="text-body text-text-body">Kindly fill in your details below to login your account</p>
+          <h1 className="font-display text-h3 capitalize text-ink">Sell your boat with confidence.</h1>
+          <p className="text-body text-text-body">
+            Create an account to add your boat and manage your listing. Noel Creary and The Boat Brokers team will
+            guide you through the sale.
+          </p>
+        </div>
+
+        <div className="flex w-full rounded-full bg-[#f1f0ee] p-1">
+          <span className="flex-1 rounded-full bg-navy-dark px-4 py-2.5 text-center text-body-sm font-semibold text-white">
+            Log in
+          </span>
+          <a
+            href="/seller-portal/signup"
+            className="flex-1 rounded-full px-4 py-2.5 text-center text-body-sm font-semibold text-ink"
+          >
+            Sign up
+          </a>
         </div>
 
         <form className="flex w-full flex-col items-center gap-5 short:gap-3" onSubmit={handleSubmit}>
           <div className="flex w-full flex-col gap-4 short:gap-3">
             <label className="flex w-full flex-col gap-2">
-              <span className="text-body font-medium text-ink">Username or Email</span>
+              <span className="text-body font-medium text-ink">Email address</span>
               <span className="relative flex w-full items-center">
                 <img src={emailIcon} alt="" aria-hidden="true" className="absolute left-4 size-4" />
                 <input
                   type="email"
                   name="email"
                   autoComplete="username"
-                  placeholder="john@doe.com"
+                  placeholder="you@example.com"
                   className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] py-3 pr-4 pl-12 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
                 />
               </span>
@@ -68,6 +90,10 @@ export default function Login() {
                 </button>
               </span>
             </label>
+
+            <a href="/seller-portal/forgot-password" className="self-start text-body-sm font-semibold text-navy-dark underline">
+              Forgot password?
+            </a>
           </div>
 
           <div className="flex w-full flex-col items-center gap-5">
@@ -76,26 +102,24 @@ export default function Login() {
             <Button
               type="submit"
               variant="dark"
-              label={loading ? 'Logging in…' : 'Login'}
+              label={loading ? 'Logging in…' : 'Log in'}
               icon="none"
               disabled={loading}
               className="w-full disabled:cursor-not-allowed disabled:opacity-70"
             />
 
             <p className="text-body text-text-body">
-              Don&rsquo;t have an account?{' '}
+              New to the seller portal?{' '}
               <a href="/seller-portal/signup" className="font-semibold text-navy-dark underline">
-                Signup
+                Sign up
               </a>
             </p>
-
-            <p className="text-body text-text-body">Or</p>
-
-            <a href="/seller-portal/forgot-password" className="text-body font-semibold text-navy-dark underline">
-              Forgot Password?
-            </a>
           </div>
         </form>
+
+        <div className="h-px w-full bg-border" />
+
+        <p className="w-full text-center text-caption text-text-muted">Design &amp; Develop By Blue Hawke</p>
       </div>
 
       <div className="hidden max-h-[70.375rem] w-full max-w-[44.1875rem] self-stretch overflow-clip rounded-xl nav:block">

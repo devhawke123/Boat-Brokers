@@ -1,6 +1,6 @@
 import logoWhite from '../../assets/logo/logo.svg'
 import britishMarine from '../../assets/icons/british-marine.png'
-import xLogo from '../../assets/icons/x-logo.svg'
+import youtubeLogo from '../../assets/icons/Youtube.svg'
 import instagramLogo from '../../assets/icons/instagram-logo.svg'
 import facebookLogo from '../../assets/icons/facebook-logo.svg'
 import arrowRightWhite from '../../assets/Arrow.svg'
@@ -11,6 +11,7 @@ const quickLinks = [
   { label: 'Blog', href: '/blog' },
   { label: 'Areas We Serve', href: '/areas-we-serve' },
   { label: 'Faq', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 const serviceLinks = [
@@ -23,7 +24,7 @@ const serviceLinks = [
 ]
 
 const socialLinks = [
-  { name: 'X', href: 'https://www.linkedin.com/company/the-boat-brokers/', icon: xLogo, bg: 'bg-white' },
+  { name: 'YouTube', href: 'https://www.youtube.com/@TheBoatBrokers', icon: youtubeLogo, bg: 'bg-white' },
   { name: 'Instagram', href: 'https://www.instagram.com/theboatbrokersuk/', icon: instagramLogo, bg: 'bg-blue' },
   { name: 'Facebook', href: 'https://www.facebook.com/theboatbrokersuk/', icon: facebookLogo, bg: 'bg-white' },
 ]

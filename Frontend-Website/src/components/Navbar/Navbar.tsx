@@ -67,6 +67,7 @@ const navLinks: NavLink[] = [
       { label: 'Blog', href: '/blog' },
       { label: 'Why Choose Us', href: '/#why-choose-us' },
       { label: 'FAQ', href: '/faq' },
+      { label: 'Contact Us', href: '/contact' },
     ],
   },
 ]
@@ -117,7 +118,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
             <div key={link.label} className="group relative">
               <a
                 href={link.href}
-                className={`inline-flex items-center gap-1 rounded-xl px-1.5 py-1 text-base transition-colors duration-150 hover:text-blue-active 2xl:gap-1.5 2xl:px-2 ${
+                className={`inline-flex items-center gap-2 rounded-xl px-1.5 py-1 text-base transition-colors duration-150 hover:text-blue-active 2xl:gap-2.5 2xl:px-2 ${
                   link.label === activeLabel ? 'font-semibold text-blue-active' : 'text-white'
                 }`}
               >

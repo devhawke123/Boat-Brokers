@@ -1,4 +1,4 @@
-import boatsHeroBg from '../../assets/boats-for-sale-hero-bg.jpg'
+import boatsHeroBg from '../../assets/BoatsForSale2 (2).png'
 import PageHero from '../../components/PageHero/PageHero'
 import BoatsListing from './sections/BoatsListing/BoatsListing'
 import GetInTouch from './sections/GetInTouch/GetInTouch'
@@ -14,6 +14,7 @@ export default function BoatForSale() {
         title="Boats for Sale"
         titleFont="accent"
         body="Find a boat that fits your lifestyle, plans, and budget. Explore our carefully selected boats and start your next adventure on the waterways."
+        overlayClassName="bg-black/45"
       />
       <BoatsListing />
       <GetInTouch />

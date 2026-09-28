@@ -8,6 +8,8 @@ import BoatViewing from './pages/BoatViewing/BoatViewing'
 import JargonBuster from './pages/JargonBuster/JargonBuster'
 import NoelCreary from './pages/NoelCreary/NoelCreary'
 import Faq from './pages/Faq/Faq'
+import Contact from './pages/Contact/Contact'
+import Valuation from './pages/Valuation/Valuation'
 import BookAViewing from './pages/BookAViewing/BookAViewing'
 import AreasWeServe from './pages/AreasWeServe/AreasWeServe'
 import WestMidlands from './pages/AreasWeServe/WestMidlands/WestMidlands'
@@ -19,6 +21,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 import Blog from './pages/Blog/Blog'
 import BlogDetail from './pages/BlogDetail/BlogDetail'
 import Login from './seller-portal/pages/Login/Login'
+import Signup from './seller-portal/pages/Signup/Signup'
 import Dashboard from './seller-portal/pages/Dashboard/Dashboard'
 import MyBoats from './seller-portal/pages/MyBoats/MyBoats'
 import AddBoat from './seller-portal/pages/AddBoat/AddBoat'
@@ -89,6 +92,14 @@ function App() {
     return <Faq />
   }
 
+  if (pathname === '/contact') {
+    return <Contact />
+  }
+
+  if (pathname === '/valuation') {
+    return <Valuation />
+  }
+
   if (pathname === '/book-a-viewing') {
     return <BookAViewing />
   }
@@ -131,6 +142,10 @@ function App() {
 
   if (pathname === '/seller-portal/login') {
     return <Login />
+  }
+
+  if (pathname === '/seller-portal/signup') {
+    return <Signup />
   }
 
   if (pathname === '/seller-portal/dashboard') {

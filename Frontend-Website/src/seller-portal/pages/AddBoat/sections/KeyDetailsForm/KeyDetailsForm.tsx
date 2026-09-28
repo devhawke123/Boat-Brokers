@@ -16,7 +16,7 @@ export type KeyDetailsValues = {
   email: string
   countryCode: string
   phone: string
-  country: string
+  city: string
   sellTimeline: string
   contactTime: string
   listerType: string
@@ -29,7 +29,7 @@ export const initialKeyDetailsValues: KeyDetailsValues = {
   email: '',
   countryCode: '+44',
   phone: '',
-  country: '',
+  city: '',
   sellTimeline: '',
   contactTime: '',
   listerType: '',
@@ -126,15 +126,15 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
           </div>
           <div className="flex flex-1 flex-col gap-2">
             <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
-              Country <span className="text-red-500">*</span>
+              City <span className="text-red-500">*</span>
             </span>
             <div className="relative flex h-11 items-center rounded-lg border border-[#e4eef2] bg-white">
               <input
                 type="text"
                 required
-                value={values.country}
-                onChange={(e) => onChange('country', e.target.value)}
-                placeholder="United Kingdom"
+                value={values.city}
+                onChange={(e) => onChange('city', e.target.value)}
+                placeholder="London"
                 className="h-full w-full rounded-lg bg-transparent px-3 text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
               />
             </div>

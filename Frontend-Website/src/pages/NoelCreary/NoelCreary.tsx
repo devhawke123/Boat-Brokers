@@ -2,8 +2,6 @@ import heroBg from '../../assets/noel-creary-hero-bg.png'
 import PageHero from '../../components/PageHero/PageHero'
 import NoelCrearyAbout from './sections/NoelCrearyAbout/NoelCrearyAbout'
 import NoelCrearyStory from './sections/NoelCrearyStory/NoelCrearyStory'
-import NoelCrearyExpertise from './sections/NoelCrearyExpertise/NoelCrearyExpertise'
-import NoelCrearyJourney from './sections/NoelCrearyJourney/NoelCrearyJourney'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
 import Footer from '../../components/Footer/Footer'
 
@@ -21,8 +19,6 @@ export default function NoelCreary() {
       />
       <NoelCrearyAbout />
       <NoelCrearyStory />
-      <NoelCrearyExpertise />
-      <NoelCrearyJourney />
       <CtaBanner />
       <Footer />
     </main>

@@ -114,7 +114,7 @@ export default function WorcestershireSellingProcess() {
       </div>
 
       <a
-        href="/book-a-viewing"
+        href="/valuation"
         className="inline-flex items-center gap-1.5 rounded-xl bg-[#0d5673] px-5 py-3 text-base font-semibold text-white shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
       >
         Book a Free Valuation

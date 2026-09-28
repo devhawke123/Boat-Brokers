@@ -16,6 +16,8 @@ import { buyersRouter } from "./routes/buyers";
 import { leadsRouter } from "./routes/leads";
 import { salesRouter } from "./routes/sales";
 import { blogAdminRouter } from "./routes/blogAdmin";
+import { contactRouter } from "./routes/contact";
+import { valuationRouter } from "./routes/valuation";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -52,6 +54,8 @@ app.use("/api/buyers", buyersRouter);
 app.use("/api/leads", leadsRouter);
 app.use("/api/sales", salesRouter);
 app.use("/api/admin/blogs", blogAdminRouter);
+app.use("/api/contact", contactRouter);
+app.use("/api/valuation", valuationRouter);
 app.use("/media", express.static(imagesRoot));
 app.use("/media/blogs", express.static(blogImagesRoot));
 app.use("/uploads", express.static(uploadsRoot));

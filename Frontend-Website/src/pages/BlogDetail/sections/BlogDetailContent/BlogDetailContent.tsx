@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { BlogPostDetail } from '../../../../data/blogPostDetail'
-import { IconChevronDown, IconClose, IconPhone } from '../../icons'
+import { IconChevronDown, IconClose } from '../../icons'
+import Button from '../../../../components/Button/Button'
 
 type BlogDetailContentProps = {
   post: BlogPostDetail
@@ -11,15 +12,12 @@ const midCta = {
   heading: 'Need a Second Opinion?',
   description: 'Want an experienced second opinion on a narrowboat survey report?',
   phone: '07960 768724',
-  linkLabel: 'theboatbrokers.co.uk/buying',
 }
 
 const closingCta = {
   heading: 'Considering a Purchase?',
   description:
     'Get the clarity you need before signing. Our experts are here to help you navigate the complexities of narrowboat surveys.',
-  phone: '07960 768724',
-  linkLabel: 'or visit theboatbrokers.co.uk/buying',
 }
 
 const faqs = [
@@ -107,13 +105,11 @@ export default function BlogDetailContent({ post }: BlogDetailContentProps) {
                 <h4 className="font-display text-2xl text-[#0a1f44] capitalize">{midCta.heading}</h4>
                 <p className="text-lg leading-[32.4px] text-[#374151]">{midCta.description}</p>
               </div>
-              <div className="flex shrink-0 flex-col items-start gap-1.5 sm:items-end">
+              <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
                 <a href={`tel:${midCta.phone.replace(/\s/g, '')}`} className="text-right text-xl font-bold tracking-[-0.33px] text-[#0a1f44]">
                   {midCta.phone}
                 </a>
-                <a href="/buying" className="text-right text-sm font-semibold tracking-[1.4px] text-navy-dark uppercase">
-                  {midCta.linkLabel}
-                </a>
+                <Button variant="dark" label="Contact Us" href="/contact" />
               </div>
             </div>
 
@@ -124,14 +120,10 @@ export default function BlogDetailContent({ post }: BlogDetailContentProps) {
               <p className="max-w-[36rem] text-sm leading-[22px] text-text-body sm:text-lg sm:leading-[28px]">{closingCta.description}</p>
               <div className="flex w-full flex-col items-center gap-3 pt-2 sm:w-auto sm:gap-4 sm:pt-4">
                 <a
-                  href={`tel:${closingCta.phone.replace(/\s/g, '')}`}
+                  href="/boats-for-sale"
                   className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-navy-darkest px-10 py-4 text-base font-bold text-white sm:w-auto sm:text-lg"
                 >
-                  <IconPhone className="size-[18px]" />
-                  {closingCta.phone}
-                </a>
-                <a href="/buying" className="text-xs font-semibold tracking-[1.4px] text-[#6b7280] uppercase sm:text-sm">
-                  {closingCta.linkLabel}
+                  Boats for Sale
                 </a>
               </div>
             </div>

@@ -15,6 +15,7 @@ import {
   updateListingPreferencesSchema,
 } from "../schemas/boatListing.schema";
 import { serializeListing } from "../views/boatListing.view";
+import { sendListingSubmittedEmail } from "../lib/email";
 
 export async function listListings(_req: Request, res: Response) {
   const listings = await findAllListings();
@@ -61,6 +62,14 @@ export async function updateListingStatusHandler(req: Request, res: Response) {
   if (!existing) return res.status(404).json({ error: "Listing not found" });
 
   const listing = await updateListingStatus(id, parsed.data.status);
+
+  await sendListingSubmittedEmail({
+    to: listing.seller.email,
+    sellerName: listing.seller.name,
+    boatName: listing.boat.name,
+    status: listing.status,
+  });
+
   res.json(serializeListing(listing));
 }
 

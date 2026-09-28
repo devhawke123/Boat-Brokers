@@ -46,7 +46,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
   function handleLogout() {
     clearStoredSeller()
-    window.location.href = '/'
+    window.location.href = '/seller-portal/login'
   }
 
   return (

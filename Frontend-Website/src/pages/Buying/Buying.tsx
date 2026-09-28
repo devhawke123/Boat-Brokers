@@ -1,4 +1,4 @@
-import buyingHeroBg from '../../assets/buyinghero.jpg'
+import buyingHeroBg from '../../assets/buyingselling.png'
 import PageHero from '../../components/PageHero/PageHero'
 import BuyingProcessSteps from './sections/BuyingProcessSteps/BuyingProcessSteps'
 import SurveyGuide from './sections/SurveyGuide/SurveyGuide'
