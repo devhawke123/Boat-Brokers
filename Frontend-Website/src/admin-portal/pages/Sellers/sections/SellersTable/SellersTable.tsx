@@ -3,14 +3,13 @@ import type { ApiSeller, SellerStatus } from '../../../../../seller-portal/lib/a
 import { formatDate } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
-import { EyeIcon, PlusIcon, TrashIcon } from '../../../../components/ActionButton/icons'
+import { EyeIcon, PlusIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
 type SellersTableProps = {
   sellers: ApiSeller[]
   boatCounts: Record<number, number>
-  onDelete: (seller: ApiSeller) => void
 }
 
 const tabs: { label: string; status: SellerStatus | 'All' }[] = [
@@ -37,7 +36,7 @@ const statusTones: Record<SellerStatus, BadgeTone> = {
 
 const pageSizeOptions = [5, 10, 20]
 
-export default function SellersTable({ sellers, boatCounts, onDelete }: SellersTableProps) {
+export default function SellersTable({ sellers, boatCounts }: SellersTableProps) {
   const [activeTab, setActiveTab] = useState<SellerStatus | 'All'>('All')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -146,7 +145,6 @@ export default function SellersTable({ sellers, boatCounts, onDelete }: SellersT
                 <td className="px-5 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <ActionButton href={`/admin-portal/sellers/${seller.id}`} label="View Details" icon={EyeIcon} />
-                    <ActionButton label="Delete" variant="delete" icon={TrashIcon} onClick={() => onDelete(seller)} />
                   </div>
                 </td>
               </tr>

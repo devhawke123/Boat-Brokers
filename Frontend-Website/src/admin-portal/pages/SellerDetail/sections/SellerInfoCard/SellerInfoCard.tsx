@@ -4,7 +4,6 @@ import { formatDate } from '../../../../../seller-portal/lib/formatDate'
 type SellerInfoCardProps = {
   seller: ApiSeller
   onStatusChange: (status: SellerStatus) => void
-  onDelete: () => void
   updatingStatus: boolean
 }
 
@@ -15,7 +14,7 @@ const statusOptions: { value: SellerStatus; label: string }[] = [
   { value: 'LOST', label: 'Lost' },
 ]
 
-export default function SellerInfoCard({ seller, onStatusChange, onDelete, updatingStatus }: SellerInfoCardProps) {
+export default function SellerInfoCard({ seller, onStatusChange, updatingStatus }: SellerInfoCardProps) {
   return (
     <div className="flex flex-col gap-5 rounded-lg border border-[#e2e8f0] bg-white p-6">
       <div className="flex items-start justify-between gap-4">
@@ -30,13 +29,6 @@ export default function SellerInfoCard({ seller, onStatusChange, onDelete, updat
           >
             Edit
           </a>
-          <button
-            type="button"
-            onClick={onDelete}
-            className="rounded-md border border-[#fecaca] px-3 py-1.5 text-xs font-bold text-[#dc2626] transition-colors duration-300 hover:bg-[#fef2f2]"
-          >
-            Delete
-          </button>
         </div>
       </div>
 

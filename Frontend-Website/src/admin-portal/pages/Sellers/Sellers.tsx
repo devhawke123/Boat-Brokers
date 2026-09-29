@@ -1,30 +1,18 @@
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
-import { useSellers, invalidateSellersCache } from '../../../seller-portal/data/useSellers'
+import { useSellers } from '../../../seller-portal/data/useSellers'
 import { useBoatListings } from '../../../seller-portal/data/useBoatListings'
-import { deleteSeller, type ApiSeller } from '../../../seller-portal/lib/api'
 import SellersTable from './sections/SellersTable/SellersTable'
 
 export default function Sellers() {
   const { checkedSession } = useAdminSession()
-  const { sellers, loading, error, refetch } = useSellers()
+  const { sellers, loading, error } = useSellers()
   const { listings } = useBoatListings()
 
   const boatCounts = listings.reduce<Record<number, number>>((counts, listing) => {
     counts[listing.seller.id] = (counts[listing.seller.id] ?? 0) + 1
     return counts
   }, {})
-
-  async function handleDelete(seller: ApiSeller) {
-    if (!window.confirm(`Delete seller "${seller.name}"? This can't be undone.`)) return
-    try {
-      await deleteSeller(seller.id)
-      invalidateSellersCache()
-      refetch()
-    } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete seller.')
-    }
-  }
 
   if (!checkedSession) return null
 
@@ -41,7 +29,7 @@ export default function Sellers() {
         ) : loading ? (
           <div className="h-80 w-full animate-pulse rounded-lg border border-[#e2e8f0] bg-[#f8fafc]" />
         ) : (
-          <SellersTable sellers={sellers} boatCounts={boatCounts} onDelete={handleDelete} />
+          <SellersTable sellers={sellers} boatCounts={boatCounts} />
         )}
       </div>
     </AdminShell>

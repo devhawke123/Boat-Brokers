@@ -3,7 +3,7 @@ import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useSellers, invalidateSellersCache } from '../../../seller-portal/data/useSellers'
 import { useBoatListings, invalidateListingsCache } from '../../../seller-portal/data/useBoatListings'
-import { deleteSeller, updateListingStatus, type ListingStatus, type SellerStatus } from '../../../seller-portal/lib/api'
+import { updateListingStatus, type ListingStatus, type SellerStatus } from '../../../seller-portal/lib/api'
 import { updateSellerStatus } from '../../lib/api'
 import SellerInfoCard from './sections/SellerInfoCard/SellerInfoCard'
 import SellerListingsTable from './sections/SellerListingsTable/SellerListingsTable'
@@ -51,18 +51,6 @@ export default function SellerDetail({ sellerId }: SellerDetailProps) {
     }
   }
 
-  async function handleDelete() {
-    if (!seller) return
-    if (!window.confirm(`Delete seller "${seller.name}"? This can't be undone.`)) return
-    try {
-      await deleteSeller(seller.id)
-      invalidateSellersCache()
-      window.location.href = '/admin-portal/sellers'
-    } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete seller.')
-    }
-  }
-
   if (!checkedSession) return null
 
   return (
@@ -92,12 +80,7 @@ export default function SellerDetail({ sellerId }: SellerDetailProps) {
                 {actionError}
               </p>
             )}
-            <SellerInfoCard
-              seller={seller}
-              onStatusChange={handleStatusChange}
-              onDelete={handleDelete}
-              updatingStatus={updatingStatus}
-            />
+            <SellerInfoCard seller={seller} onStatusChange={handleStatusChange} updatingStatus={updatingStatus} />
             <SellerListingsTable
               listings={sellerListings}
               onStatusChange={handleListingStatusChange}
