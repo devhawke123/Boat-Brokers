@@ -117,11 +117,10 @@ type FilterPanelProps = {
   filters: Filters
   onChange: (next: Filters) => void
   onClear: () => void
-  onApply: () => void
   boatTypeCounts: Record<string, number>
 }
 
-function FilterPanel({ filters, onChange, onClear, onApply, boatTypeCounts }: FilterPanelProps) {
+function FilterPanel({ filters, onChange, onClear, boatTypeCounts }: FilterPanelProps) {
   function toggleBoatType(type: string) {
     const has = filters.boatTypes.includes(type)
     onChange({
@@ -237,16 +236,6 @@ function FilterPanel({ filters, onChange, onClear, onApply, boatTypeCounts }: Fi
           ))}
         </div>
       </div>
-
-      <div className="flex flex-col gap-3 border-t border-[#e2e8f0] pt-6">
-        <button
-          type="button"
-          onClick={onApply}
-          className="w-full rounded-[10px] bg-navy-dark py-3 text-base font-medium text-white"
-        >
-          Apply Filters
-        </button>
-      </div>
     </>
   )
 }
@@ -341,10 +330,6 @@ export default function BoatsListing() {
     setPage(1)
   }
 
-  function handleApplyFilters() {
-    setShowMobileFilters(false)
-  }
-
   return (
     <section className="flex flex-col gap-8 px-6 py-14 sm:px-16 sm:py-20">
       <div className="flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between">
@@ -386,7 +371,6 @@ export default function BoatsListing() {
             filters={filters}
             onChange={setFilters}
             onClear={handleClearAll}
-            onApply={handleApplyFilters}
             boatTypeCounts={boatTypeCounts}
           />
         </aside>
@@ -420,7 +404,6 @@ export default function BoatsListing() {
                   filters={filters}
                   onChange={setFilters}
                   onClear={handleClearAll}
-                  onApply={handleApplyFilters}
                   boatTypeCounts={boatTypeCounts}
                 />
               </div>
