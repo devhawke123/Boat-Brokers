@@ -42,7 +42,6 @@ const navLinks: NavLink[] = [
       { label: 'Why Use a Broker?', href: '/selling#why-use-a-broker' },
       { label: 'What Do We Charge?', href: '/selling#fees' },
       { label: 'Where Do We Advertise?', href: '/selling#advertise' },
-      { label: 'The Boat Brokers Guide', href: '/selling#selling-guide' },
       { label: 'Ask a Question?', href: '/selling#ask-a-question' },
     ],
   },
