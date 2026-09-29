@@ -55,7 +55,7 @@ export async function updateBookingStatusHandler(req: Request, res: Response) {
       to: booking.buyer.email,
       buyerFirstName: booking.buyer.firstName,
       boatName: booking.boat.name,
-      boatSlug: booking.boat.slug,
+      boatId: booking.boat.id,
       when,
     });
   }

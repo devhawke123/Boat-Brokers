@@ -195,15 +195,27 @@ export async function sendBoatSoldEmail(params: { to: string; sellerName: string
   await sendStatusEmail({ ...params, statusInfo: SOLD_STATUS_INFO }, "boat-sold");
 }
 
+// Boats have no stored slug column — the frontend derives the URL slug from
+// the boat name at render time (see Frontend-Website/src/data/boats.ts), so
+// this mirrors that same logic to link to the right page.
+function slugify(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export async function sendBookingConfirmedEmail(params: {
   to: string;
   buyerFirstName: string;
   boatName: string;
-  boatSlug: string | null;
+  boatId: number;
   when: string;
 }) {
-  const { to, buyerFirstName, boatName, boatSlug, when } = params;
-  const boatUrl = boatSlug ? `${CLIENT_ORIGIN}/boats/${boatSlug}` : CLIENT_ORIGIN;
+  const { to, buyerFirstName, boatName, boatId, when } = params;
+  const slug = slugify(boatName) || String(boatId);
+  const boatUrl = `${CLIENT_ORIGIN}/boats/${slug}`;
 
   const html = renderEmailShell({
     eyebrow: "Viewing Confirmed",
