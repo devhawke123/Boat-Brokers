@@ -5,6 +5,7 @@ import loginHero from '../../../seller-portal/assets/Login/login-hero.png'
 import emailIcon from '../../../seller-portal/assets/Login/email-icon.svg'
 import lockIcon from '../../../seller-portal/assets/Login/lock-icon.svg'
 import eyeIcon from '../../../seller-portal/assets/Login/eye-icon.svg'
+import logo from '../../../assets/The_Boat_Brokers_Blue_Logo.png'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
@@ -25,10 +26,18 @@ export default function Login() {
 
   return (
     <main className="flex h-svh items-center justify-center overflow-hidden bg-[#fcfcfc] px-6 py-6 short:py-4 nav:gap-10 nav:px-16">
-      <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 short:gap-4">
+      <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 rounded-2xl border border-border p-6 short:gap-4 short:p-4 sm:p-8">
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="The Boat Brokers" className="h-12 w-auto" />
+          <span className="h-9 w-px bg-border" />
+          <span className="text-label font-semibold tracking-[2px] text-gold uppercase">Admin Portal</span>
+        </div>
+
         <div className="flex w-full flex-col gap-4 short:gap-2">
-          <h1 className="font-display text-h3 capitalize text-ink">Admin Login 👋</h1>
-          <p className="text-body text-text-body">Kindly fill in your details below to access the admin dashboard</p>
+          <h1 className="font-display text-h3 capitalize text-ink">Welcome back, admin.</h1>
+          <p className="text-body text-text-body">
+            Log in to manage boats, sales, buyers, sellers, and availability from the admin dashboard.
+          </p>
         </div>
 
         <form className="flex w-full flex-col items-center gap-5 short:gap-3" onSubmit={handleSubmit}>
@@ -76,13 +85,17 @@ export default function Login() {
             <Button
               type="submit"
               variant="dark"
-              label={loading ? 'Logging in…' : 'Login'}
+              label={loading ? 'Logging in…' : 'Log in'}
               icon="none"
               disabled={loading}
               className="w-full disabled:cursor-not-allowed disabled:opacity-70"
             />
           </div>
         </form>
+
+        <div className="h-px w-full bg-border" />
+
+        <p className="w-full text-center text-caption text-text-muted">Design &amp; Develop By Blue Hawke</p>
       </div>
 
       <div className="hidden max-h-[70.375rem] w-full max-w-[44.1875rem] self-stretch overflow-clip rounded-xl nav:block">

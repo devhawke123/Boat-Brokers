@@ -1,11 +1,9 @@
 import type { Request, Response } from "express";
-import { Resend } from "resend";
 import { createBooking, findAllBookings, findBookingById, updateBookingStatus, SlotUnavailableError } from "../models/booking.model";
 import { updateBuyerStatus } from "../models/buyer.model";
 import { createBookingSchema, updateBookingStatusSchema } from "../schemas/booking.schema";
 import { serializeBooking } from "../views/booking.view";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendBookingConfirmedEmail } from "../lib/email";
 
 // Admin-only — includes buyer PII (see views/booking.view.ts).
 export async function listBookings(_req: Request, res: Response) {
@@ -46,33 +44,20 @@ export async function updateBookingStatusHandler(req: Request, res: Response) {
     // rather than the stale snapshot from before it.
     booking = (await findBookingById(id)) ?? booking;
 
-    try {
-      const fromEmail = process.env.FROM_EMAIL || "no-reply@theboatbrokers.co.uk";
-      const when = new Date(booking.slot.startsAt).toLocaleString("en-GB", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        hour: "numeric",
-        minute: "2-digit",
-      });
-      const response = await resend.emails.send({
-        from: `Boat Brokers <${fromEmail}>`,
-        to: booking.buyer.email,
-        subject: `Your viewing for ${booking.boat.name} is confirmed`,
-        text: `Hi ${booking.buyer.firstName},
-
-Your viewing for "${booking.boat.name}" has been confirmed for ${when}.
-
-We look forward to seeing you!
-
-The Boat Brokers Team`,
-      });
-      if (response.error) {
-        console.error("Resend API Error object:", response.error);
-      }
-    } catch (err) {
-      console.error("Exception sending booking confirmation email:", err);
-    }
+    const when = new Date(booking.slot.startsAt).toLocaleString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    await sendBookingConfirmedEmail({
+      to: booking.buyer.email,
+      buyerFirstName: booking.buyer.firstName,
+      boatName: booking.boat.name,
+      boatSlug: booking.boat.slug,
+      when,
+    });
   }
 
   res.json(serializeBooking(booking));

@@ -3,7 +3,7 @@ import { findOrCreateBuyer } from "./buyer.model";
 
 const bookingInclude = {
   slot: true,
-  boat: { select: { id: true, name: true, imageUrl: true } },
+  boat: { select: { id: true, name: true, imageUrl: true, slug: true } },
   buyer: true,
 } as const;
 
