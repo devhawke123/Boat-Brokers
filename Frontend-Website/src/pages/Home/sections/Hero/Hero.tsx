@@ -16,27 +16,27 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]" />
       <Navbar />
 
-      <div className="relative z-[5] flex max-w-[45rem] flex-col gap-[30px] short:gap-4">
+      <div className="relative z-[5] flex max-w-[45rem] flex-col gap-[30px] overflow-x-hidden short:gap-4">
         <div className="flex flex-col gap-4 short:gap-2">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(96,166,192,0.28)] px-4 py-1.5 text-label font-medium text-white uppercase">
+          <span className="hero-reveal inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(96,166,192,0.28)] px-4 py-1.5 text-label font-medium text-white uppercase">
             <span className="size-2 rounded-full bg-white" />
             The Boat Brokers - Luxury Feel
           </span>
 
-          <h1 className="font-display text-h1 text-white capitalize short:text-h1-short">
+          <h1 className="hero-reveal hero-reveal-delay-1 font-display text-h1 text-white capitalize short:text-h1-short">
             The Simple Way
             <br />
             To Buy &amp; Sell.
           </h1>
 
-          <p className="max-w-[35rem] text-body text-body-light">
+          <p className="hero-reveal hero-reveal-delay-2 max-w-[35rem] text-body text-body-light">
             Helping at every stage of the sales process, from appointment to completion. We are
             passionate about boating and dedicated to providing our clients with exceptional
             service.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="hero-reveal hero-reveal-delay-3 flex flex-wrap items-center gap-6">
           <div className="flex flex-wrap items-center gap-3">
             <Button variant="light" label="Buy Boats Now" href="/boats-for-sale" />
             <Button variant="outline-white" label="Sell Your Boats" href="/selling" />

@@ -20,6 +20,7 @@ export default function About() {
         body="We make buying and selling boats simple, personal, and stress-free, with expert guidance every step of the way."
         bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]"
         contentClassName="mt-20 sm:mt-0"
+        animateEntrance
       />
       <OurStory />
       <OurPurpose />

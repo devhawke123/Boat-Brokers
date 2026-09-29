@@ -16,6 +16,7 @@ export default function Buying() {
         activeLabel="Buying"
         title="The Buying Process"
         body="Buying a boat doesn’t have to be complicated. From finding the right boat to completing the purchase, we’re here to guide you through every step."
+        animateEntrance
       />
       <BuyingProcessSteps />
       <SurveyGuide />

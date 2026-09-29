@@ -56,6 +56,13 @@ type PageHeroProps = {
   contentClassName?: string
   /** Extra content rendered after the body copy, e.g. a meta row or badges. */
   children?: ReactNode
+  /**
+   * Opt-in slide+fade-in-on-load stagger for the eyebrow/title/body/children,
+   * matching Home's bespoke Hero (pages/Home/sections/Hero/Hero.tsx). Off by
+   * default since PageHero is shared by pages that shouldn't animate (e.g.
+   * navbar dropdown-only pages) — set true only on top-level navbar pages.
+   */
+  animateEntrance?: boolean
 }
 
 export default function PageHero({
@@ -74,7 +81,9 @@ export default function PageHero({
   gapClassName = 'gap-6',
   contentClassName = '',
   children,
+  animateEntrance = false,
 }: PageHeroProps) {
+  const reveal = (delayClass: string) => (animateEntrance ? `hero-reveal ${delayClass}` : '')
   return (
     <section
       className={`relative flex ${sectionSizeClassNames[size]} flex-col ${alignSectionClassNames[align]} overflow-hidden rounded-3xl bg-cover bg-center p-8 max-[900px]:p-5`}
@@ -99,14 +108,14 @@ export default function PageHero({
       <div
         className={`relative z-[5] flex ${maxWidthClassName} flex-col ${alignContentClassNames[align]} ${gapClassName} ${contentClassName}`}
       >
-        {eyebrow}
+        {eyebrow && (animateEntrance ? <div className={reveal('')}>{eyebrow}</div> : eyebrow)}
         <h1
-          className={`${titleFontClassNames[titleFont]} ${titleSizeClassNames[size]} text-white capitalize`}
+          className={`${reveal('hero-reveal-delay-1')} ${titleFontClassNames[titleFont]} ${titleSizeClassNames[size]} text-white capitalize`}
         >
           {title}
         </h1>
-        {body && <p className={bodyClassName}>{body}</p>}
-        {children}
+        {body && <p className={`${reveal('hero-reveal-delay-2')} ${bodyClassName}`}>{body}</p>}
+        {children && (animateEntrance ? <div className={reveal('hero-reveal-delay-3')}>{children}</div> : children)}
       </div>
     </section>
   )

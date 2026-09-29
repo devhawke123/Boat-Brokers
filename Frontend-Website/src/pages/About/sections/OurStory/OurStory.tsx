@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import storyMain from '../../../../assets/about-story-main.png'
 import storyAccent from '../../../../assets/about-story-accent.png'
 import Button from '../../../../components/Button/Button'
+import { useInViewOnce } from '../../../../hooks/useInViewOnce'
 
 const stats = [
   { value: '25+', label: 'Years of exceptional experience and excellence' },
@@ -11,11 +12,18 @@ const stats = [
 ]
 
 export default function OurStory() {
+  const { ref: revealRef, isVisible } = useInViewOnce<HTMLDivElement>()
+
   return (
-    <section className="py-14 lg:py-20">
+    <section className="overflow-x-hidden py-14 lg:py-20">
       <div className="mx-auto flex max-w-[87.5rem] flex-col gap-14 lg:gap-16">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[auto_1fr_auto] lg:items-stretch lg:gap-12">
-          <div className="h-[280px] overflow-hidden rounded-2xl sm:h-[24rem] lg:h-[34.375rem] lg:w-[22rem]">
+        <div
+          ref={revealRef}
+          className="grid grid-cols-1 gap-10 lg:grid-cols-[auto_1fr_auto] lg:items-stretch lg:gap-12"
+        >
+          <div
+            className={`reveal-left h-[280px] overflow-hidden rounded-2xl sm:h-[24rem] lg:h-[34.375rem] lg:w-[22rem] ${isVisible ? 'is-visible' : ''}`}
+          >
             <img
               src={storyMain}
               alt="A narrowboat moored on a canal at sunset"
@@ -23,7 +31,9 @@ export default function OurStory() {
             />
           </div>
 
-          <div className="flex flex-col gap-8 lg:h-[34.375rem] lg:min-w-[22rem] lg:justify-between">
+          <div
+            className={`reveal-right reveal-delay-1 flex flex-col gap-8 lg:h-[34.375rem] lg:min-w-[22rem] lg:justify-between ${isVisible ? 'is-visible' : ''}`}
+          >
             <div className="flex flex-col gap-6">
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
                 <span className="size-2 rounded-full bg-blue" />
@@ -49,7 +59,9 @@ export default function OurStory() {
             </div>
           </div>
 
-          <div className="hidden self-end overflow-hidden rounded-2xl lg:block lg:h-[25rem] lg:w-[25rem]">
+          <div
+            className={`reveal-right reveal-delay-2 hidden self-end overflow-hidden rounded-2xl lg:block lg:h-[25rem] lg:w-[25rem] ${isVisible ? 'is-visible' : ''}`}
+          >
             <img
               src={storyAccent}
               alt="Boats moored along a canal towpath"

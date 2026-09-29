@@ -454,3 +454,90 @@
     animation: none;
   }
 }
+
+/*
+ * —— Entrance animations (currently Home page only) ——
+ * `.reveal-left` / `.reveal-right` are for scroll-triggered elements: apply
+ * the class plus `.is-visible` once an IntersectionObserver reports the
+ * element in view (see src/hooks/useInViewOnce.ts). `.hero-reveal` +
+ * `.hero-reveal-delay-*` are for above-the-fold elements that animate
+ * immediately on load — pure CSS, no JS/observer involved.
+ */
+:root {
+  --reveal-distance: 4.5rem; /* ~72px */
+}
+
+@media (width < 40rem) {
+  :root {
+    --reveal-distance: 1.875rem; /* 30px — shorter throw on small screens */
+  }
+}
+
+.reveal-left,
+.reveal-right {
+  opacity: 0;
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left {
+  transform: translateX(calc(-1 * var(--reveal-distance)));
+}
+
+.reveal-right {
+  transform: translateX(var(--reveal-distance));
+}
+
+.reveal-left.is-visible,
+.reveal-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-delay-1 {
+  transition-delay: 0.15s;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.3s;
+}
+
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--reveal-distance)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-reveal {
+  opacity: 0;
+  animation: hero-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-reveal-delay-1 {
+  animation-delay: 0.15s;
+}
+
+.hero-reveal-delay-2 {
+  animation-delay: 0.3s;
+}
+
+.hero-reveal-delay-3 {
+  animation-delay: 0.45s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-left,
+  .reveal-right,
+  .hero-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}

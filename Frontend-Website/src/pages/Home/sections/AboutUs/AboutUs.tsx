@@ -3,6 +3,7 @@ import noelVideo from '../../../../assets/noel-video.mp4'
 import noelPortrait from '../../../../assets/noel-creary-portrait.png'
 import playIcon from '../../../../assets/icons/play.svg'
 import Button from '../../../../components/Button/Button'
+import { useInViewOnce } from '../../../../hooks/useInViewOnce'
 
 const stats = [
   { value: '25+', label: 'Years of exceptional experience and excellence' },
@@ -14,6 +15,7 @@ const stats = [
 export default function AboutUs() {
   const modalVideoRef = useRef<HTMLVideoElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { ref: revealRef, isVisible } = useInViewOnce<HTMLElement>()
 
   const closeModal = () => {
     modalVideoRef.current?.pause()
@@ -21,9 +23,14 @@ export default function AboutUs() {
   }
 
   return (
-    <section className="section content-center grid grid-cols-1 items-start justify-center gap-x-11 gap-y-10 short:gap-y-6 lg:grid-cols-[minmax(0,clamp(20rem,50%,40rem))_minmax(0,clamp(20rem,45%,37rem))]">
+    <section
+      ref={revealRef}
+      className="section content-center grid grid-cols-1 items-start justify-center gap-x-11 gap-y-10 overflow-x-hidden short:gap-y-6 lg:grid-cols-[minmax(0,clamp(20rem,50%,40rem))_minmax(0,clamp(20rem,45%,37rem))]"
+    >
       <div className="order-2 lg:order-1">
-        <div className="media-frame aspect-[640/560] rounded-2xl">
+        <div
+          className={`media-frame reveal-left aspect-[640/560] rounded-2xl ${isVisible ? 'is-visible' : ''}`}
+        >
           <img src={noelPortrait} alt="Noel Creary of The Boat Brokers on a canal towpath" />
           <button
             type="button"
@@ -61,7 +68,9 @@ export default function AboutUs() {
         </div>
       )}
 
-      <div className="order-1 flex flex-col gap-6 lg:order-2">
+      <div
+        className={`reveal-right reveal-delay-1 order-1 flex flex-col gap-6 lg:order-2 ${isVisible ? 'is-visible' : ''}`}
+      >
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-4">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-badge-bg px-4 py-1.5 text-label font-medium text-badge-text uppercase">

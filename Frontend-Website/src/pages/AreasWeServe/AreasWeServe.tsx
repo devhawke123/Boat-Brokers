@@ -19,6 +19,7 @@ export default function AreasWeServe() {
         align="left"
         overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]"
         contentClassName="mb-[100px]"
+        animateEntrance
       >
         <p className="hidden max-w-[35rem] text-[#ededed] sm:block">
           Specialist Narrowboat &amp; Canal Boat Brokerage Across the Midlands. The Boat Brokers

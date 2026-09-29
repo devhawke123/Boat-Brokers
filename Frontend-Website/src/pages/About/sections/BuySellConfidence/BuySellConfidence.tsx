@@ -3,10 +3,14 @@ import sellersImg from '../../../../assets/confidence-sellers.png'
 import budgetIcon from '../../../../assets/icons/icon-budget.png'
 import resellerIcon from '../../../../assets/icons/icon-reseller.png'
 import Button from '../../../../components/Button/Button'
+import { useInViewOnce } from '../../../../hooks/useInViewOnce'
 
 export default function BuySellConfidence() {
+  const { ref: buyersRef, isVisible: buyersVisible } = useInViewOnce<HTMLDivElement>()
+  const { ref: sellersRef, isVisible: sellersVisible } = useInViewOnce<HTMLDivElement>()
+
   return (
-    <section className="py-14 lg:py-16">
+    <section className="overflow-x-hidden py-14 lg:py-16">
       <div className="mx-auto flex max-w-[87.5rem] flex-col gap-14 lg:gap-12">
         <div className="flex flex-col gap-6 lg:gap-4">
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-[0.625rem] font-medium tracking-[0.7px] text-[#14b2ef] uppercase sm:text-sm">
@@ -19,8 +23,10 @@ export default function BuySellConfidence() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="media-frame order-2 mx-auto aspect-square w-full max-w-[35.375rem] rounded-2xl lg:order-1 lg:mx-0 lg:max-w-[min(41.5rem,calc(100svh-18.5rem))]">
+        <div ref={buyersRef} className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div
+            className={`media-frame reveal-left order-2 mx-auto aspect-square w-full max-w-[35.375rem] rounded-2xl lg:order-1 lg:mx-0 lg:max-w-[min(41.5rem,calc(100svh-18.5rem))] ${buyersVisible ? 'is-visible' : ''}`}
+          >
             <img
               src={buyersImg}
               alt="A narrowboat moored beside a green riverbank"
@@ -28,7 +34,9 @@ export default function BuySellConfidence() {
             />
           </div>
 
-          <div className="order-1 flex flex-col gap-8 lg:order-2 lg:gap-6">
+          <div
+            className={`reveal-right reveal-delay-1 order-1 flex flex-col gap-8 lg:order-2 lg:gap-6 ${buyersVisible ? 'is-visible' : ''}`}
+          >
             <div className="flex flex-col gap-6 lg:gap-4">
               <h3 className="font-display text-[1.5rem] leading-[1.3] tracking-[-2px] text-[#1a1a1a] capitalize sm:text-[1.75rem] lg:text-[2.375rem]">
                 Your Boat Journey,
@@ -60,8 +68,10 @@ export default function BuySellConfidence() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="order-1 flex flex-col justify-end gap-8 lg:gap-6">
+        <div ref={sellersRef} className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div
+            className={`reveal-left order-1 flex flex-col justify-end gap-8 lg:gap-6 ${sellersVisible ? 'is-visible' : ''}`}
+          >
             <div className="flex flex-col gap-8 lg:gap-6">
               <p className="text-sm leading-[1.5] font-light text-text-body sm:text-lg">
                 We make selling your boat simple, from professional marketing and maximum exposure
@@ -92,7 +102,9 @@ export default function BuySellConfidence() {
             </div>
           </div>
 
-          <div className="media-frame order-2 mx-auto aspect-square w-full max-w-[35.375rem] rounded-2xl lg:mr-0 lg:ml-auto lg:max-w-[min(41.5rem,calc(100svh-18.5rem))]">
+          <div
+            className={`media-frame reveal-right reveal-delay-1 order-2 mx-auto aspect-square w-full max-w-[35.375rem] rounded-2xl lg:mr-0 lg:ml-auto lg:max-w-[min(41.5rem,calc(100svh-18.5rem))] ${sellersVisible ? 'is-visible' : ''}`}
+          >
             <img
               src={sellersImg}
               alt="A narrowboat moored on a canal surrounded by trees"

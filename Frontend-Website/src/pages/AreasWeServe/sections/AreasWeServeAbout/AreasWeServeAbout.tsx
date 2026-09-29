@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import mainImage from '../../../../assets/areas-we-serve-main.png'
 import accentImage from '../../../../assets/areas-we-serve-accent.png'
 import Button from '../../../../components/Button/Button'
+import { useInViewOnce } from '../../../../hooks/useInViewOnce'
 
 const stats = [
   { value: '25+', label: 'Years of exceptional experience and excellence' },
@@ -18,8 +19,10 @@ const mobileStats = [
 ]
 
 export default function AreasWeServeAbout() {
+  const { ref: revealRef, isVisible } = useInViewOnce<HTMLDivElement>()
+
   return (
-    <section className="py-14 lg:py-20">
+    <section className="overflow-x-hidden py-14 lg:py-20">
       <div className="mx-auto flex max-w-[87.5rem] flex-col gap-14 lg:gap-16">
         <div className="flex flex-col gap-5 lg:hidden">
           <div className="h-[8.5625rem] w-[9.125rem] overflow-hidden rounded-lg">
@@ -59,8 +62,13 @@ export default function AreasWeServeAbout() {
           </div>
         </div>
 
-        <div className="hidden grid-cols-1 gap-10 lg:grid lg:grid-cols-[25rem_1fr] lg:items-stretch lg:gap-12">
-          <div className="h-[280px] overflow-hidden rounded-2xl sm:h-[24rem] lg:h-[34.375rem]">
+        <div
+          ref={revealRef}
+          className="hidden grid-cols-1 gap-10 lg:grid lg:grid-cols-[25rem_1fr] lg:items-stretch lg:gap-12"
+        >
+          <div
+            className={`reveal-left h-[280px] overflow-hidden rounded-2xl sm:h-[24rem] lg:h-[34.375rem] ${isVisible ? 'is-visible' : ''}`}
+          >
             <img
               src={mainImage}
               alt="A narrowboat on a Midlands canal at sunset"
@@ -68,7 +76,9 @@ export default function AreasWeServeAbout() {
             />
           </div>
 
-          <div className="flex flex-col gap-8 lg:h-[34.375rem] lg:justify-between">
+          <div
+            className={`reveal-right reveal-delay-1 flex flex-col gap-8 lg:h-[34.375rem] lg:justify-between ${isVisible ? 'is-visible' : ''}`}
+          >
             <div className="flex flex-col gap-6">
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
                 <span className="size-2 rounded-full bg-blue" />
@@ -100,7 +110,9 @@ export default function AreasWeServeAbout() {
                 </div>
               </div>
 
-              <div className="h-[260px] w-full overflow-hidden rounded-2xl sm:h-[19rem] lg:h-full lg:w-[21rem]">
+              <div
+                className={`reveal-right reveal-delay-2 h-[260px] w-full overflow-hidden rounded-2xl sm:h-[19rem] lg:h-full lg:w-[21rem] ${isVisible ? 'is-visible' : ''}`}
+              >
                 <img
                   src={accentImage}
                   alt="Narrowboats moored along a misty canal towpath"

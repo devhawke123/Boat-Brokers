@@ -18,6 +18,7 @@ export default function Selling() {
         title="The Selling Process"
         body="Ready to sell your boat? We make the process simple and straightforward, helping you present your boat to the right buyers and achieve the best possible outcome."
         bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]"
+        animateEntrance
       />
       <SellingProcessSteps />
       <WhyUseABroker />
