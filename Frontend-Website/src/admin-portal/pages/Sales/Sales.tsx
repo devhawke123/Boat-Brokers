@@ -1,4 +1,5 @@
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog, alertDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useSales, invalidateSalesCache } from '../../data/useSales'
 import { deleteSale, type ApiSale } from '../../lib/api'
@@ -9,13 +10,16 @@ export default function Sales() {
   const { sales, loading, error, refetch } = useSales()
 
   async function handleDelete(sale: ApiSale) {
-    if (!window.confirm(`Delete this sale of "${sale.boat.name}"? This can't be undone.`)) return
+    const confirmed = await confirmDialog(`Delete this sale of "${sale.boat.name}"? This can't be undone.`, {
+      title: 'Delete sale',
+    })
+    if (!confirmed) return
     try {
       await deleteSale(sale.id)
       invalidateSalesCache()
       refetch()
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete sale.')
+      await alertDialog(err instanceof Error ? err.message : 'Failed to delete sale.')
     }
   }
 

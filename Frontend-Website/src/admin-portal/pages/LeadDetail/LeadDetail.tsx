@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog, alertDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useLeads, invalidateLeadsCache } from '../../data/useLeads'
 import { deleteLead, updateLeadStatus, type LeadStatus } from '../../lib/api'
@@ -40,13 +41,16 @@ export default function LeadDetail({ leadId }: LeadDetailProps) {
 
   async function handleDelete() {
     if (!lead) return
-    if (!window.confirm(`Delete lead "${lead.firstName} ${lead.surname}"? This can't be undone.`)) return
+    const confirmed = await confirmDialog(`Delete lead "${lead.firstName} ${lead.surname}"? This can't be undone.`, {
+      title: 'Delete lead',
+    })
+    if (!confirmed) return
     try {
       await deleteLead(lead.id)
       invalidateLeadsCache()
       window.location.href = '/admin-portal/leads'
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete lead.')
+      await alertDialog(err instanceof Error ? err.message : 'Failed to delete lead.')
     }
   }
 

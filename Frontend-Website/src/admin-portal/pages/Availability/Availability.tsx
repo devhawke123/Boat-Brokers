@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { fetchAvailabilitySlots, type ApiAvailabilitySlot } from '../../../lib/api'
 import { deleteAvailabilitySlot, fetchBookings, updateBookingStatus, type ApiAdminBooking } from '../../lib/api'
@@ -59,7 +60,8 @@ export default function Availability() {
   }
 
   async function handleDelete(slotId: number) {
-    if (!window.confirm('Delete this slot?')) return
+    const confirmed = await confirmDialog('Delete this slot?', { title: 'Delete slot' })
+    if (!confirmed) return
     setActionError(null)
     try {
       await deleteAvailabilitySlot(slotId)
@@ -85,7 +87,7 @@ export default function Availability() {
           <p className="text-sm text-[#64748b]">Open viewing slots and manage buyer requests against them.</p>
         </div>
 
-        <CreateSlotForm onCreated={load} />
+        <CreateSlotForm existingSlots={slots} onCreated={load} />
 
         {actionError && (
           <p className="rounded-lg border border-[#fecaca] bg-[#fef2f2] px-4 py-2 text-sm font-medium text-[#dc2626]">

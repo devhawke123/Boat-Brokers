@@ -1,4 +1,5 @@
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog, alertDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useBuyers, invalidateBuyersCache } from '../../data/useBuyers'
 import { deleteBuyer, type ApiBuyer } from '../../lib/api'
@@ -9,13 +10,16 @@ export default function Buyers() {
   const { buyers, loading, error, refetch } = useBuyers()
 
   async function handleDelete(buyer: ApiBuyer) {
-    if (!window.confirm(`Delete buyer "${buyer.firstName} ${buyer.surname}"? This can't be undone.`)) return
+    const confirmed = await confirmDialog(`Delete buyer "${buyer.firstName} ${buyer.surname}"? This can't be undone.`, {
+      title: 'Delete buyer',
+    })
+    if (!confirmed) return
     try {
       await deleteBuyer(buyer.id)
       invalidateBuyersCache()
       refetch()
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete buyer.')
+      await alertDialog(err instanceof Error ? err.message : 'Failed to delete buyer.')
     }
   }
 

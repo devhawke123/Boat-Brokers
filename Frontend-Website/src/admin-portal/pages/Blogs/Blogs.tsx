@@ -1,4 +1,5 @@
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog, alertDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useBlogPosts, invalidateBlogPostsCache } from '../../data/useBlogPosts'
 import { deleteBlogPost, type ApiBlogPostAdmin } from '../../lib/api'
@@ -9,13 +10,16 @@ export default function Blogs() {
   const { posts, loading, error, refetch } = useBlogPosts()
 
   async function handleDelete(post: ApiBlogPostAdmin) {
-    if (!window.confirm(`Delete blog post "${post.title}"? This can't be undone.`)) return
+    const confirmed = await confirmDialog(`Delete blog post "${post.title}"? This can't be undone.`, {
+      title: 'Delete blog post',
+    })
+    if (!confirmed) return
     try {
       await deleteBlogPost(post.id)
       invalidateBlogPostsCache()
       refetch()
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete blog post.')
+      await alertDialog(err instanceof Error ? err.message : 'Failed to delete blog post.')
     }
   }
 

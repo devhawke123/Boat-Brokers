@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import { MenuIcon } from '../Sidebar/icons'
+import AdminDialogHost from '../AdminDialog/AdminDialog'
 import sidebarLogo from '../../../seller-portal/assets/Sidebar/sidebar-logo.png'
 
 type AdminShellProps = {
@@ -28,6 +29,8 @@ export default function AdminShell({ children, mainClassName = 'bg-frost' }: Adm
       </div>
 
       <main className={`flex-1 overflow-y-auto ${mainClassName}`}>{children}</main>
+
+      <AdminDialogHost />
     </div>
   )
 }

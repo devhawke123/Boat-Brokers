@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
+import { confirmDialog, alertDialog } from '../../components/AdminDialog/AdminDialog'
 import { useAdminSession } from '../../data/useAdminSession'
 import { useBuyers, invalidateBuyersCache } from '../../data/useBuyers'
 import { deleteBuyer, updateBuyerStatus, type BuyerStatus } from '../../lib/api'
@@ -34,13 +35,16 @@ export default function BuyerDetail({ buyerId }: BuyerDetailProps) {
 
   async function handleDelete() {
     if (!buyer) return
-    if (!window.confirm(`Delete buyer "${buyer.firstName} ${buyer.surname}"? This can't be undone.`)) return
+    const confirmed = await confirmDialog(`Delete buyer "${buyer.firstName} ${buyer.surname}"? This can't be undone.`, {
+      title: 'Delete buyer',
+    })
+    if (!confirmed) return
     try {
       await deleteBuyer(buyer.id)
       invalidateBuyersCache()
       window.location.href = '/admin-portal/buyers'
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : 'Failed to delete buyer.')
+      await alertDialog(err instanceof Error ? err.message : 'Failed to delete buyer.')
     }
   }
 

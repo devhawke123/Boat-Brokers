@@ -4,6 +4,7 @@ import { formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
 import { EditIcon, EyeIcon, RestoreIcon, TrashIcon } from '../../../../components/ActionButton/icons'
+import { confirmDialog } from '../../../../components/AdminDialog/AdminDialog'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -218,10 +219,12 @@ export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, 
                           variant="delete"
                           icon={TrashIcon}
                           disabled={updatingId === boat.id}
-                          onClick={() => {
-                            if (window.confirm(`Delete "${boat.name}"? It will be removed from the storefront immediately.`)) {
-                              onDeleteToggle(boat.id, true)
-                            }
+                          onClick={async () => {
+                            const confirmed = await confirmDialog(
+                              `Delete "${boat.name}"? It will be removed from the storefront immediately.`,
+                              { title: 'Delete boat' },
+                            )
+                            if (confirmed) onDeleteToggle(boat.id, true)
                           }}
                         />
                       )}
