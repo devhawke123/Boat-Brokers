@@ -1,4 +1,3 @@
-import arrowRightExplore from '../../../../assets/icons/arrow-right-explore.svg'
 import ellipseIcon from '../../../../assets/Ellipse 6.png'
 import Button from '../../../../components/Button/Button'
 
@@ -115,10 +114,6 @@ export default function BuyingProcessSteps() {
                 {step.number}
               </span>
             </div>
-            <a href="/about" className="inline-flex items-center gap-1.5 text-base text-ink">
-              More About Us
-              <img src={arrowRightExplore} alt="" aria-hidden="true" className="size-[18px]" />
-            </a>
           </div>
         ))}
       </div>
