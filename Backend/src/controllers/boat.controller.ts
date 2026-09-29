@@ -1,16 +1,24 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
-import { createBoatWithListing, findAllBoats, findBoatById, updateBoat } from "../models/boat.model";
+import {
+  createBoatWithListing,
+  findAllBoats,
+  findBoatById,
+  restoreBoat,
+  softDeleteBoat,
+  updateBoat,
+} from "../models/boat.model";
 import { createBoatSchema, updateBoatSchema } from "../schemas/boat.schema";
 import { serializeBoat } from "../views/boat.view";
 import { serializeListing } from "../views/boatListing.view";
 import { Resend } from "resend";
-import { sendListingSubmittedEmail } from "../lib/email";
+import { sendBoatSoldEmail, sendListingSubmittedEmail } from "../lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function listBoats(_req: Request, res: Response) {
-  const boats = await findAllBoats();
+export async function listBoats(req: Request, res: Response) {
+  const includeDeleted = req.query.includeDeleted === "true";
+  const boats = await findAllBoats({ includeDeleted });
   res.json(boats.map(serializeBoat));
 }
 
@@ -18,8 +26,31 @@ export async function getBoat(req: Request, res: Response) {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid boat id" });
 
-  const boat = await findBoatById(id);
+  const includeDeleted = req.query.includeDeleted === "true";
+  const boat = await findBoatById(id, { includeDeleted });
   if (!boat) return res.status(404).json({ error: "Boat not found" });
+  res.json(serializeBoat(boat));
+}
+
+export async function deleteBoatHandler(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid boat id" });
+
+  const existing = await findBoatById(id, { includeDeleted: true });
+  if (!existing) return res.status(404).json({ error: "Boat not found" });
+
+  const boat = await softDeleteBoat(id);
+  res.json(serializeBoat(boat));
+}
+
+export async function restoreBoatHandler(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid boat id" });
+
+  const existing = await findBoatById(id, { includeDeleted: true });
+  if (!existing) return res.status(404).json({ error: "Boat not found" });
+
+  const boat = await restoreBoat(id);
   res.json(serializeBoat(boat));
 }
 
@@ -157,6 +188,16 @@ export async function updateBoatHandler(req: Request, res: Response) {
     newBrochureUrl,
     customFields,
   );
+
+  // Email only on the false -> true transition, not on every subsequent edit
+  // of an already-sold boat.
+  if (mappedFields.isSold === true && !existing.isSold) {
+    await sendBoatSoldEmail({
+      to: boat.seller.email,
+      sellerName: boat.seller.name,
+      boatName: boat.name,
+    });
+  }
 
   res.json(serializeBoat(boat));
 }

@@ -3,22 +3,49 @@ import type { ApiBoat } from '../../../../../lib/api'
 import { formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
-import { EditIcon, EyeIcon } from '../../../../components/ActionButton/icons'
+import { EditIcon, EyeIcon, RestoreIcon, TrashIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
+export type SaleStatus = 'Live' | 'Under Offer' | 'Sold'
+
 type BoatsTableProps = {
   boats: ApiBoat[]
+  onDeleteToggle: (boatId: number, nextDeleted: boolean) => void
+  onSaleStatusChange: (boatId: number, status: SaleStatus) => void
+  updatingId: number | null
 }
 
-type BoatFilter = 'All' | 'Live' | 'Under Offer' | 'Sold'
+type BoatFilter = 'All' | 'Live' | 'Under Offer' | 'Sold' | 'Deleted'
 
-const tabs: BoatFilter[] = ['All', 'Live', 'Under Offer', 'Sold']
+const tabs: BoatFilter[] = ['All', 'Live', 'Under Offer', 'Sold', 'Deleted']
+
+function saleStatus(boat: ApiBoat): SaleStatus {
+  if (boat.isSold) return 'Sold'
+  if (boat.isUnderOffer) return 'Under Offer'
+  return 'Live'
+}
+
+const saleStatusTones: Record<SaleStatus, BadgeTone> = {
+  Live: 'success',
+  'Under Offer': 'progress',
+  Sold: 'neutral',
+}
+
+// Matches StatusBadge's success/progress/neutral tones so this dropdown
+// reads as the same badge system, just made interactive.
+const saleStatusSelectClasses: Record<SaleStatus, string> = {
+  Live: 'bg-[#dcfce7] text-[#116a37] border-[#b6ecc9]',
+  'Under Offer': 'bg-[#fef9c3] text-[#8a6116] border-[#fbe89a]',
+  Sold: 'bg-[#f1f5f9] text-[#475569] border-[#e2e8f0]',
+}
 
 function boatStatus(boat: ApiBoat): { label: string; tone: BadgeTone } {
-  if (boat.isSold) return { label: 'Sold', tone: 'neutral' }
-  if (boat.isUnderOffer) return { label: 'Under Offer', tone: 'progress' }
-  return { label: 'Live', tone: 'success' }
+  // Deleted takes priority over sold/under-offer — it's an admin-only
+  // archival state, not a real sale status.
+  if (boat.isDeleted) return { label: 'Deleted', tone: 'danger' }
+  const status = saleStatus(boat)
+  return { label: status, tone: saleStatusTones[status] }
 }
 
 function matchesTab(boat: ApiBoat, tab: BoatFilter) {
@@ -40,7 +67,7 @@ function slugify(value: string) {
 
 const pageSizeOptions = [10, 20, 50]
 
-export default function BoatsTable({ boats }: BoatsTableProps) {
+export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, updatingId }: BoatsTableProps) {
   const [activeTab, setActiveTab] = useState<BoatFilter>('All')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -127,7 +154,6 @@ export default function BoatsTable({ boats }: BoatsTableProps) {
           </thead>
           <tbody>
             {paginated.map((boat) => {
-              const status = boatStatus(boat)
               return (
                 <tr key={boat.id} className="border-t border-[#f3f4f6]">
                   <td className="py-2 pr-5 pl-5">
@@ -149,18 +175,56 @@ export default function BoatsTable({ boats }: BoatsTableProps) {
                   </td>
                   <td className="px-5 py-2 text-xs font-bold text-[#0a192f]">{formatPrice(boat.price)}</td>
                   <td className="px-5 py-2">
-                    <StatusBadge label={status.label} tone={status.tone} />
+                    {boat.isDeleted ? (
+                      <StatusBadge label="Deleted" tone="danger" />
+                    ) : (
+                      <select
+                        value={saleStatus(boat)}
+                        disabled={updatingId === boat.id}
+                        onChange={(event) => onSaleStatusChange(boat.id, event.target.value as SaleStatus)}
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold focus:outline-none disabled:opacity-60 ${saleStatusSelectClasses[saleStatus(boat)]}`}
+                      >
+                        <option value="Live">Live</option>
+                        <option value="Under Offer">Under Offer</option>
+                        <option value="Sold">Sold</option>
+                      </select>
+                    )}
                   </td>
                   <td className="px-5 py-2 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <ActionButton href={`/admin-portal/boats/${boat.id}/edit`} label="Edit" icon={EditIcon} />
-                      <ActionButton
-                        href={`/boats/${slugify(boat.name) || boat.id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        label="View"
-                        icon={EyeIcon}
-                      />
+                      {!boat.isDeleted && (
+                        <>
+                          <ActionButton href={`/admin-portal/boats/${boat.id}/edit`} label="Edit" icon={EditIcon} />
+                          <ActionButton
+                            href={`/boats/${slugify(boat.name) || boat.id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            label="View"
+                            icon={EyeIcon}
+                          />
+                        </>
+                      )}
+                      {boat.isDeleted ? (
+                        <ActionButton
+                          label="Restore"
+                          variant="approve"
+                          icon={RestoreIcon}
+                          disabled={updatingId === boat.id}
+                          onClick={() => onDeleteToggle(boat.id, false)}
+                        />
+                      ) : (
+                        <ActionButton
+                          label="Delete"
+                          variant="delete"
+                          icon={TrashIcon}
+                          disabled={updatingId === boat.id}
+                          onClick={() => {
+                            if (window.confirm(`Delete "${boat.name}"? It will be removed from the storefront immediately.`)) {
+                              onDeleteToggle(boat.id, true)
+                            }
+                          }}
+                        />
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -43,6 +43,7 @@ export type ApiBoat = {
   boatName: string | null
   imageUrl: string | null
   price: number | null
+  isDeleted: boolean
   seller: ApiSeller
   images: ApiBoatImage[]
   [field: string]: unknown
@@ -68,6 +69,9 @@ export type ApiBoatListing = {
     videoUrl: string | null
     virtualTourUrl: string | null
     overview: string | null
+    isDeleted: boolean
+    isSold: boolean
+    isUnderOffer: boolean
     images: ApiBoatImage[]
     customFields: { id: number; label: string; value: string; position: number }[]
     [field: string]: unknown

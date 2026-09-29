@@ -8,9 +8,14 @@ export const boatInclude = {
   customFields: { orderBy: { position: "asc" as const } },
 };
 
-export function findAllBoats() {
+// `includeDeleted` is opt-in — the public storefront (GET /api/boats) never
+// sets it, so a soft-deleted boat disappears from listings automatically.
+// The admin Boats page passes it explicitly so it can still see (and tag)
+// deleted boats.
+export function findAllBoats(options: { includeDeleted?: boolean } = {}) {
   return prisma.boat.findMany({
     where: {
+      ...(options.includeDeleted ? {} : { isDeleted: false }),
       OR: [
         { listings: { none: {} } },
         { listings: { some: { status: "APPROVED" } } },
@@ -21,8 +26,19 @@ export function findAllBoats() {
   });
 }
 
-export function findBoatById(id: number) {
-  return prisma.boat.findUnique({ where: { id }, include: boatInclude });
+export function findBoatById(id: number, options: { includeDeleted?: boolean } = {}) {
+  return prisma.boat.findFirst({
+    where: { id, ...(options.includeDeleted ? {} : { isDeleted: false }) },
+    include: boatInclude,
+  });
+}
+
+export function softDeleteBoat(id: number) {
+  return prisma.boat.update({ where: { id }, data: { isDeleted: true }, include: boatInclude });
+}
+
+export function restoreBoat(id: number) {
+  return prisma.boat.update({ where: { id }, data: { isDeleted: false }, include: boatInclude });
 }
 
 type ListingPreferences = Pick<

@@ -143,7 +143,7 @@ export default function BoatEditForm(props: BoatEditFormProps) {
     setIsLoading(true)
     const request = hasListing
       ? fetchListing(props.listingId).then((listing) => populateFromBoat(listing.boat, listing.seller, listing))
-      : fetchBoat(props.boatId).then((boat) => populateFromBoat(boat, boat.seller))
+      : fetchBoat(props.boatId, { includeDeleted: true }).then((boat) => populateFromBoat(boat, boat.seller))
     request
       .catch((err: unknown) => {
         if (!cancelled) setSubmitError(err instanceof Error ? err.message : 'Failed to load boat.')

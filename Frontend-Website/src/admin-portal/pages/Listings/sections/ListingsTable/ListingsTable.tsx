@@ -3,7 +3,7 @@ import type { ApiBoatListing, ListingStatus } from '../../../../../seller-portal
 import { formatDateTime, formatPrice } from '../../../../../seller-portal/lib/formatDate'
 import StatusBadge, { type BadgeTone } from '../../../../components/StatusBadge/StatusBadge'
 import ActionButton from '../../../../components/ActionButton/ActionButton'
-import { CheckIcon, CommentIcon, CrossIcon, EditIcon } from '../../../../components/ActionButton/icons'
+import { CheckIcon, ClockIcon, CommentIcon, CrossIcon, EditIcon } from '../../../../components/ActionButton/icons'
 import chevronLeft from '../../../../../seller-portal/assets/MyBoats/chevron-left.svg'
 import chevronRight from '../../../../../seller-portal/assets/MyBoats/chevron-right.svg'
 
@@ -148,29 +148,46 @@ export default function ListingsTable({ listings, onStatusChange, updatingId }: 
                 <td className="px-5 py-2 text-xs text-[#64748b]">{formatDateTime(listing.createdAt)}</td>
                 <td className="px-5 py-2 text-xs font-bold text-[#0a192f]">{formatPrice(listing.boat.price)}</td>
                 <td className="px-5 py-2">
-                  <StatusBadge label={statusLabels[listing.status]} tone={statusTones[listing.status]} />
+                  {listing.boat.isDeleted ? (
+                    <StatusBadge label="Deleted" tone="danger" />
+                  ) : (
+                    <StatusBadge label={statusLabels[listing.status]} tone={statusTones[listing.status]} />
+                  )}
                 </td>
                 <td className="px-5 py-2 text-right">
                   <div className="flex items-center justify-end gap-2">
-                    {listing.status === 'PENDING' && (
+                    {!listing.boat.isDeleted && (
                       <>
-                        <ActionButton
-                          label="Approve"
-                          variant="approve"
-                          icon={CheckIcon}
-                          disabled={updatingId === listing.id}
-                          onClick={() => onStatusChange(listing.id, 'APPROVED')}
-                        />
-                        <ActionButton
-                          label="Reject"
-                          variant="reject"
-                          icon={CrossIcon}
-                          disabled={updatingId === listing.id}
-                          onClick={() => onStatusChange(listing.id, 'REJECTED')}
-                        />
+                        {listing.status !== 'APPROVED' && (
+                          <ActionButton
+                            label="Approve"
+                            variant="approve"
+                            icon={CheckIcon}
+                            disabled={updatingId === listing.id}
+                            onClick={() => onStatusChange(listing.id, 'APPROVED')}
+                          />
+                        )}
+                        {listing.status !== 'REJECTED' && (
+                          <ActionButton
+                            label="Reject"
+                            variant="reject"
+                            icon={CrossIcon}
+                            disabled={updatingId === listing.id}
+                            onClick={() => onStatusChange(listing.id, 'REJECTED')}
+                          />
+                        )}
+                        {listing.status !== 'PENDING' && (
+                          <ActionButton
+                            label="Pending"
+                            variant="pending"
+                            icon={ClockIcon}
+                            disabled={updatingId === listing.id}
+                            onClick={() => onStatusChange(listing.id, 'PENDING')}
+                          />
+                        )}
+                        <ActionButton href={`/admin-portal/listings/${listing.id}/edit`} label="Edit" icon={EditIcon} />
                       </>
                     )}
-                    <ActionButton href={`/admin-portal/listings/${listing.id}/edit`} label="Edit" icon={EditIcon} />
                     <ActionButton
                       href={`/admin-portal/listings/${listing.id}`}
                       label={`Comments (${listing.comments.length})`}

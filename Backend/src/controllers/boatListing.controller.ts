@@ -60,6 +60,9 @@ export async function updateListingStatusHandler(req: Request, res: Response) {
 
   const existing = await findListingById(id);
   if (!existing) return res.status(404).json({ error: "Listing not found" });
+  if (existing.boat.isDeleted) {
+    return res.status(409).json({ error: "This boat has been deleted and its listing status can no longer be changed" });
+  }
 
   const listing = await updateListingStatus(id, parsed.data.status);
 

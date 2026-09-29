@@ -6,7 +6,16 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.FROM_EMAIL || "no-reply@theboatbrokers.co.uk";
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://theboatbrokers.co.uk";
 
-const STATUS_COPY: Record<ListingStatus, { label: string; badgeBg: string; badgeText: string; message: string }> = {
+type StatusEmailInfo = { label: string; badgeBg: string; badgeText: string; message: string };
+
+const SOLD_STATUS_INFO: StatusEmailInfo = {
+  label: "Sold",
+  badgeBg: "#dcfce7",
+  badgeText: "#15803d",
+  message: "Great news — your boat has sold! Our team will be in touch shortly to arrange the next steps.",
+};
+
+const STATUS_COPY: Record<ListingStatus, StatusEmailInfo> = {
   PENDING: {
     label: "Pending Review",
     badgeBg: "#fef3c7",
@@ -21,17 +30,15 @@ const STATUS_COPY: Record<ListingStatus, { label: string; badgeBg: string; badge
     message: "Your listing has been approved and is now live for buyers to see.",
   },
   REJECTED: {
-    label: "Needs Changes",
+    label: "Rejected",
     badgeBg: "#fee2e2",
     badgeText: "#b91c1c",
-    message:
-      "Our team has reviewed your listing and it needs a few changes before it can go live. Please check your dashboard for details.",
+    message: "Our team has reviewed your listing and it has been rejected. Please review the comments.",
   },
 };
 
-function renderListingSubmittedEmail(params: { sellerName: string; boatName: string; status: ListingStatus }) {
-  const { sellerName, boatName, status } = params;
-  const statusInfo = STATUS_COPY[status];
+function renderStatusEmail(params: { sellerName: string; boatName: string; statusInfo: StatusEmailInfo }) {
+  const { sellerName, boatName, statusInfo } = params;
   const firstName = sellerName.trim().split(/\s+/)[0] || sellerName;
   const dashboardUrl = `${CLIENT_ORIGIN}/seller-portal/dashboard`;
 
@@ -117,14 +124,12 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export async function sendListingSubmittedEmail(params: {
-  to: string;
-  sellerName: string;
-  boatName: string;
-  status: ListingStatus;
-}) {
-  const { to, ...rest } = params;
-  const { subject, html, text } = renderListingSubmittedEmail(rest);
+async function sendStatusEmail(
+  params: { to: string; sellerName: string; boatName: string; statusInfo: StatusEmailInfo },
+  logLabel: string,
+) {
+  const { to, sellerName, boatName, statusInfo } = params;
+  const { subject, html, text } = renderStatusEmail({ sellerName, boatName, statusInfo });
 
   try {
     const response = await resend.emails.send({
@@ -135,9 +140,26 @@ export async function sendListingSubmittedEmail(params: {
       text,
     });
     if (response.error) {
-      console.error("Resend API Error sending listing-submitted email:", response.error);
+      console.error(`Resend API Error sending ${logLabel} email:`, response.error);
     }
   } catch (err) {
-    console.error("Exception sending listing-submitted email:", err);
+    console.error(`Exception sending ${logLabel} email:`, err);
   }
+}
+
+export async function sendListingSubmittedEmail(params: {
+  to: string;
+  sellerName: string;
+  boatName: string;
+  status: ListingStatus;
+}) {
+  const { status, ...rest } = params;
+  await sendStatusEmail({ ...rest, statusInfo: STATUS_COPY[status] }, "listing-submitted");
+}
+
+// Sent when an admin marks a boat as Sold on the admin Boats page — separate
+// from listing status (PENDING/APPROVED/REJECTED), which tracks moderation,
+// not the sale itself.
+export async function sendBoatSoldEmail(params: { to: string; sellerName: string; boatName: string }) {
+  await sendStatusEmail({ ...params, statusInfo: SOLD_STATUS_INFO }, "boat-sold");
 }

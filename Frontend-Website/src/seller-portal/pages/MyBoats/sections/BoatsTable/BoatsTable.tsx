@@ -68,9 +68,7 @@ export default function BoatsTable({ listings }: BoatsTableProps) {
   }
 
   function getReviewHref(listing: ApiBoatListing) {
-    return listing.status === 'PENDING'
-      ? `/seller-portal/boats/new?step=5&listingId=${listing.id}`
-      : `/seller-portal/comments/${listing.id}`
+    return `/seller-portal/boats/new?step=5&listingId=${listing.id}`
   }
 
   return (
@@ -155,25 +153,44 @@ export default function BoatsTable({ listings }: BoatsTableProps) {
                 <td className="px-5 py-2 text-xs text-[#64748b]">{formatDateTime(listing.createdAt)}</td>
                 <td className="px-5 py-2 text-xs font-bold text-[#0a192f]">{formatPrice(listing.boat.price)}</td>
                 <td className="px-5 py-2">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[listing.status]}`}
-                  >
-                    {statusLabels[listing.status]}
-                  </span>
+                  {listing.boat.isDeleted ? (
+                    <span className="inline-flex items-center rounded-full bg-[#ffeae9] px-2 py-[3px] text-[9.5px] font-bold text-[#dc2626]">
+                      Deleted
+                    </span>
+                  ) : listing.boat.isSold ? (
+                    <span className="inline-flex items-center rounded-full bg-[#f1f5f9] px-2 py-[3px] text-[9.5px] font-bold text-[#475569]">
+                      Sold
+                    </span>
+                  ) : listing.boat.isUnderOffer ? (
+                    <span className="inline-flex items-center rounded-full bg-[#fef9c3] px-2 py-[3px] text-[9.5px] font-bold text-[#a16207]">
+                      Under Offer
+                    </span>
+                  ) : (
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[listing.status]}`}
+                    >
+                      {statusLabels[listing.status]}
+                    </span>
+                  )}
                 </td>
                 <td className="px-5 py-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-[#475569]">
+                  <a
+                    href={`/seller-portal/comments/${listing.id}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#475569] hover:text-navy-dark"
+                  >
                     <img src={commentIcon} alt="" aria-hidden="true" className="size-3" />
                     {listing.comments.length}
-                  </div>
+                  </a>
                 </td>
                 <td className="px-5 py-2 text-right">
-                  <a
-                    href={getReviewHref(listing)}
-                    className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
-                  >
-                    Review
-                  </a>
+                  {!listing.boat.isDeleted && (
+                    <a
+                      href={getReviewHref(listing)}
+                      className="inline-flex items-center justify-center rounded-md border border-[#e5e7eb] px-3 py-1 text-[9.5px] font-bold text-[#102a43] transition-colors duration-300 hover:bg-[#f8fafc]"
+                    >
+                      Review
+                    </a>
+                  )}
                 </td>
               </tr>
             ))}

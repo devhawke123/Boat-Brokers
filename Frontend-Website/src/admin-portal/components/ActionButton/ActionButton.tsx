@@ -5,13 +5,15 @@ import type { ComponentType, MouseEvent, SVGProps } from 'react'
 // its own bordered rectangle. Renders as a link when href is given, a button
 // otherwise — same chrome either way, so a row of mixed actions reads as one
 // consistent control group rather than a link stitched next to a button.
-export type ActionVariant = 'approve' | 'reject' | 'delete' | 'neutral' | 'primary'
+export type ActionVariant = 'approve' | 'reject' | 'pending' | 'delete' | 'neutral' | 'primary'
 
 const VARIANTS: Record<ActionVariant, string> = {
   approve:
     'border-[#b6ecc9] bg-[#f0fdf4] text-[#116a37] hover:bg-[#dcfce7] hover:border-[#8fe0ac] focus-visible:ring-[#16a34a]/40',
   reject:
     'border-[#ffcfcc] bg-[#fef2f2] text-[#b3261e] hover:bg-[#ffe4e2] hover:border-[#ffb3ad] focus-visible:ring-[#dc2626]/40',
+  pending:
+    'border-[#fbe89a] bg-[#fef9c3] text-[#8a6116] hover:bg-[#fef08a] hover:border-[#f5d76e] focus-visible:ring-[#d97706]/40',
   delete:
     'border-[#ffcfcc] bg-white text-[#b3261e] hover:bg-[#fef2f2] hover:border-[#ffb3ad] focus-visible:ring-[#dc2626]/40',
   neutral:

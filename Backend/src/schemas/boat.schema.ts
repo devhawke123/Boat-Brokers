@@ -188,6 +188,10 @@ export const updateBoatSchema = z.object({
   additionalNotes: optionalTrimmed,
   agreedToContact: optionalBoolean,
   customFields: optionalCustomFields,
+  // Admin-only sale status toggle (see admin Boats page) — mutually exclusive
+  // with each other, enforced client-side.
+  isSold: optionalBoolean,
+  isUnderOffer: optionalBoolean,
   ...Object.fromEntries(
     OPTIONAL_STRING_FIELDS.map((field) => [field, updateOptionalTrimmed]),
   ) as Record<(typeof OPTIONAL_STRING_FIELDS)[number], typeof updateOptionalTrimmed>,

@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
-import { fetchBoats, type ApiBoat } from '../../../lib/api'
-import BoatsTable from './sections/BoatsTable/BoatsTable'
+import { deleteBoat, fetchBoats, restoreBoat, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
+import BoatsTable, { type SaleStatus } from './sections/BoatsTable/BoatsTable'
 
 export default function Boats() {
   const { checkedSession } = useAdminSession()
   const [boats, setBoats] = useState<ApiBoat[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [updatingId, setUpdatingId] = useState<number | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    fetchBoats()
+    // includeDeleted: the admin Boats page must still show deleted boats
+    // (tagged "Deleted") — only the public storefront excludes them.
+    fetchBoats({ includeDeleted: true })
       .then((data) => {
         if (!cancelled) setBoats(data)
       })
@@ -28,6 +32,35 @@ export default function Boats() {
     }
   }, [])
 
+  async function handleDeleteToggle(boatId: number, nextDeleted: boolean) {
+    setUpdatingId(boatId)
+    setActionError(null)
+    try {
+      const updated = nextDeleted ? await deleteBoat(boatId) : await restoreBoat(boatId)
+      setBoats((prev) => prev.map((boat) => (boat.id === boatId ? updated : boat)))
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to update boat.')
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
+  async function handleSaleStatusChange(boatId: number, status: SaleStatus) {
+    setUpdatingId(boatId)
+    setActionError(null)
+    try {
+      const updated = await updateBoatSaleStatus(boatId, {
+        isSold: status === 'Sold',
+        isUnderOffer: status === 'Under Offer',
+      })
+      setBoats((prev) => prev.map((boat) => (boat.id === boatId ? updated : boat)))
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to update boat status.')
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
   if (!checkedSession) return null
 
   return (
@@ -38,6 +71,12 @@ export default function Boats() {
           <p className="text-sm text-[#64748b]">Every boat currently live on the website — new submissions are moderated in Listings.</p>
         </div>
 
+        {actionError && (
+          <p className="rounded-md border border-[#fecaca] bg-[#fef2f2] px-4 py-2 text-sm font-medium text-[#dc2626]">
+            {actionError}
+          </p>
+        )}
+
         {error ? (
           <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-[#fca5a5] bg-[#fef2f2] py-16 text-center text-[#b91c1c]">
             <p>Couldn&rsquo;t load boats from the server: {error}</p>
@@ -46,7 +85,12 @@ export default function Boats() {
         ) : loading ? (
           <div className="h-80 w-full animate-pulse rounded-lg border border-[#e2e8f0] bg-[#f8fafc]" />
         ) : (
-          <BoatsTable boats={boats} />
+          <BoatsTable
+            boats={boats}
+            onDeleteToggle={handleDeleteToggle}
+            onSaleStatusChange={handleSaleStatusChange}
+            updatingId={updatingId}
+          />
         )}
       </div>
     </AdminShell>

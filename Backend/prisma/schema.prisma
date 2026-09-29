@@ -22,6 +22,10 @@ model Boat {
   isSold       Boolean @default(false)
   isUnderOffer Boolean @default(false)
   isFeatured   Boolean @default(false)
+  // Soft delete — an admin-deleted boat is hidden from the public storefront
+  // (findAllBoats/findBoatById exclude it by default) but the row and its
+  // listing are kept so the admin can still see it tagged "Deleted".
+  isDeleted    Boolean @default(false)
   imageUrl String?
   sellerId Int
   seller   Seller      @relation(fields: [sellerId], references: [id])

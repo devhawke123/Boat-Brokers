@@ -89,11 +89,25 @@ export default function BoatListingTable({ listings }: BoatListingTableProps) {
                 </td>
                 <td className="px-5 py-2 text-sm text-[#64748b]">{formatDateTime(listing.createdAt)}</td>
                 <td className="px-5 py-2 text-right">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[listing.status]}`}
-                  >
-                    {statusLabels[listing.status]}
-                  </span>
+                  {listing.boat.isDeleted ? (
+                    <span className="inline-flex items-center rounded-full bg-[#ffeae9] px-2 py-[3px] text-[9.5px] font-bold text-[#dc2626]">
+                      Deleted
+                    </span>
+                  ) : listing.boat.isSold ? (
+                    <span className="inline-flex items-center rounded-full bg-[#f1f5f9] px-2 py-[3px] text-[9.5px] font-bold text-[#475569]">
+                      Sold
+                    </span>
+                  ) : listing.boat.isUnderOffer ? (
+                    <span className="inline-flex items-center rounded-full bg-[#fef9c3] px-2 py-[3px] text-[9.5px] font-bold text-[#a16207]">
+                      Under Offer
+                    </span>
+                  ) : (
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-[3px] text-[9.5px] font-bold ${statusBadgeClasses[listing.status]}`}
+                    >
+                      {statusLabels[listing.status]}
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}

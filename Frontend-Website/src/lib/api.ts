@@ -30,6 +30,7 @@ export type ApiBoat = {
   isSold: boolean
   isUnderOffer: boolean
   isFeatured: boolean
+  isDeleted: boolean
   imageUrl: string | null
   sellerId: number
   seller: ApiSeller
@@ -196,12 +197,46 @@ async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return readResponse<T>(res, path)
 }
 
-export function fetchBoats(): Promise<ApiBoat[]> {
-  return apiGet<ApiBoat[]>('/boats')
+async function apiPatch<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  return readResponse<T>(res, path)
 }
 
-export function fetchBoat(id: number): Promise<ApiBoat> {
-  return apiGet<ApiBoat>(`/boats/${id}`)
+async function apiDelete<T>(path: string): Promise<T> {
+  const res = await fetchWithTimeout(`${API_BASE}${path}`, { method: 'DELETE' })
+  return readResponse<T>(res, path)
+}
+
+// `includeDeleted` is only ever passed by the admin Boats page — the public
+// storefront calls this with no options and never sees soft-deleted boats.
+export function fetchBoats(options: { includeDeleted?: boolean } = {}): Promise<ApiBoat[]> {
+  return apiGet<ApiBoat[]>(`/boats${options.includeDeleted ? '?includeDeleted=true' : ''}`)
+}
+
+export function fetchBoat(id: number, options: { includeDeleted?: boolean } = {}): Promise<ApiBoat> {
+  return apiGet<ApiBoat>(`/boats/${id}${options.includeDeleted ? '?includeDeleted=true' : ''}`)
+}
+
+// Soft delete — hides the boat from the storefront but keeps the row (and
+// its listing) so admins can still see and restore it. See Backend's
+// Boat.isDeleted / softDeleteBoat.
+export function deleteBoat(id: number): Promise<ApiBoat> {
+  return apiDelete<ApiBoat>(`/boats/${id}`)
+}
+
+export function restoreBoat(id: number): Promise<ApiBoat> {
+  return apiPatch<ApiBoat>(`/boats/${id}/restore`, {})
+}
+
+// Admin-only "Sold" / "Under Offer" / "Live" toggle on the Boats page —
+// PATCH /api/boats/:id also accepts plain JSON for this (the multer
+// middleware in front of it passes non-multipart requests straight through).
+export function updateBoatSaleStatus(id: number, status: { isSold: boolean; isUnderOffer: boolean }): Promise<ApiBoat> {
+  return apiPatch<ApiBoat>(`/boats/${id}`, status)
 }
 
 // Mirrors the Blog admin panel: an editor pastes the fields below and the
