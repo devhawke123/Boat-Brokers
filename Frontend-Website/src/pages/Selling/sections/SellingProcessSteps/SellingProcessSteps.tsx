@@ -124,7 +124,7 @@ export default function SellingProcessSteps() {
         ))}
       </div>
 
-      <Button variant="dark" label="Back to Boats for Sale" href="/boats-for-sale" />
+      <Button variant="dark" label="Seller Portal" href="/seller-portal/login" />
     </section>
   )
 }

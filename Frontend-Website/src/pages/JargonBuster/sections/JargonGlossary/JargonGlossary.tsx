@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { groupTermsByLetter, jargonTerms } from '../../../../data/jargon'
-import { IconChevronDown, IconSearch } from './icons'
+import { IconSearch } from './icons'
 
 const ALPHABET = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
 
@@ -89,13 +89,10 @@ export default function JargonGlossary() {
                 {group.items.map((item) => (
                   <div
                     key={item.term}
-                    className="flex items-center justify-between gap-6 rounded-lg border border-[#e3f7ff] bg-white p-6 shadow-[0px_1px_1px_0px_rgba(0,0,0,0.05)]"
+                    className="flex flex-col gap-1 rounded-lg border border-[#e3f7ff] bg-white p-6 shadow-[0px_1px_1px_0px_rgba(0,0,0,0.05)]"
                   >
-                    <div className="flex flex-col gap-1">
-                      <h3 className="font-display text-2xl leading-[1.3] text-[#0b2436] capitalize">{item.term}</h3>
-                      <p className="text-sm leading-[1.4] text-[#64767e] italic">{item.definition}</p>
-                    </div>
-                    <IconChevronDown className="size-4 shrink-0 -rotate-90 text-[#9ca3af]" />
+                    <h3 className="font-display text-2xl leading-[1.3] text-[#0b2436] capitalize">{item.term}</h3>
+                    <p className="text-sm leading-[1.4] text-[#64767e] italic">{item.definition}</p>
                   </div>
                 ))}
               </div>
