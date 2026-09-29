@@ -11,10 +11,40 @@ type Testimonial = {
 
 const testimonials: Testimonial[] = [
   {
+    quote: '"A Seamless Experience!"',
+    body: '"Selling my boat was stress-free thanks to The Boat Brokers. They handled everything professionally and got me a great price. Highly recommend!"',
+    name: 'James R., Southampton',
+    date: '22 February, 2023',
+  },
+  {
+    quote: '"Sold Faster Than Expected!"',
+    body: '"I listed my boat with The Boat Brokers, and within weeks, it was sold at a price I was happy with. The team kept me informed at every step."',
+    name: 'Mark W., Plymouth',
+    date: '30 March, 2024',
+  },
+  {
+    quote: '"Honest and Transparent Service"',
+    body: '"I was hesitant about buying a used boat, but The Boat Brokers made the process smooth. Their honesty and attention to detail gave me complete peace of mind."',
+    name: 'Emma L., Bristol',
+    date: '10 January, 2024',
+  },
+  {
+    quote: '"Professional from Start to Finish"',
+    body: '"The Boat Brokers made selling my narrowboat so easy. They handled the viewings and negotiations, and I didn\'t have to worry about a thing."',
+    name: 'Sarah D., Portsmouth',
+    date: '02 April, 2024',
+  },
+  {
     quote: '"Fair Valuation and Quick Sale"',
     body: "\"The valuation was spot on, and they managed to find a buyer quickly. The service was fantastic, and I'd definitely use them again.\"",
     name: 'Lucy M., Bournemouth',
     date: '07 May, 2024',
+  },
+  {
+    quote: '"Best Brokerage for Boat Sales"',
+    body: '"I had tried selling my boat privately without success. The Boat Brokers found a serious buyer fast and handled all the paperwork effortlessly."',
+    name: 'Richard K., Brighton',
+    date: '10 June, 2024',
   },
   {
     quote: '"Highly Recommend!"',
@@ -23,10 +53,16 @@ const testimonials: Testimonial[] = [
     date: '12 July, 2024',
   },
   {
-    quote: '"Smooth From Start To Finish"',
-    body: '"The team kept us updated every step of the way. Selling our narrowboat has never been this easy."',
-    name: 'James T., Bristol',
-    date: '03 September, 2024',
+    quote: '"Excellent Customer Service"',
+    body: '"The team went above and beyond to ensure I was happy with my purchase. They answered all my questions and even helped with after-sales support."',
+    name: 'David P., Exeter',
+    date: '26 August, 2024',
+  },
+  {
+    quote: '"Stress-Free Process"',
+    body: '"I expected selling my boat to be a hassle, but The Boat Brokers made it simple and quick. They are trustworthy and efficient!"',
+    name: 'Alex B., Poole',
+    date: '26 February, 2025',
   },
 ]
 
