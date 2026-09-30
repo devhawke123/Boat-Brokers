@@ -52,7 +52,7 @@ export default function ValuationForm() {
             type="text"
             name="name"
             required
-            placeholder="John Doe"
+            placeholder="Your Name"
             className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] px-4 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
           />
         </label>
@@ -63,7 +63,7 @@ export default function ValuationForm() {
             type="email"
             name="email"
             required
-            placeholder="john@doe.com"
+            placeholder="Your Email"
             className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] px-4 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
           />
         </label>
@@ -73,7 +73,7 @@ export default function ValuationForm() {
           <input
             type="tel"
             name="phone"
-            placeholder="07960 768724"
+            placeholder="Your Phone Number"
             className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] px-4 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
           />
         </label>

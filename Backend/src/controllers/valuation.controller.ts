@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
-import { Resend } from "resend";
+import { sendAdminEmail } from "../lib/email";
 import { createValuationRequestSchema } from "../schemas/valuation.schema";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function createValuationRequestHandler(req: Request, res: Response) {
   const parsed = createValuationRequestSchema.safeParse(req.body);
@@ -15,21 +13,21 @@ export async function createValuationRequestHandler(req: Request, res: Response)
     console.error("Cannot send valuation request: CONTACT_EMAIL is not set in environment variables.");
     return res.status(500).json({ error: "Valuation form is not configured. Please try again later." });
   }
-  const fromEmail = process.env.FROM_EMAIL || "no-reply@theboatbrokers.co.uk";
 
   try {
-    const response = await resend.emails.send({
-      from: `Boat Brokers Website <${fromEmail}>`,
-      to: toEmail,
-      replyTo: email,
+    const response = await sendAdminEmail({
       subject: `New valuation request for "${boatName}" from ${name}`,
-      text: `Name: ${name}
-Email: ${email}
-Phone: ${phone ?? "Not provided"}
-Boat Name: ${boatName}
-
-Message:
-${message}`,
+      eyebrow: "Valuation Request",
+      heading: `Valuation request for ${boatName}`,
+      details: [
+        { label: "Boat", value: boatName },
+        { label: "Name", value: name },
+        { label: "Email", value: email, href: `mailto:${email}` },
+        { label: "Phone", value: phone ?? "Not provided", href: phone ? `tel:${phone}` : undefined },
+      ],
+      message,
+      replyTo: email,
+      replyLabel: `Reply to ${name}`,
     });
 
     if (response.error) {

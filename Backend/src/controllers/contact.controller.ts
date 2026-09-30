@@ -1,8 +1,6 @@
 import type { Request, Response } from "express";
-import { Resend } from "resend";
+import { sendAdminEmail } from "../lib/email";
 import { createContactMessageSchema } from "../schemas/contact.schema";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function createContactMessageHandler(req: Request, res: Response) {
   const parsed = createContactMessageSchema.safeParse(req.body);
@@ -15,20 +13,20 @@ export async function createContactMessageHandler(req: Request, res: Response) {
     console.error("Cannot send contact message: CONTACT_EMAIL is not set in environment variables.");
     return res.status(500).json({ error: "Contact form is not configured. Please try again later." });
   }
-  const fromEmail = process.env.FROM_EMAIL || "no-reply@theboatbrokers.co.uk";
 
   try {
-    const response = await resend.emails.send({
-      from: `Boat Brokers Website <${fromEmail}>`,
-      to: toEmail,
-      replyTo: email,
+    const response = await sendAdminEmail({
       subject: `New contact form message from ${name}`,
-      text: `Name: ${name}
-Email: ${email}
-Phone: ${phone ?? "Not provided"}
-
-Message:
-${message}`,
+      eyebrow: "Contact Form",
+      heading: `New message from ${name}`,
+      details: [
+        { label: "Name", value: name },
+        { label: "Email", value: email, href: `mailto:${email}` },
+        { label: "Phone", value: phone ?? "Not provided", href: phone ? `tel:${phone}` : undefined },
+      ],
+      message,
+      replyTo: email,
+      replyLabel: `Reply to ${name}`,
     });
 
     if (response.error) {

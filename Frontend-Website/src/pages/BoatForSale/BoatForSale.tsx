@@ -13,6 +13,7 @@ export default function BoatForSale() {
         activeLabel="Boats for Sale"
         title="Boats for Sale"
         titleFont="accent"
+        scrollHint
         body="Find a boat that fits your lifestyle, plans, and budget. Explore our carefully selected boats and start your next adventure on the waterways."
         overlayClassName="bg-black/45"
         animateEntrance

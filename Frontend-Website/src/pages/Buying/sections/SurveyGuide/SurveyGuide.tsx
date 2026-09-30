@@ -1,7 +1,6 @@
 import outOfWaterImg from '../../../../assets/outofhill.jpg'
 import inWaterImg from '../../../../assets/inwater.jpg'
 import fullPreImg from '../../../../assets/fullpre.jpg'
-import Button from '../../../../components/Button/Button'
 
 type SurveyType = {
   title: string
@@ -104,7 +103,6 @@ export default function SurveyGuide() {
         </div>
       </div>
 
-      <Button variant="light" label="Explore All Boats" href="/boats-for-sale" />
     </section>
   )
 }

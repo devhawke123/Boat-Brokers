@@ -206,6 +206,69 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+// Internal notification to the site admin (contact form, valuation request,
+// new listing). Same shell as the customer emails; details render as a
+// label/value table plus an optional message block. Unlike the customer
+// emails this returns the Resend response so form controllers can still
+// surface a 502 when delivery fails.
+export async function sendAdminEmail(params: {
+  subject: string;
+  eyebrow: string;
+  heading: string;
+  details: { label: string; value: string; href?: string }[];
+  message?: string;
+  replyTo?: string;
+  replyLabel?: string;
+}) {
+  const { subject, eyebrow, heading, details, message, replyTo, replyLabel } = params;
+  const toEmail = process.env.CONTACT_EMAIL;
+  if (!toEmail) throw new Error("CONTACT_EMAIL is not set");
+
+  const rows = details
+    .map(({ label, value, href }) => {
+      const shown = href
+        ? `<a href="${escapeHtml(href)}" style="color:#14b2ef; text-decoration:none;">${escapeHtml(value)}</a>`
+        : escapeHtml(value);
+      return `<tr>
+              <td style="padding:10px 0; width:110px; font-size:12px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; color:#94a3b8; border-bottom:1px solid #e5e4e7; vertical-align:top;">${escapeHtml(label)}</td>
+              <td style="padding:10px 0; font-size:15px; color:#1a1a1a; border-bottom:1px solid #e5e4e7;">${shown}</td>
+            </tr>`;
+    })
+    .join("");
+
+  const messageHtml = message
+    ? `<div style="margin:24px 0 28px; padding:16px 20px; background-color:#f8fcff; border-left:4px solid #1cc0ff; border-radius:8px;">
+            <div style="font-size:12px; font-weight:bold; letter-spacing:0.5px; text-transform:uppercase; color:#94a3b8; margin-bottom:8px; font-family: Arial, sans-serif;">Message</div>
+            <div style="font-size:15px; line-height:24px; color:#374151; white-space:pre-wrap; font-family: Arial, sans-serif;">${escapeHtml(message)}</div>
+          </div>`
+    : `<div style="height:28px;"></div>`;
+
+  const html = renderEmailShell({
+    eyebrow,
+    heading: escapeHtml(heading),
+    bodyHtml: `
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-family: Arial, sans-serif; margin-top:8px;">
+            ${rows}
+          </table>
+          ${messageHtml}`,
+    ctaLabel: replyTo ? (replyLabel ?? "Reply") : undefined,
+    ctaUrl: replyTo ? `mailto:${encodeURI(replyTo)}` : undefined,
+  });
+
+  const text = `${heading}
+
+${details.map((d) => `${d.label}: ${d.value}`).join("\n")}${message ? `\n\nMessage:\n${message}` : ""}`;
+
+  return resend.emails.send({
+    from: `Boat Brokers Website <${FROM_EMAIL}>`,
+    to: toEmail,
+    replyTo,
+    subject,
+    html,
+    text,
+  });
+}
+
 export async function sendBookingConfirmedEmail(params: {
   to: string;
   buyerFirstName: string;

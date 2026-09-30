@@ -65,7 +65,7 @@ export default function Signup() {
                   type="text"
                   name="name"
                   autoComplete="name"
-                  placeholder="John Doe"
+                  placeholder="Your Name"
                   required
                   className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] py-3 pr-4 pl-12 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
                 />
