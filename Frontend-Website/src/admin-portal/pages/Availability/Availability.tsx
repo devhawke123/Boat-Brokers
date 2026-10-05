@@ -73,7 +73,11 @@ export default function Availability() {
 
   if (!checkedSession) return null
 
-  const upcomingSlots = [...slots].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+  // Today and later only (local midnight cutoff, so today's earlier slots still show).
+  const startOfToday = new Date().setHours(0, 0, 0, 0)
+  const upcomingSlots = slots
+    .filter((slot) => new Date(slot.startsAt).getTime() >= startOfToday)
+    .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
   const visibleSlots =
     tab === 'All'
       ? upcomingSlots

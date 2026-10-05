@@ -3,7 +3,17 @@ import { createBooking, findAllBookings, findBookingById, updateBookingStatus, S
 import { updateBuyerStatus } from "../models/buyer.model";
 import { createBookingSchema, updateBookingStatusSchema } from "../schemas/booking.schema";
 import { serializeBooking } from "../views/booking.view";
-import { sendBookingConfirmedEmail } from "../lib/email";
+import { sendAdminEmail, sendBookingConfirmedEmail } from "../lib/email";
+
+function formatSlot(startsAt: Date | string) {
+  return new Date(startsAt).toLocaleString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
 
 // Admin-only — includes buyer PII (see views/booking.view.ts).
 export async function listBookings(_req: Request, res: Response) {
@@ -17,6 +27,28 @@ export async function createBookingHandler(req: Request, res: Response) {
 
   try {
     const booking = await createBooking(parsed.data);
+    // Admin heads-up; a delivery failure must not fail the buyer's request.
+    try {
+      const { buyer, boat, slot } = booking;
+      const emailRes = await sendAdminEmail({
+        subject: `New viewing request for ${boat.name}`,
+        eyebrow: "Viewing Request",
+        heading: `New viewing request from ${buyer.firstName} ${buyer.surname}`,
+        details: [
+          { label: "Boat", value: boat.name },
+          { label: "Slot", value: formatSlot(slot.startsAt) },
+          { label: "Name", value: `${buyer.firstName} ${buyer.surname}` },
+          { label: "Email", value: buyer.email, href: `mailto:${buyer.email}` },
+          { label: "Phone", value: buyer.phone ?? "Not provided", href: buyer.phone ? `tel:${buyer.phone}` : undefined },
+        ],
+        message: booking.notes ?? undefined,
+        replyTo: buyer.email,
+        replyLabel: `Reply to ${buyer.firstName}`,
+      });
+      if (emailRes.error) console.error("Resend API Error sending viewing-request email:", emailRes.error);
+    } catch (err) {
+      console.error("Exception sending viewing-request email:", err);
+    }
     res.status(201).json(serializeBooking(booking));
   } catch (err) {
     if (err instanceof SlotUnavailableError) {
@@ -44,13 +76,7 @@ export async function updateBookingStatusHandler(req: Request, res: Response) {
     // rather than the stale snapshot from before it.
     booking = (await findBookingById(id)) ?? booking;
 
-    const when = new Date(booking.slot.startsAt).toLocaleString("en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      hour: "numeric",
-      minute: "2-digit",
-    });
+    const when = formatSlot(booking.slot.startsAt);
     await sendBookingConfirmedEmail({
       to: booking.buyer.email,
       buyerFirstName: booking.buyer.firstName,

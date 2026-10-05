@@ -300,11 +300,10 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Recent survey', boat.recentSurvey],
       ]),
       additional: specs((boat.customFields ?? []).map((f) => [f.label, f.value] as [string, string])),
-      brochureUrl:
-        boat.brochureUrl ??
-        `mailto:info@theboatbrokers.co.uk?subject=${encodeURIComponent(`Brochure request - ${boat.name}`)}`,
-      videoUrl: boat.videoUrl ?? '/selling#virtual-tour',
-      virtualTourUrl: boat.virtualTourUrl ?? '/selling#virtual-tour',
+      // No fallback links: a missing brochure/video/tour disables its button on the detail page.
+      brochureUrl: boat.brochureUrl ?? undefined,
+      videoUrl: boat.videoUrl ?? undefined,
+      virtualTourUrl: boat.virtualTourUrl ?? undefined,
     },
   }
 }

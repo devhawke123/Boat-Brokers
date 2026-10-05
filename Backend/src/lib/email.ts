@@ -318,3 +318,46 @@ We look forward to seeing you!
     console.error("Exception sending booking-confirmed email:", err);
   }
 }
+
+// Simple welcome after seller signup. Fire-and-forget safe: failures are
+// logged, never thrown, so signup still succeeds if email delivery is down.
+export async function sendSellerWelcomeEmail(params: { to: string; sellerName: string }) {
+  const { to, sellerName } = params;
+  const firstName = sellerName.trim().split(/\s+/)[0] || sellerName;
+  const dashboardUrl = `${CLIENT_ORIGIN}/seller-portal/dashboard`;
+
+  const html = renderEmailShell({
+    eyebrow: "Welcome",
+    heading: `Welcome aboard, ${escapeHtml(firstName)}!`,
+    bodyHtml: `
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 20px; font-family: Arial, sans-serif;">
+            Thanks for creating your seller account with The Boat Brokers.
+          </p>
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 28px; font-family: Arial, sans-serif;">
+            You can now list your boat and track its progress from your dashboard.
+          </p>`,
+    ctaLabel: "Go to My Dashboard",
+    ctaUrl: dashboardUrl,
+  });
+
+  const text = `Welcome aboard, ${firstName}!
+
+Thanks for creating your seller account with The Boat Brokers. You can now list your boat and track its progress from your dashboard.
+
+${dashboardUrl}
+
+- The Boat Brokers`;
+
+  try {
+    const response = await resend.emails.send({
+      from: `The Boat Brokers <${FROM_EMAIL}>`,
+      to,
+      subject: "Welcome to The Boat Brokers",
+      html,
+      text,
+    });
+    if (response.error) console.error("Resend API Error sending seller-welcome email:", response.error);
+  } catch (err) {
+    console.error("Exception sending seller-welcome email:", err);
+  }
+}
