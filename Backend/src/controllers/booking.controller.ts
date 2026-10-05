@@ -12,6 +12,9 @@ function formatSlot(startsAt: Date | string) {
     month: "long",
     hour: "numeric",
     minute: "2-digit",
+    // The server runs in UTC; without this emails show UTC, not the viewing's local time.
+    timeZone: "Europe/London",
+    timeZoneName: "short",
   });
 }
 
