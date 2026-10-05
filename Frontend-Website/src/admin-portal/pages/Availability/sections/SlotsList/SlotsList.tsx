@@ -93,6 +93,15 @@ export default function SlotsList({ slots, bookings, onApprove, onReject, onDele
                       />
                     </>
                   )}
+                  {booking.status === 'APPROVED' && (
+                    <ActionButton
+                      label="Cancel"
+                      variant="reject"
+                      icon={CrossIcon}
+                      disabled={busyBookingId === booking.id}
+                      onClick={() => onReject(booking.id)}
+                    />
+                  )}
                 </div>
               )}
               {!booking && (

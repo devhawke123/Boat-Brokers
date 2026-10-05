@@ -3,7 +3,7 @@ import { createBooking, findAllBookings, findBookingById, updateBookingStatus, S
 import { updateBuyerStatus } from "../models/buyer.model";
 import { createBookingSchema, updateBookingStatusSchema } from "../schemas/booking.schema";
 import { serializeBooking } from "../views/booking.view";
-import { sendAdminEmail, sendBookingConfirmedEmail } from "../lib/email";
+import { sendAdminEmail, sendBookingConfirmedEmail, sendBookingRejectedEmail } from "../lib/email";
 
 function formatSlot(startsAt: Date | string) {
   return new Date(startsAt).toLocaleString("en-GB", {
@@ -83,6 +83,16 @@ export async function updateBookingStatusHandler(req: Request, res: Response) {
       boatName: booking.boat.name,
       boatId: booking.boat.id,
       when,
+    });
+  }
+
+  if (parsed.data.status === "REJECTED" && existing.status !== "REJECTED") {
+    await sendBookingRejectedEmail({
+      to: booking.buyer.email,
+      buyerFirstName: booking.buyer.firstName,
+      boatName: booking.boat.name,
+      boatId: booking.boat.id,
+      when: formatSlot(booking.slot.startsAt),
     });
   }
 

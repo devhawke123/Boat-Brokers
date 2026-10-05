@@ -47,6 +47,10 @@ export default function Availability() {
   }
 
   async function handleReject(bookingId: number) {
+    if (bookings.find((b) => b.id === bookingId)?.status === 'APPROVED') {
+      const confirmed = await confirmDialog('Cancel this viewing? The buyer will be emailed.', { title: 'Cancel viewing' })
+      if (!confirmed) return
+    }
     setBusyBookingId(bookingId)
     setActionError(null)
     try {

@@ -361,3 +361,52 @@ ${dashboardUrl}
     console.error("Exception sending seller-welcome email:", err);
   }
 }
+
+// Sent when an admin rejects a pending viewing request or cancels an approved one.
+export async function sendBookingRejectedEmail(params: {
+  to: string;
+  buyerFirstName: string;
+  boatName: string;
+  boatId: number;
+  when: string;
+}) {
+  const { to, buyerFirstName, boatName, boatId, when } = params;
+  const slug = slugify(boatName) || String(boatId);
+  const viewingUrl = `${CLIENT_ORIGIN}/boats/${slug}`;
+
+  const html = renderEmailShell({
+    eyebrow: "Viewing Update",
+    heading: `Sorry, ${escapeHtml(buyerFirstName)}`,
+    pill: { label: "Slot Unavailable", bg: "#fee2e2", text: "#b91c1c" },
+    bodyHtml: `
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 20px; font-family: Arial, sans-serif;">
+            Unfortunately we can't offer your viewing for <strong>${escapeHtml(boatName)}</strong> on <strong>${escapeHtml(when)}</strong>.
+          </p>
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 28px; font-family: Arial, sans-serif;">
+            We're sorry for the inconvenience. Please book another slot that suits you and we'll be happy to show you the boat.
+          </p>`,
+    ctaLabel: "Book Another Slot",
+    ctaUrl: viewingUrl,
+  });
+
+  const text = `Sorry, ${buyerFirstName}
+
+Unfortunately we can't offer your viewing for ${boatName} on ${when}.
+
+We're sorry for the inconvenience. Please book another slot: ${viewingUrl}
+
+- The Boat Brokers`;
+
+  try {
+    const response = await resend.emails.send({
+      from: `The Boat Brokers <${FROM_EMAIL}>`,
+      to,
+      subject: `Your viewing request for ${boatName} — slot unavailable`,
+      html,
+      text,
+    });
+    if (response.error) console.error("Resend API Error sending booking-rejected email:", response.error);
+  } catch (err) {
+    console.error("Exception sending booking-rejected email:", err);
+  }
+}
