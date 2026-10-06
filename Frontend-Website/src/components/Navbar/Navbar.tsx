@@ -46,18 +46,6 @@ const navLinks: NavLink[] = [
     ],
   },
   {
-    label: 'Areas We Serve',
-    href: '/areas-we-serve',
-    hasDropdown: true,
-    dropdownItems: [
-      { label: 'Birmingham', href: '/areas-we-serve/birmingham' },
-      { label: 'Wolverhampton', href: '/areas-we-serve/wolverhampton' },
-      { label: 'West Midlands', href: '/areas-we-serve/west-midlands' },
-      { label: 'Worcestershire', href: '/areas-we-serve/worcestershire' },
-      { label: 'Warwickshire', href: '/areas-we-serve/warwickshire' },
-    ],
-  },
-  {
     label: 'About',
     href: '/about',
     hasDropdown: true,
@@ -109,7 +97,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 2xl:gap-6 2xl:px-5">
         <a href="/" className="flex shrink-0 items-center" aria-label="The Boat Brokers home">
-          <img src={logo} alt="The Boat Brokers" className="h-11 w-auto" />
+          <img src={logo} alt="The Boat Brokers" className="h-14 w-auto" />
         </a>
 
         <nav className="flex flex-wrap items-center text-white gap-3 max-nav:hidden 2xl:gap-5" aria-label="Primary">

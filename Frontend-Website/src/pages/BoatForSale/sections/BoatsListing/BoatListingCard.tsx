@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { boatStatusStyles, type BoatListing } from '../../../../data/boats'
 import { IconBed, IconCalendar, IconFuel, IconMapPin, IconRuler } from './icons'
 
@@ -7,14 +9,26 @@ type BoatListingCardProps = {
 
 export default function BoatListingCard({ boat }: BoatListingCardProps) {
   const status = boat.status ? boatStatusStyles[boat.status] : null
+  const [isEnlarged, setIsEnlarged] = useState(false)
+
+  useEffect(() => {
+    if (!isEnlarged) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsEnlarged(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isEnlarged])
 
   return (
     <article className="relative flex w-full flex-col overflow-hidden rounded-2xl border border-[#e2e8f0] bg-white shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-1px_rgba(0,0,0,0.06)]">
-      <div className="relative h-[200px] w-full shrink-0 overflow-hidden">
+      <div className="relative h-[300px] w-full shrink-0 overflow-hidden">
         <img src={boat.image} alt={boat.name} className="size-full object-cover" />
         {status && (
           <span
-            className={`absolute top-3 left-3 rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.6px] text-white uppercase shadow-sm ${status.className}`}
+            className={`absolute top-3 left-3 rounded-md px-2.5 py-1 font-bold tracking-[0.6px] text-white uppercase shadow-sm ${
+              boat.status === 'sold' ? 'bg-red-600 text-sm' : `text-xs ${status.className}`
+            }`}
           >
             {status.label}
           </span>
@@ -57,16 +71,47 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
         </dl>
 
         <div className="flex items-center justify-between">
-          <p className="font-body text-2xl font-bold text-navy-dark">{boat.price}</p>
+          <p
+            className={`font-body font-bold ${
+              boat.status === 'sold' ? 'text-3xl text-red-600' : 'text-2xl text-navy-dark'
+            }`}
+          >
+            {boat.price}
+          </p>
           <a
             href={`/boats/${boat.slug}`}
-            className="text-base font-medium text-navy-dark hover:underline after:absolute after:inset-0"
+            className="relative z-10 text-base font-medium text-navy-dark hover:underline"
             aria-label={`View details for ${boat.name}`}
           >
             View Details
           </a>
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsEnlarged(true)}
+        aria-label={`Enlarge image of ${boat.name}`}
+        className="absolute inset-0 cursor-zoom-in"
+      />
+
+      {isEnlarged &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${boat.name} image`}
+            onClick={() => setIsEnlarged(false)}
+            className="fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center bg-black/80 p-4 sm:p-10"
+          >
+            <img
+              src={boat.image}
+              alt={boat.name}
+              className="max-h-full max-w-full rounded-2xl object-contain shadow-btn"
+            />
+          </div>,
+          document.body,
+        )}
     </article>
   )
 }

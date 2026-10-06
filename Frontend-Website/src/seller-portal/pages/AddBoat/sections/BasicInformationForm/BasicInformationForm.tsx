@@ -37,6 +37,9 @@ export const initialBasicInformationValues: BasicInformationValues = {
 }
 
 const BERTH_OPTIONS = ['1', '2', '2 + 2', '3', '4', '4 + 2', '5', '6+']
+const STERN_OPTIONS = ['Cruiser Stern', 'Semi-Cruiser', 'Semi-traditional', 'Traditional']
+
+
 const OVERVIEW_MAX_LENGTH = 1000
 
 type BasicInformationFormProps = {
@@ -65,10 +68,10 @@ export default function BasicInformationForm({ values, onChange }: BasicInformat
           value={values.berths}
           onChange={(v) => onChange('berths', v)}
         />
-        <TextField
+        <SelectField
           label="Stern"
-          required
-          placeholder="e.g. Cruiser Stern"
+          placeholder="Select stern"
+          options={STERN_OPTIONS}
           value={values.stern}
           onChange={(v) => onChange('stern', v)}
         />

@@ -14,14 +14,13 @@ const tabs: Tab[] = [
   { key: 'sold', label: 'Sold Boats' },
 ]
 
-const BOAT_TYPES = ['Narrowboats', 'Widebeams', 'Cruisers', 'Sailing Boats']
+const BOAT_TYPES = ['Narrowboats', 'Widebeams', 'Cruisers']
 const PRICE_MIN = 0
 const PRICE_MAX = 200_000
 const PRICE_STEP = 1_000
 const LENGTH_MIN = 0
 const LENGTH_MAX = 70
 const LENGTH_STEP = 1
-const BERTH_OPTIONS = [1, 2, 4, 6]
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First' },
   { value: 'price-asc', label: 'Price: Low to High' },
@@ -35,7 +34,6 @@ type Filters = {
   boatTypes: string[]
   priceRange: [number, number]
   lengthRange: [number, number]
-  minBerths: number
   sortBy: SortValue
 }
 
@@ -48,7 +46,6 @@ const DEFAULT_FILTERS: Filters = {
   boatTypes: ['Narrowboats'],
   priceRange: [PRICE_MIN, PRICE_MAX],
   lengthRange: [LENGTH_MIN, LENGTH_MAX],
-  minBerths: 0,
   sortBy: 'newest',
 }
 
@@ -92,8 +89,6 @@ function applyFilters(boats: BoatListing[], filters: Filters): BoatListing[] {
       if (lengthHi < LENGTH_MAX && boat.lengthFeet > lengthHi) return false
     }
 
-    if (filters.minBerths > 0 && (boat.berthsCount === null || boat.berthsCount < filters.minBerths)) return false
-
     return true
   })
 }
@@ -133,10 +128,6 @@ function FilterPanel({ filters, onChange, onClear, boatTypeCounts }: FilterPanel
 
   function toggleAllBoatTypes() {
     onChange({ ...filters, boatTypes: allTypesSelected ? [] : [...BOAT_TYPES] })
-  }
-
-  function toggleBerths(option: number) {
-    onChange({ ...filters, minBerths: filters.minBerths === option ? 0 : option })
   }
 
   return (
@@ -217,25 +208,6 @@ function FilterPanel({ filters, onChange, onClear, boatTypeCounts }: FilterPanel
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <h4 className="text-base font-semibold text-[#1e293b]">Berths</h4>
-        <div className="flex items-center gap-2">
-          {BERTH_OPTIONS.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => toggleBerths(option)}
-              className={`flex-1 rounded-[10px] border py-2 text-base ${
-                filters.minBerths === option
-                  ? 'border-navy-dark bg-[#e8f0fe] font-medium text-navy-dark'
-                  : 'border-[#e2e8f0] text-[#1e293b]'
-              }`}
-            >
-              {option}+
-            </button>
-          ))}
-        </div>
-      </div>
     </>
   )
 }
@@ -306,9 +278,6 @@ export default function BoatsListing() {
       label: lengthRangeLabel(filters.lengthRange),
       onRemove: () => updateFilters({ lengthRange: [LENGTH_MIN, LENGTH_MAX] }),
     })
-  }
-  if (filters.minBerths > 0) {
-    chips.push({ key: 'berths', label: `${filters.minBerths}+ Berths`, onRemove: () => updateFilters({ minBerths: 0 }) })
   }
   function updateFilters(patch: Partial<Filters>) {
     setFilters((f) => ({ ...f, ...patch }))

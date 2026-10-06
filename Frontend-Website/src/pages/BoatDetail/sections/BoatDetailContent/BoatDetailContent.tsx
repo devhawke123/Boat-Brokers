@@ -16,7 +16,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
     { icon: lengthIcon, label: 'Length', value: boat.length },
     { icon: berthIcon, label: 'Berths', value: `${boat.berths}` },
     { icon: engineIcon, label: 'Engine', value: boat.detail.engineMake },
-    { icon: yearIcon, label: 'Year', value: boat.yearBuilt },
+    { icon: yearIcon, label: 'Year Built', value: boat.yearBuilt },
     { icon: sternIcon, label: 'Stern', value: boat.detail.sternType },
     { icon: steelIcon, label: 'Steel', value: boat.detail.hullThickness },
   ].filter((chip) => chip.value && chip.value !== 'N/A')

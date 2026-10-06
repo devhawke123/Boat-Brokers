@@ -9,9 +9,16 @@ const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Areas We Serve', href: '/areas-we-serve' },
   { label: 'Faq', href: '/faq' },
   { label: 'Contact', href: '/contact' },
+]
+
+const areaLinks = [
+  { label: 'Birmingham', href: '/areas-we-serve/birmingham' },
+  { label: 'Wolverhampton', href: '/areas-we-serve/wolverhampton' },
+  { label: 'West Midlands', href: '/areas-we-serve/west-midlands' },
+  { label: 'Worcestershire', href: '/areas-we-serve/worcestershire' },
+  { label: 'Warwickshire', href: '/areas-we-serve/warwickshire' },
 ]
 
 const serviceLinks = [
@@ -65,6 +72,21 @@ export default function Footer() {
           <h3 className="font-display text-h6 text-white">Quick Links</h3>
           <ul className="flex flex-col gap-4 text-body-sm text-body-light">
             {quickLinks.map((link) => (
+              <li key={link.label}>
+                <a href={link.href} className="inline-flex items-center gap-1.5">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <h3 className="font-display text-h6 text-white">
+            <a href="/areas-we-serve">Areas We Serve</a>
+          </h3>
+          <ul className="flex flex-col gap-4 text-body-sm text-body-light">
+            {areaLinks.map((link) => (
               <li key={link.label}>
                 <a href={link.href} className="inline-flex items-center gap-1.5">
                   {link.label}
