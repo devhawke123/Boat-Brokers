@@ -23,9 +23,12 @@ export default function AreasWeServeCoverage() {
           </h2>
           <p className="text-sm leading-[26px] text-text-body sm:text-base lg:text-xl lg:leading-[30px]">
             If your narrowboat is moored on any canal connected to the West Midlands network, the
-            answer is almost certainly yes. Call us on 07960 768724 and we will confirm within
-            minutes whether we can help and if we can, we will arrange a free valuation at a time
-            that suits you.
+            answer is almost certainly yes. Call us on{' '}
+            <a href="tel:07960768724" className="underline">
+              07960 768724
+            </a>{' '}
+            and we will confirm within minutes whether we can help and if we can, we will arrange
+            a free valuation at a time that suits you.
           </p>
           <img
             src={britishMarine}

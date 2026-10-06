@@ -9,7 +9,6 @@ type Tab = { key: 'all' | Exclude<BoatStatus, null>; label: string }
 
 const tabs: Tab[] = [
   { key: 'all', label: 'All Boats' },
-  { key: 'featured', label: 'Featured Boats' },
   { key: 'under-offer', label: 'Under Offer' },
   { key: 'sold', label: 'Sold Boats' },
 ]

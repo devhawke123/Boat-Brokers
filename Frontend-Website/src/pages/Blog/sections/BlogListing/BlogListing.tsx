@@ -22,22 +22,27 @@ export default function BlogListing() {
 
   const filteredPosts = useMemo(() => {
     const query = search.trim().toLowerCase()
-    const results = query
-      ? blogPosts.filter(
-          (post) =>
-            post.title.toLowerCase().includes(query) ||
-            post.category.toLowerCase().includes(query) ||
-            post.excerpt.toLowerCase().includes(query),
-        )
-      : [...blogPosts]
+    const results = (
+      query
+        ? blogPosts.filter(
+            (post) =>
+              post.title.toLowerCase().includes(query) ||
+              post.category.toLowerCase().includes(query) ||
+              post.excerpt.toLowerCase().includes(query),
+          )
+        : [...blogPosts]
+    ).map((post) => ({ post, order: blogPosts.indexOf(post) }))
 
-    if (sort === 'title') {
-      results.sort((a, b) => a.title.localeCompare(b.title))
-    } else if (sort === 'oldest') {
-      results.reverse()
-    }
+    // The API returns posts oldest-id-first, so order by the post's own date;
+    // ties (same day) fall back to API order so the later-created post wins.
+    const byDate = (a: (typeof results)[number], b: (typeof results)[number]) =>
+      (Date.parse(b.post.date) || 0) - (Date.parse(a.post.date) || 0) || b.order - a.order
 
-    return results
+    if (sort === 'title') results.sort((a, b) => a.post.title.localeCompare(b.post.title))
+    else if (sort === 'oldest') results.sort((a, b) => -byDate(a, b))
+    else results.sort(byDate)
+
+    return results.map((r) => r.post)
   }, [blogPosts, search, sort])
 
   const visiblePosts = filteredPosts.slice(0, visibleCount)

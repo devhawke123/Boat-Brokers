@@ -51,6 +51,7 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
       <PageHero
         image={boat.image}
         activeLabel="Boats for Sale"
+        scrollHint
         title={`About ${boat.name}`}
         body="Take a closer look at your next boat. Explore its features, specifications, condition, and everything you need to know before making your move."
         bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-base sm:leading-[26px]"

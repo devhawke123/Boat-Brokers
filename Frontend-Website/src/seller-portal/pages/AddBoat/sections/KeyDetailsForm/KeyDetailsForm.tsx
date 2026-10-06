@@ -72,7 +72,7 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
                 required
                 value={values.fullName}
                 onChange={(e) => onChange('fullName', e.target.value)}
-                placeholder="John Doe"
+                placeholder="Your Name"
                 className="h-full w-full rounded-lg bg-transparent px-3 text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
               />
             </div>
@@ -88,7 +88,7 @@ export default function KeyDetailsForm({ values, onChange }: KeyDetailsFormProps
                 required
                 value={values.email}
                 onChange={(e) => onChange('email', e.target.value)}
-                placeholder="john@example.com"
+                placeholder="Your Email"
                 className="h-full w-full rounded-lg bg-transparent px-3 text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
               />
             </div>

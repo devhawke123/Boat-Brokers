@@ -89,45 +89,53 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
           </div>
 
           <div className="flex flex-col gap-3">
-            {boat.detail.brochureUrl && (
-              <a
-                href={boat.detail.brochureUrl}
-                {...(hasDownloadableBrochure
-                  ? { download: `${boat.name} - Brochure.pdf` }
-                  : { target: '_blank', rel: 'noreferrer' })}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-transparent bg-navy-dark px-4 py-3.5 text-base font-semibold text-white transition-colors duration-300 hover:border-navy-dark hover:bg-white hover:text-navy-dark"
-              >
-                <IconDownload className="size-4" />
-                Download PDF Brochure
-              </a>
-            )}
+            <a
+              {...(boat.detail.brochureUrl
+                ? {
+                    href: boat.detail.brochureUrl,
+                    ...(hasDownloadableBrochure
+                      ? { download: `${boat.name} - Brochure.pdf` }
+                      : { target: '_blank', rel: 'noreferrer' }),
+                  }
+                : { 'aria-disabled': true, title: 'Brochure not available', 'aria-label': 'Brochure not available' })}
+              className={
+                boat.detail.brochureUrl
+                  ? 'inline-flex items-center justify-center gap-2 rounded-xl border-2 border-transparent bg-navy-dark px-4 py-3.5 text-base font-semibold text-white transition-colors duration-300 hover:border-navy-dark hover:bg-white hover:text-navy-dark'
+                  : 'inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-xl border-2 border-transparent bg-navy-dark px-4 py-3.5 text-base font-semibold text-white opacity-40'
+              }
+            >
+              <IconDownload className="size-4" />
+              Download PDF Brochure
+            </a>
 
-            {(boat.detail.videoUrl || boat.detail.virtualTourUrl) && (
-              <div className="flex gap-3">
-                {boat.detail.videoUrl && (
-                  <a
-                    href={boat.detail.videoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white"
-                  >
-                    <IconPlay className="size-3.5 text-blue" />
-                    Video
-                  </a>
-                )}
-                {boat.detail.virtualTourUrl && (
-                  <a
-                    href={boat.detail.virtualTourUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white"
-                  >
-                    <IconCube className="size-3.5 text-blue" />
-                    Virtual
-                  </a>
-                )}
-              </div>
-            )}
+            <div className="flex gap-3">
+              <a
+                {...(boat.detail.videoUrl
+                  ? { href: boat.detail.videoUrl, target: '_blank', rel: 'noreferrer' }
+                  : { 'aria-disabled': true, title: 'Video not available', 'aria-label': 'Video not available' })}
+                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark ${
+                  boat.detail.videoUrl
+                    ? 'transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white'
+                    : 'cursor-not-allowed opacity-40'
+                }`}
+              >
+                <IconPlay className="size-3.5 text-blue" />
+                Video
+              </a>
+              <a
+                {...(boat.detail.virtualTourUrl
+                  ? { href: boat.detail.virtualTourUrl, target: '_blank', rel: 'noreferrer' }
+                  : { 'aria-disabled': true, title: 'Virtual tour not available', 'aria-label': 'Virtual tour not available' })}
+                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-[#e5e7eb] bg-white px-4 py-3 text-sm font-semibold text-navy-dark ${
+                  boat.detail.virtualTourUrl
+                    ? 'transition-colors duration-300 hover:border-navy-dark hover:bg-navy-dark hover:text-white'
+                    : 'cursor-not-allowed opacity-40'
+                }`}
+              >
+                <IconCube className="size-3.5 text-blue" />
+                Virtual Tour
+              </a>
+            </div>
 
             <a
               href={viewingHref}

@@ -53,7 +53,7 @@ const navLinks: NavLink[] = [
       { label: 'Book a Viewing', href: '/book-a-viewing' },
       { label: 'Blog', href: '/blog' },
       { label: 'Why Choose Us', href: '/#why-choose-us' },
-      { label: 'FAQ', href: '/faq' },
+      { label: 'FAQs', href: '/faq' },
       { label: 'Contact Us', href: '/contact' },
     ],
   },

@@ -63,6 +63,8 @@ type PageHeroProps = {
    * navbar dropdown-only pages) — set true only on top-level navbar pages.
    */
   animateEntrance?: boolean
+  /** Opt-in bottom-left down-arrow button that scrolls past the hero. */
+  scrollHint?: boolean
 }
 
 export default function PageHero({
@@ -82,6 +84,7 @@ export default function PageHero({
   contentClassName = '',
   children,
   animateEntrance = false,
+  scrollHint = false,
 }: PageHeroProps) {
   const reveal = (delayClass: string) => (animateEntrance ? `hero-reveal ${delayClass}` : '')
   return (
@@ -117,6 +120,20 @@ export default function PageHero({
         {body && <p className={`${reveal('hero-reveal-delay-2')} ${bodyClassName}`}>{body}</p>}
         {children && (animateEntrance ? <div className={reveal('hero-reveal-delay-3')}>{children}</div> : children)}
       </div>
+
+      {scrollHint && (
+        <button
+          type="button"
+          aria-label="Scroll down"
+          onClick={() => window.scrollBy({ top: window.innerHeight * 0.9, behavior: 'smooth' })}
+          className="group absolute right-5 bottom-5 z-[5] flex size-14 items-center justify-center rounded-full bg-blue text-navy-darkest shadow-btn transition-colors duration-300 motion-safe:animate-bounce sm:right-8 sm:bottom-8 lg:hover:bg-blue-light"
+        >
+          <span className="absolute inset-0 rounded-full bg-blue/60 motion-safe:animate-ping" aria-hidden="true" />
+          <svg className="relative"width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
+        </button>
+      )}
     </section>
   )
 }

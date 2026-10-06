@@ -47,6 +47,10 @@ export default function Availability() {
   }
 
   async function handleReject(bookingId: number) {
+    if (bookings.find((b) => b.id === bookingId)?.status === 'APPROVED') {
+      const confirmed = await confirmDialog('Cancel this viewing? The buyer will be emailed.', { title: 'Cancel viewing' })
+      if (!confirmed) return
+    }
     setBusyBookingId(bookingId)
     setActionError(null)
     try {
@@ -73,7 +77,11 @@ export default function Availability() {
 
   if (!checkedSession) return null
 
-  const upcomingSlots = [...slots].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+  // Today and later only (local midnight cutoff, so today's earlier slots still show).
+  const startOfToday = new Date().setHours(0, 0, 0, 0)
+  const upcomingSlots = slots
+    .filter((slot) => new Date(slot.startsAt).getTime() >= startOfToday)
+    .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
   const visibleSlots =
     tab === 'All'
       ? upcomingSlots

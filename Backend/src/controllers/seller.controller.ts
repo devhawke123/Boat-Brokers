@@ -16,6 +16,7 @@ import {
   updateSellerStatusSchema,
 } from "../schemas/seller.schema";
 import { serializeSeller } from "../views/seller.view";
+import { sendSellerWelcomeEmail } from "../lib/email";
 
 export async function listSellers(_req: Request, res: Response) {
   const sellers = await findAllSellers();
@@ -42,6 +43,7 @@ export async function createSellerHandler(req: Request, res: Response) {
     ...parsed.data,
     password: hashPassword(parsed.data.password),
   });
+  await sendSellerWelcomeEmail({ to: seller.email, sellerName: seller.name });
   res.status(201).json(serializeSeller(seller));
 }
 

@@ -19,6 +19,7 @@ export default function BlogDetailView({ post }: BlogDetailViewProps) {
         activeLabel=""
         size="md"
         title={post.title}
+        scrollHint
         maxWidthClassName="max-w-[66.875rem]"
         gapClassName="gap-4"
         overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.1)_35%,rgba(0,0,0,0.4)_100%)]"

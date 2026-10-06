@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import boatInsuranceIcon from '../../../../assets/icons/icon-boat-insurance.png'
 import licenseIcon from '../../../../assets/icons/icon-license-certificate.png'
 import boatFinanceIcon from '../../../../assets/icons/icon-boat-finance.png'
@@ -7,7 +8,7 @@ type FaqCard = {
   icon: string
   question: string
   answer: string
-  description: string
+  description: ReactNode
 }
 
 const faqCards: FaqCard[] = [
@@ -24,8 +25,17 @@ const faqCards: FaqCard[] = [
     icon: licenseIcon,
     question: 'Do I need a License?',
     answer: 'The simple answer is yes!',
-    description:
-      'A waterway license is required to navigate most waterways, managed by authorities like Canal & Rivers Trust and the Environment Agency. Smaller authorities, such as Avon Navigation Trust, may require a separate license. Apply online at info@theboatbrokers.co.uk with your insurance and boat safety certificate.',
+    description: (
+      <>
+        A waterway license is required to navigate most waterways, managed by authorities like
+        Canal &amp; Rivers Trust and the Environment Agency. Smaller authorities, such as Avon
+        Navigation Trust, may require a separate license. Apply online at{' '}
+        <a href="mailto:info@theboatbrokers.co.uk" className="underline">
+          info@theboatbrokers.co.uk
+        </a>{' '}
+        with your insurance and boat safety certificate.
+      </>
+    ),
   },
   {
     id: 'finance',

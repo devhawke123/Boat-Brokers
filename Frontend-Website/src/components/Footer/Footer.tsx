@@ -9,8 +9,8 @@ const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Faq', href: '/faq' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'FAQs', href: '/faq' },
+  { label: 'Contact Us', href: '/contact' },
 ]
 
 const areaLinks = [
@@ -117,11 +117,12 @@ export default function Footer() {
         <div className="flex flex-col gap-6">
           <h3 className="font-display text-h6 text-white">Contact Information</h3>
           <div className="flex flex-col gap-4 text-body-sm text-body-light">
-            <p>07960 768724</p>
+            <a href="tel:07960768724" className="underline">
+              07960 768724
+            </a>
             <a href="mailto:info@theboatbrokers.co.uk" className="underline">
               info@theboatbrokers.co.uk
             </a>
-            <p>Indonesia, Bandung, Jawa Barat</p>
           </div>
           <img src={britishMarine} alt="British Marine - Leading the Industry" className="h-auto w-[13.25rem]" />
         </div>

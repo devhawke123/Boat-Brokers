@@ -10,6 +10,21 @@ type BlogPostFormProps = {
   postId?: number
 }
 
+// The stored `date` is a display string ("12 Mar 2026"), but <input
+// type="date"> needs "YYYY-MM-DD". Convert with local Date field getters
+// (not toISOString) so a timezone behind UTC doesn't shift the day back.
+function toDateInputValue(displayDate: string): string {
+  const d = new Date(displayDate)
+  if (Number.isNaN(d.getTime())) return ''
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function toDisplayDate(inputValue: string): string {
+  const [y, m, d] = inputValue.split('-').map(Number)
+  if (!y || !m || !d) return inputValue
+  return new Date(y, m - 1, d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
 export default function BlogPostForm({ postId }: BlogPostFormProps) {
   const { checkedSession } = useAdminSession()
   const isEdit = postId !== undefined
@@ -17,7 +32,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState('') // "YYYY-MM-DD", as <input type="date"> needs
   const [readTime, setReadTime] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState<File | null>(null)
@@ -29,7 +44,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
   if (isEdit && post && !initialized) {
     setTitle(post.title)
     setAuthor(post.author)
-    setDate(post.date)
+    setDate(toDateInputValue(post.date))
     setReadTime(post.readTime)
     setContent(post.content)
     setInitialized(true)
@@ -43,7 +58,7 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
     const formData = new FormData()
     formData.set('title', title)
     formData.set('author', author)
-    formData.set('date', date)
+    formData.set('date', toDisplayDate(date))
     formData.set('readTime', readTime)
     formData.set('content', content)
     if (image) formData.set('image', image, image.name)
@@ -115,7 +130,18 @@ export default function BlogPostForm({ postId }: BlogPostFormProps) {
             <TextField label="Title" required value={title} onChange={setTitle} placeholder="Post title" />
             <TextField label="Author" required value={author} onChange={setAuthor} placeholder="Jane Smith" />
             <FieldRow>
-              <TextField label="Date" required value={date} onChange={setDate} placeholder="12 Mar 2026" />
+              <label className="flex min-w-0 flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+                  Date <span className="text-[#ef4444]">*</span>
+                </span>
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="h-11 w-full rounded-lg border border-[#e2e8f0] bg-white px-4 text-[16px] text-[#0f172a] focus:border-navy-dark focus:outline-none"
+                />
+              </label>
               <TextField label="Read Time" required value={readTime} onChange={setReadTime} placeholder="5 min read" />
             </FieldRow>
 

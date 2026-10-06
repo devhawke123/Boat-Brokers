@@ -11,10 +11,7 @@ import {
 import { createBoatSchema, updateBoatSchema } from "../schemas/boat.schema";
 import { serializeBoat } from "../views/boat.view";
 import { serializeListing } from "../views/boatListing.view";
-import { Resend } from "resend";
-import { sendBoatSoldEmail, sendListingSubmittedEmail } from "../lib/email";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendAdminEmail, sendBoatSoldEmail, sendListingSubmittedEmail } from "../lib/email";
 
 export async function listBoats(req: Request, res: Response) {
   const includeDeleted = req.query.includeDeleted === "true";
@@ -95,26 +92,21 @@ export async function createBoatHandler(req: Request, res: Response) {
   );
 
   try {
-    const fromEmail = process.env.FROM_EMAIL || 'no-reply@theboatbrokers.co.uk';
-    const toEmail = process.env.CONTACT_EMAIL;
-    
-    console.log("Email Config:");
-    console.log("FROM_EMAIL:", fromEmail);
-    console.log("CONTACT_EMAIL:", toEmail);
-    console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
-
-    if (toEmail) {
-      const response = await resend.emails.send({
-        from: `Boat Brokers <${fromEmail}>`,
-        to: toEmail,
-        replyTo: boat.seller.email,
+    if (process.env.CONTACT_EMAIL) {
+      const response = await sendAdminEmail({
         subject: `New Boat Published: ${boat.name}`,
-        text: `A new boat "${boat.name}" has been published by ${boat.seller.name}.
-Listing ID: ${listing.id}`,
+        eyebrow: "New Listing",
+        heading: `New boat submitted: ${boat.name}`,
+        details: [
+          { label: "Boat", value: boat.name },
+          { label: "Seller", value: boat.seller.name },
+          { label: "Email", value: boat.seller.email, href: `mailto:${boat.seller.email}` },
+          { label: "Listing ID", value: String(listing.id) },
+        ],
+        replyTo: boat.seller.email,
+        replyLabel: `Reply to ${boat.seller.name}`,
       });
-      
-      console.log("Resend API Response:", JSON.stringify(response, null, 2));
-      
+
       if (response.error) {
         console.error("Resend API Error object:", response.error);
       }

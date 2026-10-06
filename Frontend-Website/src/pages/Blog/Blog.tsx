@@ -12,6 +12,7 @@ export default function Blog() {
         activeLabel=""
         size="md"
         title="Blog"
+        scrollHint
         maxWidthClassName="max-w-[43.75rem]"
         gapClassName="gap-4"
         body="Explore expert knowledge, thoughtful guidance and essential insights for navigating the world of narrowboats with confidence."
