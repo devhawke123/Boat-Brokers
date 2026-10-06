@@ -130,7 +130,13 @@ export default function Footer() {
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-body-sm text-body-light">
         <p>&copy; 2026 The Boat Brokers. All Rights Reserved</p>
-        <p>Designed and Developed By Blue Hawke.</p>
+        <p>
+          Designed and Developed By{' '}
+          <a href="https://www.bluehawke.com/" target="_blank" rel="noreferrer" className="underline">
+            Blue Hawke
+          </a>
+          .
+        </p>
       </div>
 
       <button

@@ -94,7 +94,12 @@ function applyFilters(boats: BoatListing[], filters: Filters): BoatListing[] {
 
 function sortBoats(boats: BoatListing[], sortBy: SortValue): BoatListing[] {
   const withPrice = (b: BoatListing) => (b.priceValue > 0 ? b.priceValue : null)
+  // Live boats first, then under offer, then sold — the chosen sort applies within each group.
+  const statusRank = (b: BoatListing) => (b.status === 'sold' ? 2 : b.status === 'under-offer' ? 1 : 0)
   return [...boats].sort((a, b) => {
+    const rankDiff = statusRank(a) - statusRank(b)
+    if (rankDiff !== 0) return rankDiff
+
     if (sortBy === 'newest') return b.id - a.id
 
     const priceA = withPrice(a)
