@@ -150,7 +150,7 @@ export default function BasicInformationForm({ values, onChange }: BasicInformat
           label="Price"
           type="integer"
           placeholder="e.g. 32310"
-          prefix="$"
+          prefix="£"
           value={values.price}
           onChange={(v) => onChange('price', v)}
         />

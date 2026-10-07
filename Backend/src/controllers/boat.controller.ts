@@ -80,7 +80,7 @@ export async function createBoatHandler(req: Request, res: Response) {
     {
       name,
       boatName: name,
-      cost: price ? `$${price}` : "",
+      cost: price ? `£${Number(price).toLocaleString("en-GB")}` : "",
       price: price ?? null,
       imageUrl: imagePaths[0] ?? null,
       brochureUrl: brochureUrl ?? null,
