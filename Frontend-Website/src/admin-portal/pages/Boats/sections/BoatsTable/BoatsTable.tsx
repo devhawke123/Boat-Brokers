@@ -14,6 +14,7 @@ type BoatsTableProps = {
   boats: ApiBoat[]
   onDeleteToggle: (boatId: number, nextDeleted: boolean) => void
   onSaleStatusChange: (boatId: number, status: SaleStatus) => void
+  onFeaturedChange: (boatId: number, isFeatured: boolean) => void
   updatingId: number | null
 }
 
@@ -68,7 +69,13 @@ function slugify(value: string) {
 
 const pageSizeOptions = [10, 20, 50]
 
-export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, updatingId }: BoatsTableProps) {
+export default function BoatsTable({
+  boats,
+  onDeleteToggle,
+  onSaleStatusChange,
+  onFeaturedChange,
+  updatingId,
+}: BoatsTableProps) {
   const [activeTab, setActiveTab] = useState<BoatFilter>('All')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -148,6 +155,9 @@ export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, 
               <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Status
               </th>
+              <th className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
+                Featured
+              </th>
               <th className="px-5 py-3 text-right text-[10px] font-semibold tracking-[0.08em] text-[#64748b] uppercase">
                 Actions
               </th>
@@ -190,6 +200,16 @@ export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, 
                         <option value="Sold">Sold</option>
                       </select>
                     )}
+                  </td>
+                  <td className="px-5 py-2">
+                    <input
+                      type="checkbox"
+                      checked={boat.isFeatured}
+                      disabled={boat.isDeleted || updatingId === boat.id}
+                      onChange={(event) => onFeaturedChange(boat.id, event.target.checked)}
+                      aria-label={`Feature ${boat.name} on the home page`}
+                      className="size-4 accent-navy-dark disabled:opacity-60"
+                    />
                   </td>
                   <td className="px-5 py-2 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -236,7 +256,7 @@ export default function BoatsTable({ boats, onDeleteToggle, onSaleStatusChange, 
 
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-8 text-center text-sm text-[#64748b]">
+                <td colSpan={6} className="px-5 py-8 text-center text-sm text-[#64748b]">
                   {boats.length === 0 ? 'No boats yet.' : search ? `No boats match "${search}".` : 'No boats in this category.'}
                 </td>
               </tr>

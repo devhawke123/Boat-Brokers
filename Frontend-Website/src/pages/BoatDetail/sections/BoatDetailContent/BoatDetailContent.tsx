@@ -1,5 +1,6 @@
 import { formatPrice, type BoatListing } from '../../../../data/boats'
 import { IconCube, IconDownload, IconPlay } from '../../icons'
+import BoatPhotoBox from '../BoatPhotoBox/BoatPhotoBox'
 import lengthIcon from '../../../../assets/icons/length.svg'
 import berthIcon from '../../../../assets/icons/berth.svg'
 import engineIcon from '../../../../assets/icons/engine.svg'
@@ -14,11 +15,11 @@ type BoatDetailContentProps = {
 export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
   const specChips = [
     { icon: lengthIcon, label: 'Length', value: boat.length },
-    { icon: berthIcon, label: 'Berths', value: `${boat.berths}` },
-    { icon: engineIcon, label: 'Engine', value: boat.detail.engineMake },
-    { icon: yearIcon, label: 'Year Built', value: boat.yearBuilt },
     { icon: sternIcon, label: 'Stern', value: boat.detail.sternType },
+    { icon: yearIcon, label: 'Year Built', value: boat.yearBuilt },
     { icon: steelIcon, label: 'Steel', value: boat.detail.hullThickness },
+    { icon: engineIcon, label: 'Engine', value: boat.detail.engineMake },
+    { icon: berthIcon, label: 'Berths', value: `${boat.berths}` },
   ].filter((chip) => chip.value && chip.value !== 'N/A')
 
   const viewingHref = `/boats/${boat.slug}/book-viewing`
@@ -29,8 +30,9 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
   const hasDownloadableBrochure = boat.detail.brochureUrl?.startsWith('/uploads/') ?? false
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-1">
+    <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+      <div className="flex min-w-0 flex-1 flex-col gap-8">
+      <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-4 sm:overflow-x-auto sm:pb-1 lg:flex-wrap lg:overflow-visible">
         {specChips.map((chip) => (
           <div
             key={chip.label}
@@ -44,19 +46,6 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
           </div>
         ))}
       </div>
-
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
-        <div className="flex flex-1 flex-col gap-8">
-          <div className="flex flex-wrap gap-2">
-            {boat.detail.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-lg border border-[#e5e7eb] bg-white px-3 py-1 text-xs font-medium text-navy-dark shadow-[0px_1px_1px_rgba(0,0,0,0.05)]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
 
           <div className="flex flex-col gap-4 rounded-[22px] border border-[#f3f4f6] bg-white p-8 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)]">
             <h2 className="font-accent text-2xl text-navy-dark">Overview</h2>
@@ -82,7 +71,9 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
           </div>
         </div>
 
-        <aside className="flex w-full flex-col gap-6 rounded-3xl border border-[#f3f4f6] bg-white p-6 shadow-[0px_20px_50px_-15px_rgba(11,58,88,0.15)] lg:w-[22.5rem] lg:shrink-0 lg:sticky lg:top-6">
+        <div className="flex w-full flex-col gap-6 lg:sticky lg:top-6 lg:w-[22.5rem] lg:shrink-0">
+        <BoatPhotoBox boat={boat} />
+        <aside className="flex w-full flex-col gap-6 rounded-3xl border border-[#f3f4f6] bg-white p-6 shadow-[0px_20px_50px_-15px_rgba(11,58,88,0.15)]">
           <div className="flex flex-col gap-1">
             <p className="text-sm font-medium text-[#6e6e6e]">Asking Price</p>
             <p className="font-body text-4xl font-bold text-navy-dark">{formatPrice(boat.priceValue)}</p>
@@ -145,7 +136,7 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
             </a>
           </div>
         </aside>
-      </div>
+        </div>
     </div>
   )
 }

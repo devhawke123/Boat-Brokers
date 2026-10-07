@@ -7,6 +7,8 @@ export type FuelType = 'Diesel' | 'Petrol' | 'Electric' | 'Hybrid'
 export type BoatSpec = {
   label: string
   value: string
+  // Optional section heading — rows sharing a group render under one heading.
+  group?: string
 }
 
 export type BoatDetail = {
@@ -53,6 +55,8 @@ export type BoatListing = {
   // "Narrowboats" until an admin categorises them individually.
   boatType: string
   yearBuilt: string
+  builder: string
+  sternType: string
   fuel: FuelType
   status: BoatStatus
   detail: BoatDetail
@@ -125,6 +129,10 @@ function specs(entries: [string, string | null | undefined][]): BoatSpec[] {
     .filter((spec): spec is BoatSpec => Boolean(spec.value))
 }
 
+function groupedSpecs(group: string, entries: [string, string | null | undefined][]): BoatSpec[] {
+  return specs(entries).map((spec) => ({ ...spec, group }))
+}
+
 function deriveStatus(boat: ApiBoat): { status: BoatStatus; price: string } {
   if (boat.isSold) return { status: 'sold', price: 'Sold' }
   if (boat.isUnderOffer) return { status: 'under-offer', price: 'Under Offer' }
@@ -187,6 +195,8 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
     boatType: clean(boat.boatType) ?? 'Narrowboats',
     searchText,
     yearBuilt: clean(boat.yearBuilt) ?? 'N/A',
+    builder: clean(boat.builder) ?? clean(boat.hullBuilder) ?? 'N/A',
+    sternType: clean(boat.sternType) ?? 'N/A',
     // The catalogue doesn't record fuel type; these are canal narrowboats,
     // which are diesel-powered in practice.
     fuel: 'Diesel',
@@ -240,6 +250,7 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Gearbox', boat.gearbox],
         ['Bowthruster', boat.bowthruster],
         ['Weedhatch', boat.weedhatch],
+        ['Alternator(s)', boat.alternator],
         ['Diesel tank capacity', boat.dieselTankCapacity],
         ['Notes', boat.engineExtraNotes],
       ]),
@@ -252,12 +263,12 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Notes', boat.heatingExtraNotes],
       ]),
       electrical: specs([
-        ['Alternator', boat.alternator],
         ['Batteries', boat.batteries],
         ['Lighting', boat.lighting],
         ['Inverter/charger', boat.inverterCharger],
         ['Landline socket', boat.landlineSocket],
         ['Galvanic isolator', boat.galvanicIsolator],
+        ['Solar panels', boat.solarPanels],
         ['Notes', boat.electricalExtraNotes],
       ]),
       gas: specs([
@@ -265,31 +276,44 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Appliances', boat.appliances],
         ['Notes', boat.gasExtraNotes],
       ]),
-      interior: specs([
-        ['Insulation', boat.insulation],
-        ['Ballast', boat.ballast],
-        ['Ceiling', boat.ceiling],
-        ['Cabin sides', boat.cabinSides],
-        ['Hull sides', boat.hullSides],
-        ['Flooring', boat.flooring],
-        ['Side doors', boat.sideDoors],
-        ['Windows', boat.windows],
-        ['Saloon seating', boat.saloonSeating],
-        ['Saloon dinette', boat.saloonDinette],
-        ['Galley cooker', boat.galleyCooker],
-        ['Galley fridge/freezer', boat.galleyFridgeFreezer],
-        ['Galley microwave', boat.galleyMicrowave],
-        ['Galley washing machine', boat.galleyWashingMachine],
-        ['Bathroom toilet', boat.bathroomToilet],
-        ['Bathroom waste tank capacity', boat.bathroomWasteTankCapacity],
-        ['Bathroom bath/shower', boat.bathroomBathShower],
-        ['Bathroom vanity basin', boat.bathroomVanityBasin],
-        ['Bedroom bed', boat.bedroomBed],
-        ['Bedroom dinette', boat.bedroomDinette],
-        ['Notes', boat.interiorExtraNotes ?? boat.galleyExtraNotes ?? boat.bathroomExtraNotes ?? boat.bedroomExtraNotes],
-      ]),
+      interior: [
+        ...groupedSpecs('Cabin Fit-out', [
+          ['Insulation', boat.insulation],
+          ['Ballast', boat.ballast],
+          ['Ceiling', boat.ceiling],
+          ['Cabin sides', boat.cabinSides],
+          ['Hull sides', boat.hullSides],
+          ['Flooring', boat.flooring],
+          ['Side doors', boat.sideDoors],
+          ['Windows', boat.windows],
+        ]),
+        ...groupedSpecs('Galley', [
+          ['Cooker', boat.galleyCooker],
+          ['Fridge/freezer', boat.galleyFridgeFreezer],
+          ['Microwave', boat.galleyMicrowave],
+          ['Washing machine', boat.galleyWashingMachine],
+        ]),
+        ...groupedSpecs('Bathroom', [
+          ['Toilet', boat.bathroomToilet],
+          ['Waste tank capacity', boat.bathroomWasteTankCapacity],
+          ['Bath/shower', boat.bathroomBathShower],
+          ['Vanity basin', boat.bathroomVanityBasin],
+        ]),
+        ...groupedSpecs('Bedroom', [
+          ['Bed', boat.bedroomBed],
+          ['Dinette', boat.bedroomDinette],
+          ['Wardrobe/storage', boat.bedroomWardrobeStorage],
+        ]),
+        ...groupedSpecs('Saloon', [
+          ['Seating', boat.saloonSeating],
+          ['Dinette', boat.saloonDinette],
+          ['TV', boat.tv],
+        ]),
+        ...specs([
+          ['Notes', boat.interiorExtraNotes ?? boat.galleyExtraNotes ?? boat.bathroomExtraNotes ?? boat.bedroomExtraNotes],
+        ]),
+      ],
       other: specs([
-        ['TV', boat.tv],
         ['Covers', boat.covers],
         ['Navigation equipment', boat.navigationEquipment],
         ['Hull builder', boat.hullBuilder],

@@ -33,7 +33,7 @@ export default function BoatCarousel({ boats, className }: BoatCarouselProps) {
         }}
       >
         {boats.map((boat) => (
-          <div key={boat.name} className="w-full shrink-0 snap-center">
+          <div key={boat.href} className="w-full shrink-0 snap-center">
             <BoatCard boat={boat} />
           </div>
         ))}

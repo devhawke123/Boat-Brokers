@@ -46,9 +46,10 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <img src={logoWhite} alt="The Boat Brokers" className="h-[4.75rem] w-auto self-start" />
             <p className="text-body-sm text-body-light">
-              The Boat Brokers delivers unforgettable luxury yacht experiences with premium
-              comfort, exclusive destinations, and world-class hospitality designed for elegant
-              ocean adventures.
+              <span className="block font-semibold text-white">The Simple Way To Buy &amp; Sell.</span>
+              Helping at every stage of the sales process, from appointment to completion. We are
+              passionate about boating and dedicated to providing our clients with exceptional
+              service.
             </p>
           </div>
           <ul className="flex gap-2">

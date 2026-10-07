@@ -1,7 +1,6 @@
 import { useBoatBySlug } from '../../data/boats'
 import PageHero from '../../components/PageHero/PageHero'
 import BoatSubNav from './sections/BoatSubNav/BoatSubNav'
-import BoatGallery from './sections/BoatGallery/BoatGallery'
 import BoatDetailContent from './sections/BoatDetailContent/BoatDetailContent'
 import BoatDetailTabs from './sections/BoatDetailTabs/BoatDetailTabs'
 import Button from '../../components/Button/Button'
@@ -66,7 +65,6 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
       </div>
 
       <section className="flex flex-col gap-8 px-2 py-8 sm:px-8 sm:py-14">
-        <BoatGallery boat={boat} />
         <BoatDetailContent boat={boat} />
         <BoatDetailTabs boat={boat} />
       </section>

@@ -15,7 +15,7 @@ export default function BlogDetail({ slug }: BlogDetailProps) {
     return (
       <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
         <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
-          <Navbar activeLabel="" />
+          <Navbar activeLabel="More" />
           <p className="text-base text-[#ededed]">Loading post&hellip;</p>
         </section>
         <Footer />
@@ -27,7 +27,7 @@ export default function BlogDetail({ slug }: BlogDetailProps) {
     return (
       <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
         <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
-          <Navbar activeLabel="" />
+          <Navbar activeLabel="More" />
           <h1 className="font-accent text-4xl text-white">Post not found</h1>
           <p className="max-w-md text-base text-[#ededed]">
             {error

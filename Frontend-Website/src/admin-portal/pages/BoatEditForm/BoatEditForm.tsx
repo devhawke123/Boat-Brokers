@@ -81,6 +81,8 @@ export default function BoatEditForm(props: BoatEditFormProps) {
   const [mediaError, setMediaError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [boatId, setBoatId] = useState<number | null>(null)
+  // Existing photo the admin picked as the cover; null = unchanged.
+  const [mainImageId, setMainImageId] = useState<string | null>(null)
   const [sellerName, setSellerName] = useState('')
 
   function valueOf(boat: ApiBoat | ApiBoatListing['boat'], key: string) {
@@ -228,8 +230,14 @@ export default function BoatEditForm(props: BoatEditFormProps) {
       if (mediaValues.videoUrl.trim()) formData.set('videoUrl', mediaValues.videoUrl.trim())
       if (mediaValues.virtualTourUrl.trim()) formData.set('virtualTourUrl', mediaValues.virtualTourUrl.trim())
       if (mediaValues.brochure) formData.set('brochure', mediaValues.brochure, mediaValues.brochure.name)
-      for (const photo of mediaValues.photos) {
-        if (photo.file) formData.append('photos', photo.file, photo.name)
+      const newPhotos = mediaValues.photos.filter((photo) => photo.file)
+      for (const photo of newPhotos) formData.append('photos', photo.file!, photo.name)
+      if (mainImageId) {
+        // An existing photo is referenced by id; a just-added one by its
+        // position among the uploaded files (it has no id until saved).
+        const newIndex = newPhotos.findIndex((photo) => photo.id === mainImageId)
+        if (newIndex >= 0) formData.set('mainNewPhotoIndex', String(newIndex))
+        else if (mediaValues.photos.some((photo) => photo.id === mainImageId)) formData.set('mainImageId', mainImageId)
       }
 
       if (keyDetailsValues.sellTimeline.trim()) formData.set('sellTimeline', keyDetailsValues.sellTimeline.trim())
@@ -291,6 +299,7 @@ export default function BoatEditForm(props: BoatEditFormProps) {
   }
 
   function handleSetMainPhoto(id: string) {
+    setMainImageId(id)
     setMediaValues((prev) => {
       const index = prev.photos.findIndex((photo) => photo.id === id)
       if (index <= 0) return prev

@@ -1,17 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useBoatListings, type BoatListing, type BoatStatus } from '../../../../data/boats'
+import { useBoatListings, type BoatListing } from '../../../../data/boats'
 import BoatListingCard from './BoatListingCard'
 import Pagination from './Pagination'
 import RangeSlider from './RangeSlider'
 import { IconChevronDown, IconClose, IconFilter, IconMapPin, IconSearch } from './icons'
-
-type Tab = { key: 'all' | Exclude<BoatStatus, null>; label: string }
-
-const tabs: Tab[] = [
-  { key: 'all', label: 'All Boats' },
-  { key: 'under-offer', label: 'Under Offer' },
-  { key: 'sold', label: 'Sold Boats' },
-]
 
 const BOAT_TYPES = ['Narrowboats', 'Widebeams', 'Cruisers']
 const PRICE_MIN = 0
@@ -218,37 +210,19 @@ function FilterPanel({ filters, onChange, onClear, boatTypeCounts }: FilterPanel
 
 export default function BoatsListing() {
   const { boats: boatListings, loading, error } = useBoatListings()
-  const [activeTab, setActiveTab] = useState<Tab['key']>('all')
   const [showMobileFilters, setShowMobileFilters] = useState(false)
   const [page, setPage] = useState(1)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
 
-  const tabCounts = useMemo(
-    () =>
-      tabs.reduce<Record<Tab['key'], number>>(
-        (acc, tab) => {
-          acc[tab.key] = tab.key === 'all' ? boatListings.length : boatListings.filter((b) => b.status === tab.key).length
-          return acc
-        },
-        { all: 0, featured: 0, 'under-offer': 0, sold: 0 },
-      ),
-    [boatListings],
-  )
-
-  const tabFilteredBoats = useMemo(
-    () => (activeTab === 'all' ? boatListings : boatListings.filter((boat) => boat.status === activeTab)),
-    [activeTab, boatListings],
-  )
-
   const boatTypeCounts = useMemo(() => {
     const counts: Record<string, number> = {}
     for (const type of BOAT_TYPES) {
-      counts[type] = tabFilteredBoats.filter((b) => b.boatType === type).length
+      counts[type] = boatListings.filter((b) => b.boatType === type).length
     }
     return counts
-  }, [tabFilteredBoats])
+  }, [boatListings])
 
-  const filteredBoats = useMemo(() => applyFilters(tabFilteredBoats, filters), [tabFilteredBoats, filters])
+  const filteredBoats = useMemo(() => applyFilters(boatListings, filters), [boatListings, filters])
   const sortedBoats = useMemo(() => sortBoats(filteredBoats, filters.sortBy), [filteredBoats, filters.sortBy])
 
   const totalPages = Math.max(1, Math.ceil(sortedBoats.length / PAGE_SIZE))
@@ -288,11 +262,6 @@ export default function BoatsListing() {
     setPage(1)
   }
 
-  function handleTabChange(tab: Tab['key']) {
-    setActiveTab(tab)
-    setPage(1)
-  }
-
   function handlePageChange(nextPage: number) {
     setPage(nextPage)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -305,7 +274,7 @@ export default function BoatsListing() {
 
   return (
     <section className="flex flex-col gap-8 px-6 py-14 sm:px-16 sm:py-20">
-      <div className="flex flex-col gap-6 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between">
+      <div className="flex flex-col gap-6">
         <div className="flex max-w-[36rem] flex-col gap-2">
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-[#e3f7fe] px-4 py-1.5 text-sm font-medium tracking-[0.7px] text-[#14b2ef] uppercase">
             <span className="size-2 rounded-full bg-blue" />
@@ -320,22 +289,6 @@ export default function BoatsListing() {
           </p>
         </div>
 
-        <div className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:-mx-16 sm:px-16 lg:mx-0 lg:flex-wrap lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              type="button"
-              onClick={() => handleTabChange(tab.key)}
-              className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors duration-150 ${
-                activeTab === tab.key
-                  ? 'bg-navy-dark text-white'
-                  : 'border border-[#e2e8f0] bg-[#f8fafc] text-[#1e293b] hover:bg-[#eef2f7]'
-              }`}
-            >
-              {tab.label} ({tabCounts[tab.key]})
-            </button>
-          ))}
-        </div>
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">

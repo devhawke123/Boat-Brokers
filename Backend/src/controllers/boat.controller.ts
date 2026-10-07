@@ -139,6 +139,8 @@ export async function updateBoatHandler(req: Request, res: Response) {
 
   const {
     customFields,
+    mainImageId,
+    mainNewPhotoIndex,
     sellTimeline: _sellTimeline,
     contactTime: _contactTime,
     listerType: _listerType,
@@ -167,7 +169,7 @@ export async function updateBoatHandler(req: Request, res: Response) {
 
   // If price is provided, also update cost string
   if (mappedFields.price !== undefined) {
-    mappedFields.cost = `$${mappedFields.price}`;
+    mappedFields.cost = `£${Number(mappedFields.price).toLocaleString("en-GB")}`;
   }
 
   // Keep name and boatName in sync
@@ -179,6 +181,8 @@ export async function updateBoatHandler(req: Request, res: Response) {
     newImagePaths,
     newBrochureUrl,
     customFields,
+    mainImageId,
+    mainNewPhotoIndex !== undefined ? newImagePaths[mainNewPhotoIndex] : undefined,
   );
 
   // Email only on the false -> true transition, not on every subsequent edit

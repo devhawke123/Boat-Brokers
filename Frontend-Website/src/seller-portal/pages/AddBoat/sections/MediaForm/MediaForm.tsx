@@ -206,14 +206,14 @@ export default function MediaForm({
               className="group relative h-[86px] w-[123px] overflow-hidden rounded-lg border border-[#e2e8f0]"
             >
               <img src={photo.url} alt={photo.name} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center gap-2 bg-[#0e2136]/40 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#0e2136]/50 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
                 <button
                   type="button"
                   onClick={() => onSetMainPhoto(photo.id)}
                   aria-label="Set as main photo"
-                  className="flex size-7 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
+                  className="rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-[#0e2136]"
                 >
-                  <img src={photoEditIcon} alt="" aria-hidden="true" className="size-2.5" />
+                  Set as main
                 </button>
                 <button
                   type="button"

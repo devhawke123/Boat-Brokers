@@ -1,55 +1,30 @@
-import sentinelImg from '../../../../assets/sentinel.jpg'
-import berylImg from '../../../../assets/beryl.jpg'
-import sunflowerImg from '../../../../assets/sunflower.jpg'
-import missSassyLadyImg from '../../../../assets/miss sassy lady.jpg'
+import { useBoatListings, formatPrice, type BoatListing } from '../../../../data/boats'
 import Button from '../../../../components/Button/Button'
 import BoatCard, { type Boat } from './BoatCard'
 import BoatCarousel from './BoatCarousel'
 
-const boats: Boat[] = [
-  {
-    name: 'Sentinel',
-    price: '£69,950',
-    image: sentinelImg,
-    lengthBeam: '70ft narrowboat',
-    stern: 'Traditional',
-    yearBuilt: '1976',
-    builder: 'Brian Duvall',
-    href: '/boats/sentinel',
-  },
-  {
-    name: 'Beryl',
-    price: '£54,950',
-    image: berylImg,
-    lengthBeam: '58ft 6in narrowboat',
-    stern: 'Cruiser',
-    yearBuilt: '1990',
-    builder: 'Tayberg Boats',
-    href: '/boats/beryl',
-  },
-  {
-    name: 'Sunflower',
-    price: '£129,950',
-    image: sunflowerImg,
-    lengthBeam: '70ft narrowboat',
-    stern: '62ft narrowboat',
-    yearBuilt: '2022',
-    builder: 'Tim Tyler',
-    href: '/boats/sunflower',
-  },
-  {
-    name: 'Miss Sassy Lady',
-    price: '£69,950',
-    image: missSassyLadyImg,
-    lengthBeam: '70ft narrowboat',
-    stern: '62ft narrowboat',
-    yearBuilt: '2022',
-    builder: 'Tim Tyler',
-    href: '/boats/miss-sassy-lady',
-  },
-]
+const MAX_FEATURED = 4
+
+function toCardBoat(boat: BoatListing): Boat {
+  return {
+    name: boat.name,
+    price: boat.priceValue > 0 ? formatPrice(boat.priceValue) : boat.price,
+    image: boat.image,
+    lengthBeam: boat.length,
+    stern: boat.sternType,
+    yearBuilt: boat.yearBuilt,
+    builder: boat.builder,
+    href: `/boats/${boat.slug}`,
+  }
+}
 
 export default function FeaturedBoats() {
+  const { boats: listings, loading } = useBoatListings()
+  const boats = listings
+    .filter((boat) => boat.status === 'featured')
+    .slice(0, MAX_FEATURED)
+    .map(toCardBoat)
+
   return (
     <section className="section flex flex-col items-center gap-12 short:gap-6 rounded-2xl bg-navy-darkest px-section-x">
       <div className="flex max-w-[39.25rem] flex-col items-center gap-4 short:gap-2 text-center">
@@ -66,13 +41,25 @@ export default function FeaturedBoats() {
         </p>
       </div>
 
-      <div className="hidden w-full grid-cols-1 justify-center gap-16 lg:grid lg:grid-cols-[repeat(2,minmax(0,clamp(20rem,45%,38rem)))]">
-        {boats.map((boat) => (
-          <BoatCard key={boat.name} boat={boat} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="grid w-full grid-cols-1 justify-center gap-16 lg:grid-cols-[repeat(2,minmax(0,clamp(20rem,45%,38rem)))]">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="aspect-[16/9] animate-pulse rounded-xl bg-white/5" />
+          ))}
+        </div>
+      ) : (
+        boats.length > 0 && (
+          <>
+            <div className="hidden w-full grid-cols-1 justify-center gap-16 lg:grid lg:grid-cols-[repeat(2,minmax(0,clamp(20rem,45%,38rem)))]">
+              {boats.map((boat) => (
+                <BoatCard key={boat.href} boat={boat} />
+              ))}
+            </div>
 
-      <BoatCarousel boats={boats} className="lg:hidden" />
+            <BoatCarousel boats={boats} className="lg:hidden" />
+          </>
+        )
+      )}
 
       <Button variant="light" label="Explore All Boats" href="/boats-for-sale" />
     </section>

@@ -77,6 +77,8 @@ export type ApiBoat = {
   inverterCharger: string | null
   landlineSocket: string | null
   galvanicIsolator: string | null
+  // Not stored by the backend yet — optional until a column is added.
+  solarPanels?: string | null
   electricalExtraNotes: string | null
 
   gasBottles: string | null
@@ -110,6 +112,8 @@ export type ApiBoat = {
 
   bedroomBed: string | null
   bedroomDinette: string | null
+  // Not stored by older backends — optional until the column exists everywhere.
+  bedroomWardrobeStorage?: string | null
   bedroomExtraNotes: string | null
 
   tv: string | null
@@ -237,6 +241,11 @@ export function restoreBoat(id: number): Promise<ApiBoat> {
 // middleware in front of it passes non-multipart requests straight through).
 export function updateBoatSaleStatus(id: number, status: { isSold: boolean; isUnderOffer: boolean }): Promise<ApiBoat> {
   return apiPatch<ApiBoat>(`/boats/${id}`, status)
+}
+
+// Admin-only toggle for the home page's Featured Boats section.
+export function updateBoatFeatured(id: number, isFeatured: boolean): Promise<ApiBoat> {
+  return apiPatch<ApiBoat>(`/boats/${id}`, { isFeatured })
 }
 
 // Mirrors the Blog admin panel: an editor pastes the fields below and the

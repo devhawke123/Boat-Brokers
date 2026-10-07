@@ -18,10 +18,7 @@ export default function Hero() {
 
       <div className="relative z-[5] flex max-w-[45rem] flex-col gap-[30px] overflow-x-hidden short:gap-4">
         <div className="flex flex-col gap-4 short:gap-2">
-          <span className="hero-reveal inline-flex w-fit items-center gap-2 rounded-full bg-[rgba(96,166,192,0.28)] px-4 py-1.5 text-label font-medium text-white uppercase">
-            <span className="size-2 rounded-full bg-white" />
-            The Boat Brokers - Luxury Feel
-          </span>
+       
 
           <h1 className="hero-reveal hero-reveal-delay-1 font-display text-h1 text-white capitalize short:text-h1-short">
             The Simple Way

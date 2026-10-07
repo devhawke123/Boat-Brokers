@@ -8,32 +8,32 @@ datasource db {
 }
 
 model Boat {
-  id       Int         @id @default(autoincrement())
+  id           Int               @id @default(autoincrement())
   // Unique, system-generated public identifier (e.g. shown in the admin/seller UI)
-  boatId   String      @unique @default(cuid())
-  name     String
+  boatId       String            @unique @default(cuid())
+  name         String
   // Raw source text for the price/status cell as originally imported
   // (e.g. "£69,950", "sold", "under offer"). Kept for reference/audit —
   // the app uses `price` and the status booleans below instead.
-  cost     String
+  cost         String
   // Real numeric asking price. Null when there's no price yet (sold /
   // under offer / not set) — an admin dashboard will manage this directly.
   price        Int?
-  isSold       Boolean @default(false)
-  isUnderOffer Boolean @default(false)
-  isFeatured   Boolean @default(false)
+  isSold       Boolean           @default(false)
+  isUnderOffer Boolean           @default(false)
+  isFeatured   Boolean           @default(false)
   // Soft delete — an admin-deleted boat is hidden from the public storefront
   // (findAllBoats/findBoatById exclude it by default) but the row and its
   // listing are kept so the admin can still see it tagged "Deleted".
-  isDeleted    Boolean @default(false)
-  imageUrl String?
-  sellerId Int
-  seller   Seller      @relation(fields: [sellerId], references: [id])
-  images   BoatImage[]
-  listings BoatListing[]
+  isDeleted    Boolean           @default(false)
+  imageUrl     String?
+  sellerId     Int
+  seller       Seller            @relation(fields: [sellerId], references: [id])
+  images       BoatImage[]
+  listings     BoatListing[]
   customFields BoatCustomField[]
-  bookings Booking[]
-  sales    Sale[]
+  bookings     Booking[]
+  sales        Sale[]
 
   // History
   cinNumber              String?
@@ -79,6 +79,7 @@ model Boat {
   inverterCharger      String?
   landlineSocket       String?
   galvanicIsolator     String?
+  solarPanels          String? @db.Text
   electricalExtraNotes String?
 
   // Gas
@@ -116,9 +117,10 @@ model Boat {
   bathroomExtraNotes        String?
 
   // Interior - Bedroom
-  bedroomBed        String?
-  bedroomDinette    String?
-  bedroomExtraNotes String?
+  bedroomBed             String?
+  bedroomDinette         String?
+  bedroomWardrobeStorage String? @db.Text
+  bedroomExtraNotes      String?
 
   // Other
   tv                  String?
@@ -197,20 +199,20 @@ model BlogPost {
 }
 
 model Seller {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   // Unique, system-generated public identifier (e.g. shown to the seller/admin UI)
-  sellerId    String   @unique @default(cuid())
+  sellerId    String        @unique @default(cuid())
   name        String
-  email       String   @unique
+  email       String        @unique
   // Hashed password (e.g. bcrypt) used for seller-portal login
   password    String?
   phone       String?
   location    String?
   // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.
   avatarUrl   String?
-  joiningDate DateTime @default(now())
+  joiningDate DateTime      @default(now())
   // Admin-managed seller pipeline stage — independent of BoatListing status.
-  status      SellerStatus @default(NEW)
+  status      SellerStatus  @default(NEW)
   boats       Boat[]
   listings    BoatListing[]
   sales       Sale[]
@@ -244,42 +246,42 @@ enum ListingStatus {
 }
 
 model BoatListing {
-  id        Int           @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   boatId    Int
-  boat      Boat          @relation(fields: [boatId], references: [id], onDelete: Cascade)
+  boat      Boat             @relation(fields: [boatId], references: [id], onDelete: Cascade)
   sellerId  Int
-  seller    Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  status    ListingStatus @default(PENDING)
+  seller    Seller           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  status    ListingStatus    @default(PENDING)
   comments  ListingComment[]
-  createdAt DateTime      @default(now())
+  createdAt DateTime         @default(now())
 
   // Seller preferences captured when this listing was submitted
   // (Key Details step of the Add Boat form).
-  sellTimeline     String?
-  contactTime      String?
-  listerType       String?
-  additionalNotes  String?  @db.Text
-  agreedToContact  Boolean  @default(true)
+  sellTimeline    String?
+  contactTime     String?
+  listerType      String?
+  additionalNotes String? @db.Text
+  agreedToContact Boolean @default(true)
 
   @@index([boatId])
   @@index([sellerId])
 }
 
 model ListingComment {
-  id         Int         @id @default(autoincrement())
+  id         Int              @id @default(autoincrement())
   listingId  Int
-  listing    BoatListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-  content    String      @db.Text
+  listing    BoatListing      @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  content    String           @db.Text
   author     String?
   // True when this comment/reply was posted by the seller (from the Comments module),
   // as opposed to a buyer/admin comment left on the listing.
-  fromSeller Boolean     @default(false)
+  fromSeller Boolean          @default(false)
   // Self-relation: a null parentId is a top-level comment, non-null is a reply to it.
   // Only one level deep is used by the UI today.
   parentId   Int?
   parent     ListingComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies    ListingComment[] @relation("CommentReplies")
-  createdAt  DateTime    @default(now())
+  createdAt  DateTime         @default(now())
 
   @@index([listingId])
   @@index([parentId])

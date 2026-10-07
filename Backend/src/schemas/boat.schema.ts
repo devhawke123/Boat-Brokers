@@ -44,6 +44,7 @@ const OPTIONAL_STRING_FIELDS = [
   "inverterCharger",
   "landlineSocket",
   "galvanicIsolator",
+  "solarPanels",
   "electricalExtraNotes",
   // Gas
   "gasBottles",
@@ -77,6 +78,7 @@ const OPTIONAL_STRING_FIELDS = [
   // Interior - Bedroom
   "bedroomBed",
   "bedroomDinette",
+  "bedroomWardrobeStorage",
   "bedroomExtraNotes",
   // Other
   "tv",
@@ -192,6 +194,14 @@ export const updateBoatSchema = z.object({
   // with each other, enforced client-side.
   isSold: optionalBoolean,
   isUnderOffer: optionalBoolean,
+  // Admin-only: shows the boat in the home page's Featured Boats section.
+  isFeatured: optionalBoolean,
+  // Id of an existing BoatImage to use as the cover photo (Boat.imageUrl) —
+  // shown on the home page's Featured Boats cards.
+  mainImageId: z.coerce.number().int().positive().optional(),
+  // Alternatively, the index (within this request's uploaded photos) of a new
+  // photo to use as the cover.
+  mainNewPhotoIndex: z.coerce.number().int().min(0).optional(),
   ...Object.fromEntries(
     OPTIONAL_STRING_FIELDS.map((field) => [field, updateOptionalTrimmed]),
   ) as Record<(typeof OPTIONAL_STRING_FIELDS)[number], typeof updateOptionalTrimmed>,

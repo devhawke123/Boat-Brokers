@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { boatStatusStyles, type BoatListing } from '../../../../data/boats'
-import { IconBed, IconCalendar, IconFuel, IconMapPin, IconRuler } from './icons'
 
 type BoatListingCardProps = {
   boat: BoatListing
@@ -38,35 +37,31 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
 
       <div className="flex flex-col gap-4 p-5">
         <div className="flex flex-col gap-2">
-          <h3 className="font-display text-2xl leading-[1.3] tracking-[-1px] text-[#1e293b] capitalize">
+          <h3 className="font-body text-2xl leading-[1.3] font-bold tracking-[-0.5px] text-[#1e293b] capitalize">
             {boat.name}
           </h3>
-          <div className="flex items-center gap-1.5 text-[#6b7280]">
-            <IconMapPin className="size-3.5 shrink-0 text-[#9ca3af]" />
-            <span className="text-sm">{boat.location}</span>
-          </div>
         </div>
 
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 border-b border-[#e2e8f0] pb-4">
-          <div className="flex items-center gap-2 text-sm text-[#4b5563]">
-            <IconRuler className="size-3.5 shrink-0 text-[#9ca3af]" />
-            <dt className="sr-only">Length</dt>
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 border-b border-[#e2e8f0] pb-4 text-sm text-[#4b5563]">
+          <div className="col-span-2 flex gap-1.5">
+            <dt className="font-medium text-[#1e293b]">Location:</dt>
+            <dd>{boat.location.replace(/^location\s+/i, '')}</dd>
+          </div>
+          <div className="flex gap-1.5">
+            <dt className="font-medium text-[#1e293b]">Length:</dt>
             <dd>{boat.length}</dd>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#4b5563]">
-            <IconBed className="size-3.5 shrink-0 text-[#9ca3af]" />
-            <dt className="sr-only">Berths</dt>
-            <dd>{boat.berths} Berths</dd>
+          <div className="flex gap-1.5">
+            <dt className="font-medium text-[#1e293b]">Berths:</dt>
+            <dd>{boat.berths}</dd>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#4b5563]">
-            <IconCalendar className="size-3.5 shrink-0 text-[#9ca3af]" />
-            <dt className="sr-only">Year built</dt>
+          <div className="flex gap-1.5">
+            <dt className="font-medium text-[#1e293b]">Built:</dt>
             <dd>{boat.yearBuilt}</dd>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#4b5563]">
-            <IconFuel className="size-3.5 shrink-0 text-[#9ca3af]" />
-            <dt className="sr-only">Fuel</dt>
-            <dd>{boat.fuel}</dd>
+          <div className="flex gap-1.5">
+            <dt className="font-medium text-[#1e293b]">Style:</dt>
+            <dd>{boat.sternType || '—'}</dd>
           </div>
         </dl>
 
@@ -80,7 +75,7 @@ export default function BoatListingCard({ boat }: BoatListingCardProps) {
           </p>
           <a
             href={`/boats/${boat.slug}`}
-            className="relative z-10 text-base font-medium text-navy-dark hover:underline"
+            className="relative z-10 text-xl font-semibold text-navy-dark hover:underline"
             aria-label={`View details for ${boat.name}`}
           >
             View Details

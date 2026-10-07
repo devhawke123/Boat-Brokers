@@ -83,10 +83,19 @@ export function updateBoat(
   newImagePaths: string[] = [],
   newBrochureUrl?: string,
   customFields?: CustomFieldInput[],
+  mainImageId?: number,
+  mainNewImagePath?: string,
 ) {
   return prisma.$transaction(async (tx) => {
     const data: Prisma.BoatUncheckedUpdateInput = { ...boatData };
     if (newBrochureUrl !== undefined) data.brochureUrl = newBrochureUrl;
+
+    if (mainImageId !== undefined) {
+      const image = await tx.boatImage.findFirst({ where: { id: mainImageId, boatId: id } });
+      if (image?.path) data.imageUrl = image.path;
+    } else if (mainNewImagePath) {
+      data.imageUrl = mainNewImagePath;
+    }
 
     const boat = await tx.boat.update({
       where: { id },

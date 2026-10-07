@@ -9,7 +9,7 @@ export default function Blog() {
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
       <PageHero
         image={heroBg}
-        activeLabel=""
+        activeLabel="More"
         size="md"
         title="Blog"
         scrollHint

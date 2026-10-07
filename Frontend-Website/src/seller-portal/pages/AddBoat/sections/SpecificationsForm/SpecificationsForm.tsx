@@ -55,6 +55,7 @@ export type SpecificationsValues = {
   inverterCharger: string
   landlineSocket: string
   galvanicIsolator: string
+  solarPanels: string
   electricalExtraNotes: string
 
   // Gas
@@ -83,6 +84,7 @@ export type SpecificationsValues = {
   bathroomVanityBasin: string
   bedroomBed: string
   bedroomDinette: string
+  bedroomWardrobeStorage: string
   interiorExtraNotes: string
 
   // Other
@@ -131,6 +133,7 @@ export const initialSpecificationsValues: SpecificationsValues = {
   inverterCharger: '',
   landlineSocket: '',
   galvanicIsolator: '',
+  solarPanels: '',
   electricalExtraNotes: '',
 
   gasBottles: '',
@@ -157,6 +160,7 @@ export const initialSpecificationsValues: SpecificationsValues = {
   bathroomVanityBasin: '',
   bedroomBed: '',
   bedroomDinette: '',
+  bedroomWardrobeStorage: '',
   interiorExtraNotes: '',
 
   tv: '',
@@ -328,6 +332,9 @@ export default function SpecificationsForm({
             {field('galvanicIsolator', 'Galvanic isolator', 'e.g. Yes - Victron')}
           </FieldRow>
           <FieldRow>
+            {field('solarPanels', 'Solar panels', 'e.g. 3 x 175W with Victron MPPT controller')}
+          </FieldRow>
+          <FieldRow>
             {field('electricalExtraNotes', 'Notes', 'e.g. Victron solar panels 3 x 175W controlled by Victron MPPT controller')}
           </FieldRow>
         </div>
@@ -384,6 +391,9 @@ export default function SpecificationsForm({
           <FieldRow>
             {field('bedroomBed', 'Bedroom bed', 'e.g. 4ft 6in fixed double with 6in insert extension to 5ft (kingsize)')}
             {field('bedroomDinette', 'Bedroom dinette', 'e.g. See saloon')}
+          </FieldRow>
+          <FieldRow>
+            {field('bedroomWardrobeStorage', 'Bedroom wardrobe/storage', 'e.g. Fitted wardrobe and under-bed drawers')}
           </FieldRow>
           <FieldRow>{field('interiorExtraNotes', 'Notes', 'e.g. Double glazed hatch & bow doors')}</FieldRow>
         </div>

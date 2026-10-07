@@ -9,7 +9,7 @@ const tabs = [
   'History',
   'Dimensions',
   'Engine',
-  'Heating',
+  'Water Heating',
   'Electrical',
   'Gas',
   'Interior',
@@ -22,7 +22,7 @@ const tabDetailKey: Record<Tab, keyof BoatListing['detail']> = {
   History: 'history',
   Dimensions: 'dimensions',
   Engine: 'engineDetails',
-  Heating: 'heating',
+  'Water Heating': 'heating',
   Electrical: 'electrical',
   Gas: 'gas',
   Interior: 'interior',
@@ -45,6 +45,33 @@ function SpecList({ rows }: { rows: BoatSpec[] }) {
         </div>
       ))}
     </dl>
+  )
+}
+
+// Rows tagged with a `group` render under a heading, in first-seen order;
+// untagged rows (e.g. Notes) follow without one.
+function GroupedSpecList({ rows }: { rows: BoatSpec[] }) {
+  const groups: { title?: string; rows: BoatSpec[] }[] = []
+  for (const row of rows) {
+    const existing = groups.find((g) => g.title === row.group)
+    if (existing) existing.rows.push(row)
+    else groups.push({ title: row.group, rows: [row] })
+  }
+  groups.sort((a, b) => Number(a.title === undefined) - Number(b.title === undefined))
+
+  return (
+    <div className="flex flex-col gap-8">
+      {groups.map((group) => (
+        <div key={group.title ?? 'ungrouped'} className="flex flex-col gap-2">
+          {group.title && (
+            <h3 className="border-b-2 border-navy-dark pb-2 font-body text-base font-bold text-navy-dark">
+              {group.title}
+            </h3>
+          )}
+          <SpecList rows={group.rows} />
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -73,7 +100,7 @@ export default function BoatDetailTabs({ boat }: BoatDetailTabsProps) {
       </div>
 
       {rows.length > 0 ? (
-        <SpecList rows={rows} />
+        rows.some((row) => row.group) ? <GroupedSpecList rows={rows} /> : <SpecList rows={rows} />
       ) : (
         <div className="flex flex-col items-center gap-2 py-10 text-center text-[#6e6e6e]">
           <p>{activeTab} details for {boat.name} are available on request.</p>

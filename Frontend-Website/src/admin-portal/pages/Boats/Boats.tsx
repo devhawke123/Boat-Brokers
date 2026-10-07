@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
-import { deleteBoat, fetchBoats, restoreBoat, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
+import { deleteBoat, fetchBoats, restoreBoat, updateBoatFeatured, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
 import BoatsTable, { type SaleStatus } from './sections/BoatsTable/BoatsTable'
 
 export default function Boats() {
@@ -61,6 +61,19 @@ export default function Boats() {
     }
   }
 
+  async function handleFeaturedChange(boatId: number, isFeatured: boolean) {
+    setUpdatingId(boatId)
+    setActionError(null)
+    try {
+      const updated = await updateBoatFeatured(boatId, isFeatured)
+      setBoats((prev) => prev.map((boat) => (boat.id === boatId ? updated : boat)))
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to update featured status.')
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
   if (!checkedSession) return null
 
   return (
@@ -89,6 +102,7 @@ export default function Boats() {
             boats={boats}
             onDeleteToggle={handleDeleteToggle}
             onSaleStatusChange={handleSaleStatusChange}
+            onFeaturedChange={handleFeaturedChange}
             updatingId={updatingId}
           />
         )}

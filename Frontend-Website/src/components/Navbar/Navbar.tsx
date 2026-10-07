@@ -50,12 +50,17 @@ const navLinks: NavLink[] = [
     href: '/about',
     hasDropdown: true,
     dropdownItems: [
-      { label: 'Book a Viewing', href: '/book-a-viewing' },
-      { label: 'Blog', href: '/blog' },
       { label: 'Why Choose Us', href: '/#why-choose-us' },
-      { label: 'FAQs', href: '/faq' },
+      { label: "FAQ's", href: '/faq' },
+      { label: 'Book a Viewing', href: '/book-a-viewing' },
       { label: 'Contact Us', href: '/contact' },
     ],
+  },
+  {
+    label: 'More',
+    href: '/blog',
+    hasDropdown: true,
+    dropdownItems: [{ label: 'Blog', href: '/blog' }],
   },
 ]
 
@@ -97,7 +102,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 2xl:gap-6 2xl:px-5">
         <a href="/" className="flex shrink-0 items-center" aria-label="The Boat Brokers home">
-          <img src={logo} alt="The Boat Brokers" className="h-14 w-auto" />
+          <img src={logo} alt="The Boat Brokers" className="h-28 w-auto" />
         </a>
 
         <nav className="flex flex-wrap items-center text-white gap-3 max-nav:hidden 2xl:gap-5" aria-label="Primary">
