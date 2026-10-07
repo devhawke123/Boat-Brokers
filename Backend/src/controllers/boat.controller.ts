@@ -1,6 +1,8 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 import {
+  MAX_FEATURED_BOATS,
+  countFeaturedBoats,
   createBoatWithListing,
   findAllBoats,
   findBoatById,
@@ -165,6 +167,19 @@ export async function updateBoatHandler(req: Request, res: Response) {
   for (const [key, value] of Object.entries(boatFields)) {
     if (value === undefined) continue;
     mappedFields[FIELD_MAP[key] ?? key] = value;
+  }
+
+  // Featured boats: sold / under-offer boats can't be featured, and at most
+  // MAX_FEATURED_BOATS boats may be featured at once.
+  if (mappedFields.isFeatured === true) {
+    const isSold = (mappedFields.isSold as boolean | undefined) ?? existing.isSold;
+    const isUnderOffer = (mappedFields.isUnderOffer as boolean | undefined) ?? existing.isUnderOffer;
+    if (isSold || isUnderOffer) {
+      return res.status(400).json({ error: "Boats that are under offer or sold cannot be featured." });
+    }
+    if (!existing.isFeatured && (await countFeaturedBoats(id)) >= MAX_FEATURED_BOATS) {
+      return res.status(400).json({ error: `You can only have ${MAX_FEATURED_BOATS} featured boats at a time.` });
+    }
   }
 
   // If price is provided, also update cost string

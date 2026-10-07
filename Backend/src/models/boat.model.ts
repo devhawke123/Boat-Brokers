@@ -126,3 +126,9 @@ export function updateBoat(
   });
 }
 
+
+export const MAX_FEATURED_BOATS = 4;
+
+export function countFeaturedBoats(excludeId: number) {
+  return prisma.boat.count({ where: { isFeatured: true, isDeleted: false, id: { not: excludeId } } });
+}

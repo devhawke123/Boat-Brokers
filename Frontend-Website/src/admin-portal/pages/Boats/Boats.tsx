@@ -4,6 +4,8 @@ import { useAdminSession } from '../../data/useAdminSession'
 import { deleteBoat, fetchBoats, restoreBoat, updateBoatFeatured, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
 import BoatsTable, { type SaleStatus } from './sections/BoatsTable/BoatsTable'
 
+const MAX_FEATURED_BOATS = 4
+
 export default function Boats() {
   const { checkedSession } = useAdminSession()
   const [boats, setBoats] = useState<ApiBoat[]>([])
@@ -62,8 +64,20 @@ export default function Boats() {
   }
 
   async function handleFeaturedChange(boatId: number, isFeatured: boolean) {
-    setUpdatingId(boatId)
     setActionError(null)
+    if (isFeatured) {
+      const target = boats.find((boat) => boat.id === boatId)
+      if (target?.isSold || target?.isUnderOffer) {
+        setActionError('Boats that are under offer or sold cannot be featured.')
+        return
+      }
+      const featuredCount = boats.filter((boat) => boat.isFeatured && !boat.isDeleted && boat.id !== boatId).length
+      if (featuredCount >= MAX_FEATURED_BOATS) {
+        setActionError(`You can only have ${MAX_FEATURED_BOATS} featured boats at a time.`)
+        return
+      }
+    }
+    setUpdatingId(boatId)
     try {
       const updated = await updateBoatFeatured(boatId, isFeatured)
       setBoats((prev) => prev.map((boat) => (boat.id === boatId ? updated : boat)))
