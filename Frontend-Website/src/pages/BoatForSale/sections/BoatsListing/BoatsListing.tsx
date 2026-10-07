@@ -40,7 +40,7 @@ const DEFAULT_FILTERS: Filters = {
   sortBy: 'newest',
 }
 
-const PAGE_SIZE = 6
+const PAGE_SIZE = 50
 
 function formatK(value: number) {
   return value >= 1000 ? `£${Math.round(value / 1000)}k` : `£${value}`
