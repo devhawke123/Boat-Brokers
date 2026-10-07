@@ -102,7 +102,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 2xl:gap-6 2xl:px-5">
         <a href="/" className="flex shrink-0 items-center" aria-label="The Boat Brokers home">
-          <img src={logo} alt="The Boat Brokers" className="h-28 w-auto" />
+          <img src={logo} alt="The Boat Brokers" className="h-14 w-auto" />
         </a>
 
         <nav className="flex flex-wrap items-center text-white gap-3 max-nav:hidden 2xl:gap-5" aria-label="Primary">
