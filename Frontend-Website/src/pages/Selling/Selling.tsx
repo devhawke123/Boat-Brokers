@@ -1,4 +1,4 @@
-import buyingHeroBg from '../../assets/buyingselling.png'
+import sellingHeroBg from '../../assets/sellingheronew.png'
 import PageHero from '../../components/PageHero/PageHero'
 import SellingProcessSteps from './sections/SellingProcessSteps/SellingProcessSteps'
 import WhyUseABroker from './sections/WhyUseABroker/WhyUseABroker'
@@ -13,7 +13,7 @@ export default function Selling() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
       <PageHero
-        image={buyingHeroBg}
+        image={sellingHeroBg}
         activeLabel="Selling"
         title="The Selling Process"
         body="Ready to sell your boat? We make the process simple and straightforward, helping you present your boat to the right buyers and achieve the best possible outcome."
