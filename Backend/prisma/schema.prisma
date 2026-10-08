@@ -54,6 +54,8 @@ model Boat {
   galleyLength     String?
   bathroomLength   String?
   bedroomLength    String?
+  boatLength       String? @db.Text
+  dimensionsOther  String? @db.Text
 
   // Engine
   engine             String?
@@ -124,8 +126,6 @@ model Boat {
 
   // Other
   tv                  String?
-  covers              String?
-  navigationEquipment String?
   hullBuilder         String?
   fitOut              String?
   year                String?

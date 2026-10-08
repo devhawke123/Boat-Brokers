@@ -8,7 +8,6 @@ import heatingIcon from '../../../../assets/AddBoat/spec-tabs/heating.svg'
 import electricalIcon from '../../../../assets/AddBoat/spec-tabs/electrical.svg'
 import gasIcon from '../../../../assets/AddBoat/spec-tabs/gas.svg'
 import interiorIcon from '../../../../assets/AddBoat/spec-tabs/interior.svg'
-import otherIcon from '../../../../assets/AddBoat/spec-tabs/other.svg'
 
 export type SpecificationsValues = {
   // History
@@ -30,6 +29,8 @@ export type SpecificationsValues = {
   galleyLength: string
   bathroomLength: string
   bedroomLength: string
+  boatLength: string
+  dimensionsOther: string
 
   // Engine
   engine: string
@@ -89,8 +90,6 @@ export type SpecificationsValues = {
 
   // Other
   tv: string
-  covers: string
-  navigationEquipment: string
 }
 
 export const initialSpecificationsValues: SpecificationsValues = {
@@ -111,6 +110,8 @@ export const initialSpecificationsValues: SpecificationsValues = {
   galleyLength: '',
   bathroomLength: '',
   bedroomLength: '',
+  boatLength: '',
+  dimensionsOther: '',
 
   engine: '',
   hours: '',
@@ -164,8 +165,6 @@ export const initialSpecificationsValues: SpecificationsValues = {
   interiorExtraNotes: '',
 
   tv: '',
-  covers: '',
-  navigationEquipment: '',
 }
 
 export type SpecTab =
@@ -176,7 +175,6 @@ export type SpecTab =
   | 'electrical'
   | 'gas'
   | 'interior'
-  | 'other'
   | 'additional'
 
 const SPEC_TABS: { id: SpecTab; label: string; icon: string }[] = [
@@ -187,7 +185,6 @@ const SPEC_TABS: { id: SpecTab; label: string; icon: string }[] = [
   { id: 'electrical', label: 'Electrical', icon: electricalIcon },
   { id: 'gas', label: 'Gas', icon: gasIcon },
   { id: 'interior', label: 'Interior', icon: interiorIcon },
-  { id: 'other', label: 'Other', icon: otherIcon },
   { id: 'additional', label: 'Additional', icon: addFieldIcon },
 ]
 
@@ -279,6 +276,10 @@ export default function SpecificationsForm({
             {field('bathroomLength', 'Bathroom length', 'e.g. 6ft 1in')}
             {field('bedroomLength', 'Bedroom length', 'e.g. 10ft')}
           </FieldRow>
+          <FieldRow>
+            {field('boatLength', 'Boat length', 'e.g. 57ft')}
+            {field('dimensionsOther', 'Other', 'e.g. Beam 6ft 10in')}
+          </FieldRow>
         </div>
       )}
 
@@ -293,8 +294,12 @@ export default function SpecificationsForm({
             {field('bowthruster', 'Bowthruster', 'e.g. Fitted with tube only')}
           </FieldRow>
           <FieldRow>
+            {field('alternator', 'Alternator(s)', 'e.g. Twin 75Amp & 175Amp')}
             {field('weedhatch', 'Weedhatch', 'e.g. Quick release under rear deck')}
+          </FieldRow>
+          <FieldRow>
             {field('dieselTankCapacity', 'Diesel tank capacity', 'e.g. 180 litres approx.')}
+            {field('solarPanels', 'Solar panels', 'e.g. 3 x 175W with Victron MPPT controller')}
           </FieldRow>
           <FieldRow>{field('engineExtraNotes', 'Notes', 'e.g. N/A')}</FieldRow>
         </div>
@@ -320,20 +325,14 @@ export default function SpecificationsForm({
       {activeTab === 'electrical' && (
         <div className="flex flex-col gap-6">
           <FieldRow>
-            {field('alternator', 'Alternator', 'e.g. Twin 75Amp & 175Amp')}
             {field('batteries', 'Batteries', "e.g. 1 x starter Vetus lead acid & 4 Vetus 120Ah AGM's")}
-          </FieldRow>
-          <FieldRow>
             {field('lighting', 'Lighting', 'e.g. 12V LED lights throughout')}
+          </FieldRow>
+          <FieldRow>
             {field('inverterCharger', 'Inverter/charger', 'e.g. 1500W inverter & Victron 80Amp charger')}
-          </FieldRow>
-          <FieldRow>
             {field('landlineSocket', 'Landline socket', 'e.g. Stern')}
-            {field('galvanicIsolator', 'Galvanic isolator', 'e.g. Yes - Victron')}
           </FieldRow>
-          <FieldRow>
-            {field('solarPanels', 'Solar panels', 'e.g. 3 x 175W with Victron MPPT controller')}
-          </FieldRow>
+          <FieldRow>{field('galvanicIsolator', 'Galvanic isolator', 'e.g. Yes - Victron')}</FieldRow>
           <FieldRow>
             {field('electricalExtraNotes', 'Notes', 'e.g. Victron solar panels 3 x 175W controlled by Victron MPPT controller')}
           </FieldRow>
@@ -372,6 +371,7 @@ export default function SpecificationsForm({
             {field('saloonSeating', 'Saloon seating', 'e.g. Pullman dinette with 2 armchairs')}
             {field('saloonDinette', 'Saloon dinette', 'e.g. yes - Pullman style')}
           </FieldRow>
+          <FieldRow>{field('tv', 'Saloon TV', 'e.g. Saloon 24in Smart TV - By separate negotiation')}</FieldRow>
           <FieldRow>
             {field('galleyCooker', 'Galley cooker', 'e.g. Domino 2 ring hob & Thetford eye level oven/grill')}
             {field('galleyFridgeFreezer', 'Galley fridge/freezer', 'e.g. 12V Shoreline undercounter fridge & 12V freezer')}
@@ -390,22 +390,9 @@ export default function SpecificationsForm({
           </FieldRow>
           <FieldRow>
             {field('bedroomBed', 'Bedroom bed', 'e.g. 4ft 6in fixed double with 6in insert extension to 5ft (kingsize)')}
-            {field('bedroomDinette', 'Bedroom dinette', 'e.g. See saloon')}
-          </FieldRow>
-          <FieldRow>
             {field('bedroomWardrobeStorage', 'Bedroom wardrobe/storage', 'e.g. Fitted wardrobe and under-bed drawers')}
           </FieldRow>
           <FieldRow>{field('interiorExtraNotes', 'Notes', 'e.g. Double glazed hatch & bow doors')}</FieldRow>
-        </div>
-      )}
-
-      {activeTab === 'other' && (
-        <div className="flex flex-col gap-6">
-          <FieldRow>
-            {field('tv', 'TV', 'e.g. Saloon 24in Smart TV - By separate negotiation')}
-            {field('covers', 'Covers', 'e.g. Side hatch cover')}
-          </FieldRow>
-          <FieldRow>{field('navigationEquipment', 'Navigation equipment', 'e.g. Various')}</FieldRow>
         </div>
       )}
 

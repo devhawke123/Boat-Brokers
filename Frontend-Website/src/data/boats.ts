@@ -27,7 +27,6 @@ export type BoatDetail = {
   electrical: BoatSpec[]
   gas: BoatSpec[]
   interior: BoatSpec[]
-  other: BoatSpec[]
   additional: BoatSpec[]
   brochureUrl?: string
   videoUrl?: string
@@ -243,15 +242,18 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Galley length', boat.galleyLength],
         ['Bathroom length', boat.bathroomLength],
         ['Bedroom length', boat.bedroomLength],
+        ['Boat length', boat.boatLength],
+        ['Other', boat.dimensionsOther],
       ]),
       engineDetails: specs([
         ['Engine', boat.engine],
         ['Hours', boat.hours],
         ['Gearbox', boat.gearbox],
         ['Bowthruster', boat.bowthruster],
-        ['Weedhatch', boat.weedhatch],
         ['Alternator(s)', boat.alternator],
+        ['Weedhatch', boat.weedhatch],
         ['Diesel tank capacity', boat.dieselTankCapacity],
+        ['Solar panels', boat.solarPanels],
         ['Notes', boat.engineExtraNotes],
       ]),
       heating: specs([
@@ -268,7 +270,6 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ['Inverter/charger', boat.inverterCharger],
         ['Landline socket', boat.landlineSocket],
         ['Galvanic isolator', boat.galvanicIsolator],
-        ['Solar panels', boat.solarPanels],
         ['Notes', boat.electricalExtraNotes],
       ]),
       gas: specs([
@@ -301,7 +302,6 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
         ]),
         ...groupedSpecs('Bedroom', [
           ['Bed', boat.bedroomBed],
-          ['Dinette', boat.bedroomDinette],
           ['Wardrobe/storage', boat.bedroomWardrobeStorage],
         ]),
         ...groupedSpecs('Saloon', [
@@ -313,16 +313,6 @@ export function mapApiBoatToListing(boat: ApiBoat): BoatListing {
           ['Notes', boat.interiorExtraNotes ?? boat.galleyExtraNotes ?? boat.bathroomExtraNotes ?? boat.bedroomExtraNotes],
         ]),
       ],
-      other: specs([
-        ['Covers', boat.covers],
-        ['Navigation equipment', boat.navigationEquipment],
-        ['Hull builder', boat.hullBuilder],
-        ['Fit out', boat.fitOut],
-        ['Steel spec', boat.steelSpec],
-        ['Last service', boat.lastService],
-        ['Boat safety', boat.boatSafety],
-        ['Recent survey', boat.recentSurvey],
-      ]),
       additional: specs((boat.customFields ?? []).map((f) => [f.label, f.value] as [string, string])),
       // No fallback links: a missing brochure/video/tour disables its button on the detail page.
       brochureUrl: boat.brochureUrl ?? undefined,

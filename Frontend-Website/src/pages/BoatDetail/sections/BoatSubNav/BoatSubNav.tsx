@@ -1,5 +1,5 @@
 import type { BoatListing } from '../../../../data/boats'
-import { IconAnchor, IconChevronLeft } from '../../icons'
+import {  IconChevronLeft } from '../../icons'
 
 type BoatSubNavProps = {
   boat: BoatListing
@@ -13,10 +13,7 @@ export default function BoatSubNav({ boat }: BoatSubNavProps) {
         Back to search
       </a>
 
-      <div className="hidden items-center gap-2 sm:inline-flex">
-        <IconAnchor className="size-5 text-blue" />
-        <span className="font-body text-xl font-bold text-navy-dark capitalize">{boat.name} Brokerage</span>
-      </div>
+      
 
       <div className="flex items-center gap-4">
         <a

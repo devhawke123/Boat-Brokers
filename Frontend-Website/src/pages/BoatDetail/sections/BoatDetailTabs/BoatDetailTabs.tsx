@@ -9,11 +9,10 @@ const tabs = [
   'History',
   'Dimensions',
   'Engine',
-  'Water Heating',
+  'Water & Heating',
   'Electrical',
   'Gas',
   'Interior',
-  'Other',
   'Additional',
 ] as const
 type Tab = (typeof tabs)[number]
@@ -22,11 +21,10 @@ const tabDetailKey: Record<Tab, keyof BoatListing['detail']> = {
   History: 'history',
   Dimensions: 'dimensions',
   Engine: 'engineDetails',
-  'Water Heating': 'heating',
+  'Water & Heating': 'heating',
   Electrical: 'electrical',
   Gas: 'gas',
   Interior: 'interior',
-  Other: 'other',
   Additional: 'additional',
 }
 

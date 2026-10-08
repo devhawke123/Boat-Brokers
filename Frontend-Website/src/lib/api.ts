@@ -55,6 +55,9 @@ export type ApiBoat = {
   galleyLength: string | null
   bathroomLength: string | null
   bedroomLength: string | null
+  // Not stored by older backends — optional until the columns exist everywhere.
+  boatLength?: string | null
+  dimensionsOther?: string | null
 
   engine: string | null
   hours: string | null
@@ -117,8 +120,6 @@ export type ApiBoat = {
   bedroomExtraNotes: string | null
 
   tv: string | null
-  covers: string | null
-  navigationEquipment: string | null
   hullBuilder: string | null
   fitOut: string | null
   year: string | null

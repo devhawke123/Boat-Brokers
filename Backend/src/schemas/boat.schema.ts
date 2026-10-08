@@ -22,6 +22,8 @@ const OPTIONAL_STRING_FIELDS = [
   "galleyLength",
   "bathroomLength",
   "bedroomLength",
+  "boatLength",
+  "dimensionsOther",
   // Engine
   "engine",
   "hours",
@@ -82,8 +84,6 @@ const OPTIONAL_STRING_FIELDS = [
   "bedroomExtraNotes",
   // Other
   "tv",
-  "covers",
-  "navigationEquipment",
   "hullBuilder",
   "fitOut",
   "year",
