@@ -98,7 +98,6 @@ export default function BoatEditForm(props: BoatEditFormProps) {
   // Existing photo the admin picked as the cover; null = unchanged.
   const [mainImageId, setMainImageId] = useState<string | null>(null)
   const [sellerName, setSellerName] = useState('')
-  const [sellers, setSellers] = useState<ApiSeller[]>([])
   const [sellerId, setSellerId] = useState<number | null>(null)
 
   function valueOf(boat: ApiBoat | ApiBoatListing['boat'], key: string) {
@@ -164,8 +163,7 @@ export default function BoatEditForm(props: BoatEditFormProps) {
         .then((all) => {
           if (cancelled) return
           const usable = all.filter((seller) => seller.status !== 'LOST')
-          setSellers(usable)
-          // Existing catalogue boats are listed under the in-house seller.
+          // New admin boats are always listed under the in-house seller (Noel).
           const house = usable.find((seller) => seller.name.trim().toLowerCase() === 'boat brokers')
           applySeller(house ?? usable[0] ?? null)
         })
@@ -469,24 +467,6 @@ export default function BoatEditForm(props: BoatEditFormProps) {
           >
             {currentStep === 1 ? (
               <div className="flex flex-col gap-6">
-                {isCreating && (
-                  <label className="flex flex-col gap-2">
-                    <span className="text-[12px] font-semibold tracking-[0.6px] text-[#64748b] uppercase">
-                      Listed by <span className="text-[#dc2626]">*</span>
-                    </span>
-                    <select
-                      value={sellerId ?? ''}
-                      onChange={(event) => applySeller(sellers.find((seller) => seller.id === Number(event.target.value)) ?? null)}
-                      className="rounded-lg border border-[#e2e8f0] bg-white px-4 py-3 text-[16px] text-[#0f172a]"
-                    >
-                      {sellers.map((seller) => (
-                        <option key={seller.id} value={seller.id}>
-                          {seller.name} ({seller.email})
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                )}
                 <BasicInformationForm values={values} onChange={handleChange} />
               </div>
             ) : currentStep === 2 ? (
