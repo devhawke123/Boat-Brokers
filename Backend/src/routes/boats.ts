@@ -4,6 +4,7 @@ import {
   deleteBoatHandler,
   getBoat,
   listBoats,
+  purgeBoatHandler,
   restoreBoatHandler,
   updateBoatHandler,
 } from "../controllers/boat.controller";
@@ -14,6 +15,9 @@ export const boatsRouter = Router();
 boatsRouter.get("/", listBoats);
 boatsRouter.get("/:id", getBoat);
 boatsRouter.delete("/:id", deleteBoatHandler);
+boatsRouter.delete("/:id/permanent", (req, res, next) => {
+  purgeBoatHandler(req, res).catch(next);
+});
 boatsRouter.patch("/:id/restore", restoreBoatHandler);
 
 boatsRouter.post("/", (req, res, next) => {

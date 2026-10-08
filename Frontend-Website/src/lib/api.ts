@@ -232,6 +232,11 @@ export function deleteBoat(id: number): Promise<ApiBoat> {
   return apiDelete<ApiBoat>(`/boats/${id}`)
 }
 
+// Irreversible: removes an already-deleted boat (and its photos/listing) for good.
+export function permanentlyDeleteBoat(id: number): Promise<{ id: number }> {
+  return apiDelete<{ id: number }>(`/boats/${id}/permanent`)
+}
+
 export function restoreBoat(id: number): Promise<ApiBoat> {
   return apiPatch<ApiBoat>(`/boats/${id}/restore`, {})
 }

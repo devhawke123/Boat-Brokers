@@ -173,6 +173,9 @@ export const createBoatSchema = z.object({
   listerType: optionalTrimmed,
   additionalNotes: optionalTrimmed,
   agreedToContact: optionalBoolean,
+  // Admin portal "Add Boat": publish immediately (listing APPROVED) and skip the
+  // seller-submission notification emails.
+  adminCreated: optionalBoolean,
   // Seller-defined extra spec rows — these persist to BoatCustomField rows, not
   // to columns on the Boat itself.
   customFields: optionalCustomFields,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
-import { deleteBoat, fetchBoats, restoreBoat, updateBoatFeatured, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
+import { deleteBoat, fetchBoats, permanentlyDeleteBoat, restoreBoat, updateBoatFeatured, updateBoatSaleStatus, type ApiBoat } from '../../../lib/api'
 import BoatsTable, { type SaleStatus } from './sections/BoatsTable/BoatsTable'
 
 const MAX_FEATURED_BOATS = 4
@@ -42,6 +42,19 @@ export default function Boats() {
       setBoats((prev) => prev.map((boat) => (boat.id === boatId ? updated : boat)))
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Failed to update boat.')
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
+  async function handlePermanentDelete(boatId: number) {
+    setUpdatingId(boatId)
+    setActionError(null)
+    try {
+      await permanentlyDeleteBoat(boatId)
+      setBoats((prev) => prev.filter((boat) => boat.id !== boatId))
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to permanently delete boat.')
     } finally {
       setUpdatingId(null)
     }
@@ -93,9 +106,18 @@ export default function Boats() {
   return (
     <AdminShell mainClassName="bg-frost">
       <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold text-[#0f172a]">Boats</h1>
-          <p className="text-sm text-[#64748b]">Every boat currently live on the website — new submissions are moderated in Listings.</p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold text-[#0f172a]">Boats</h1>
+            <p className="text-sm text-[#64748b]">Every boat currently live on the website — new submissions are moderated in Listings.</p>
+          </div>
+          <a
+            href="/admin-portal/boats/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-navy-dark px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-navy-darkest"
+          >
+            <span aria-hidden="true" className="text-base leading-none">+</span>
+            Add Boat
+          </a>
         </div>
 
         {actionError && (
@@ -115,6 +137,7 @@ export default function Boats() {
           <BoatsTable
             boats={boats}
             onDeleteToggle={handleDeleteToggle}
+            onPermanentDelete={handlePermanentDelete}
             onSaleStatusChange={handleSaleStatusChange}
             onFeaturedChange={handleFeaturedChange}
             updatingId={updatingId}

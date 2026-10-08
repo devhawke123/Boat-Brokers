@@ -1,11 +1,15 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
+import fs from "fs";
+import path from "path";
 import {
   MAX_FEATURED_BOATS,
+  countBoatSales,
   countFeaturedBoats,
   createBoatWithListing,
   findAllBoats,
   findBoatById,
+  permanentlyDeleteBoat,
   restoreBoat,
   softDeleteBoat,
   updateBoat,
@@ -42,6 +46,46 @@ export async function deleteBoatHandler(req: Request, res: Response) {
   res.json(serializeBoat(boat));
 }
 
+const uploadsRoot = path.resolve(__dirname, "..", "..", "uploads");
+
+// Stored paths look like "/uploads/boats/abc.jpg" — resolve them under uploads/
+// and refuse anything that would escape it.
+function resolveUpload(stored: string) {
+  if (!stored.startsWith("/uploads/")) return null;
+  const abs = path.resolve(uploadsRoot, stored.slice("/uploads/".length));
+  return abs.startsWith(uploadsRoot + path.sep) ? abs : null;
+}
+
+// Admin-only "Delete permanently" on the Deleted tab. Irreversible, so it only
+// applies to boats that are already soft-deleted, and never to a boat with
+// recorded sales (those rows would be cascade-deleted with it).
+export async function purgeBoatHandler(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid boat id" });
+
+  const existing = await findBoatById(id, { includeDeleted: true });
+  if (!existing) return res.status(404).json({ error: "Boat not found" });
+  if (!existing.isDeleted) {
+    return res.status(400).json({ error: "Delete the boat first — only deleted boats can be permanently deleted." });
+  }
+  if ((await countBoatSales(id)) > 0) {
+    return res.status(409).json({ error: "This boat has recorded sales, so it can't be permanently deleted." });
+  }
+
+  const orphanedPaths = await permanentlyDeleteBoat(id);
+  for (const stored of orphanedPaths) {
+    const abs = resolveUpload(stored);
+    if (!abs) continue;
+    try {
+      fs.unlinkSync(abs);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== "ENOENT") console.error("Could not remove upload", abs, err);
+    }
+  }
+
+  res.json({ id });
+}
+
 export async function restoreBoatHandler(req: Request, res: Response) {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) return res.status(400).json({ error: "Invalid boat id" });
@@ -68,6 +112,7 @@ export async function createBoatHandler(req: Request, res: Response) {
     listerType,
     additionalNotes,
     agreedToContact,
+    adminCreated,
     customFields,
     ...specs
   } = parsed.data;
@@ -91,7 +136,11 @@ export async function createBoatHandler(req: Request, res: Response) {
     imagePaths,
     { sellTimeline, contactTime, listerType, additionalNotes, agreedToContact },
     customFields ?? [],
+    adminCreated ? "APPROVED" : undefined,
   );
+
+  // Admin-created boats go straight live — nobody to notify.
+  if (adminCreated) return res.status(201).json({ boat: serializeBoat(boat), listing: serializeListing(listing) });
 
   try {
     if (process.env.CONTACT_EMAIL) {

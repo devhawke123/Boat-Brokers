@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
 import AdminShell from '../../components/AdminShell/AdminShell'
 import { useAdminSession } from '../../data/useAdminSession'
-import { fetchListing, updateBoat, updateListingPreferences, type ApiBoatListing } from '../../../seller-portal/lib/api'
+import {
+  createBoat,
+  fetchListing,
+  fetchSellers,
+  updateBoat,
+  updateListingPreferences,
+  type ApiBoatListing,
+  type ApiSeller,
+} from '../../../seller-portal/lib/api'
 import { fetchBoat, type ApiBoat } from '../../../lib/api'
 import StepIndicator from '../../../seller-portal/pages/AddBoat/sections/StepIndicator/StepIndicator'
 import StepFormCard from '../../../seller-portal/components/StepFormCard/StepFormCard'
@@ -27,14 +35,19 @@ import KeyDetailsForm, {
   type KeyDetailsValues,
 } from '../../../seller-portal/pages/AddBoat/sections/KeyDetailsForm/KeyDetailsForm'
 import ReviewForm from '../../../seller-portal/pages/AddBoat/sections/ReviewForm/ReviewForm'
+import { isBasicInfoComplete } from '../../../seller-portal/pages/AddBoat/scoring'
 
 // A boat can be edited two ways: via its listing (the seller-submission
 // flow — Listings/SellerListingsTable) or directly by boat id (the Boats
 // catalog, which also covers the ~49 legacy boats that were seeded straight
-// onto the site with no BoatListing row at all).
-type BoatEditFormProps = { listingId: number } | { boatId: number }
+// onto the site with no BoatListing row at all). `create` reuses the same funnel
+// to add a brand-new boat on behalf of a chosen seller.
+type BoatEditFormProps = { listingId: number } | { boatId: number } | { create: true }
 
 const TOTAL_STEPS = 5
+
+// Admin-added boats still need a usable gallery, but not the seller flow's 5.
+const MIN_PHOTOS_FOR_NEW_BOAT = 1
 
 const MAX_PHOTO_SIZE_BYTES = 20 * 1024 * 1024
 const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -66,6 +79,7 @@ const STEP_META: Record<number, { title: string; subtitle: string }> = {
 type SellerInfo = { name: string; email: string; phone: string | null }
 
 export default function BoatEditForm(props: BoatEditFormProps) {
+  const isCreating = 'create' in props
   const hasListing = 'listingId' in props
   const { checkedSession } = useAdminSession()
   const [currentStep, setCurrentStep] = useState(1)
@@ -84,6 +98,8 @@ export default function BoatEditForm(props: BoatEditFormProps) {
   // Existing photo the admin picked as the cover; null = unchanged.
   const [mainImageId, setMainImageId] = useState<string | null>(null)
   const [sellerName, setSellerName] = useState('')
+  const [sellers, setSellers] = useState<ApiSeller[]>([])
+  const [sellerId, setSellerId] = useState<number | null>(null)
 
   function valueOf(boat: ApiBoat | ApiBoatListing['boat'], key: string) {
     const value = (boat as Record<string, unknown>)[key]
@@ -142,10 +158,31 @@ export default function BoatEditForm(props: BoatEditFormProps) {
 
   useEffect(() => {
     let cancelled = false
+    if (isCreating) {
+      // Nothing to load for a new boat except who it can be listed under.
+      fetchSellers()
+        .then((all) => {
+          if (cancelled) return
+          const usable = all.filter((seller) => seller.status !== 'LOST')
+          setSellers(usable)
+          // Existing catalogue boats are listed under the in-house seller.
+          const house = usable.find((seller) => seller.name.trim().toLowerCase() === 'boat brokers')
+          applySeller(house ?? usable[0] ?? null)
+        })
+        .catch((err: unknown) => {
+          if (!cancelled) setSubmitError(err instanceof Error ? err.message : 'Failed to load sellers.')
+        })
+        .finally(() => {
+          if (!cancelled) setIsLoading(false)
+        })
+      return () => {
+        cancelled = true
+      }
+    }
     setIsLoading(true)
     const request = hasListing
-      ? fetchListing(props.listingId).then((listing) => populateFromBoat(listing.boat, listing.seller, listing))
-      : fetchBoat(props.boatId, { includeDeleted: true }).then((boat) => populateFromBoat(boat, boat.seller))
+      ? fetchListing((props as { listingId: number }).listingId).then((listing) => populateFromBoat(listing.boat, listing.seller, listing))
+      : fetchBoat((props as { boatId: number }).boatId, { includeDeleted: true }).then((boat) => populateFromBoat(boat, boat.seller))
     request
       .catch((err: unknown) => {
         if (!cancelled) setSubmitError(err instanceof Error ? err.message : 'Failed to load boat.')
@@ -157,7 +194,20 @@ export default function BoatEditForm(props: BoatEditFormProps) {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasListing, hasListing ? props.listingId : props.boatId])
+  }, [isCreating, hasListing, 'listingId' in props ? props.listingId : 'boatId' in props ? props.boatId : 0])
+
+  // Contact details on Key Details come from the seller the boat is listed under.
+  function applySeller(seller: ApiSeller | null) {
+    setSellerId(seller?.id ?? null)
+    setSellerName(seller?.name ?? '')
+    setKeyDetailsValues((prev) => ({
+      ...prev,
+      fullName: seller?.name ?? '',
+      email: seller?.email ?? '',
+      phone: seller?.phone ?? '',
+      city: seller?.location ?? '',
+    }))
+  }
 
   if (!checkedSession) return null
 
@@ -193,14 +243,30 @@ export default function BoatEditForm(props: BoatEditFormProps) {
   }
 
   async function handleContinue() {
+    if (isCreating) {
+      if (currentStep === 1 && (sellerId === null || !isBasicInfoComplete(values))) {
+        setStepError(
+          sellerId === null
+            ? 'Choose which seller this boat is listed under.'
+            : 'Please fill in all required fields (marked *) before continuing.',
+        )
+        return
+      }
+      if (currentStep === 3 && mediaValues.photos.length < MIN_PHOTOS_FOR_NEW_BOAT) {
+        setStepError(`Please upload at least ${MIN_PHOTOS_FOR_NEW_BOAT} photo before continuing.`)
+        return
+      }
+    }
     if (currentStep < TOTAL_STEPS) {
       setStepError(null)
       setMediaError(null)
       setCurrentStep((step) => Math.min(step + 1, TOTAL_STEPS))
       return
     }
-    if (boatId === null) {
-      setStepError('Boat details are still loading. Please try again.')
+    if (isCreating ? sellerId === null : boatId === null) {
+      setStepError(
+        isCreating ? 'Choose which seller this boat is listed under.' : 'Boat details are still loading. Please try again.',
+      )
       return
     }
 
@@ -210,22 +276,29 @@ export default function BoatEditForm(props: BoatEditFormProps) {
     try {
       const formData = new FormData()
       const sanitizedPrice = values.price.replace(/[^0-9]/g, '')
-      formData.set('price', sanitizedPrice)
+      // On create, empty values are omitted entirely (the backend treats absent as unset).
+      if (sanitizedPrice || !isCreating) formData.set('price', sanitizedPrice)
       formData.set('name', values.boatName)
+      if (isCreating) {
+        formData.set('sellerId', String(sellerId))
+        formData.set('adminCreated', 'true')
+      }
 
       for (const [key, value] of Object.entries(values)) {
         if (key === 'price' || key === 'boatName') continue
+        if (isCreating && !value.trim()) continue
         formData.set(BASIC_INFO_TO_BOAT_FIELD[key as keyof BasicInformationValues] ?? key, value.trim())
       }
 
       for (const [key, value] of Object.entries(specValues)) {
+        if (isCreating && !value.trim()) continue
         formData.set(key, value.trim())
       }
 
       const extraFields = customFields.fields
         .map((field) => ({ label: field.label.trim(), value: field.value.trim() }))
         .filter((field) => field.label && field.value)
-      formData.set('customFields', JSON.stringify(extraFields))
+      if (!isCreating || extraFields.length) formData.set('customFields', JSON.stringify(extraFields))
 
       if (mediaValues.videoUrl.trim()) formData.set('videoUrl', mediaValues.videoUrl.trim())
       if (mediaValues.virtualTourUrl.trim()) formData.set('virtualTourUrl', mediaValues.virtualTourUrl.trim())
@@ -246,7 +319,11 @@ export default function BoatEditForm(props: BoatEditFormProps) {
       if (keyDetailsValues.additionalNotes.trim()) formData.set('additionalNotes', keyDetailsValues.additionalNotes.trim())
       formData.set('agreedToContact', String(keyDetailsValues.agreedToContact))
 
-      await updateBoat(boatId, formData)
+      if (isCreating) {
+        await createBoat(formData)
+      } else {
+        await updateBoat(boatId!, formData)
+      }
       if (hasListing) {
         await updateListingPreferences(props.listingId, {
           sellTimeline: keyDetailsValues.sellTimeline,
@@ -326,7 +403,11 @@ export default function BoatEditForm(props: BoatEditFormProps) {
     setKeyDetailsValues((prev) => ({ ...prev, [field]: value }))
   }
 
-  const { title, subtitle } = STEP_META[currentStep]
+  const stepMeta = STEP_META[currentStep]
+  const title = stepMeta.title
+  const subtitle = isCreating
+    ? stepMeta.subtitle.replace(/^Edit/, 'Add').replace(/^Manage/, 'Add').replace('this boat', 'the boat')
+    : stepMeta.subtitle
 
   if (isLoading) {
     return (
@@ -341,9 +422,13 @@ export default function BoatEditForm(props: BoatEditFormProps) {
       <div className="flex w-full flex-col gap-5 p-4 sm:p-6 lg:p-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="font-display text-h4 capitalize text-[#0f172a]">Edit Boat</h1>
+            <h1 className="font-display text-h4 capitalize text-[#0f172a]">{isCreating ? 'Add Boat' : 'Edit Boat'}</h1>
             <p className="text-[16px] text-[#64748b]">
-              {sellerName ? `Listed by ${sellerName}.` : 'Edit any field on this listing.'}
+              {isCreating
+                ? 'Add a boat directly to the website — it goes live immediately.'
+                : sellerName
+                  ? `Listed by ${sellerName}.`
+                  : 'Edit any field on this listing.'}
             </p>
           </div>
 
@@ -368,14 +453,42 @@ export default function BoatEditForm(props: BoatEditFormProps) {
             onCancel={handleCancel}
             onBack={handleBack}
             onContinue={handleContinue}
-            continueLabel={currentStep === TOTAL_STEPS ? (isSubmitting ? 'Saving...' : 'Save Changes') : 'Save & Continue'}
+            continueLabel={
+              currentStep === TOTAL_STEPS
+                ? isSubmitting
+                  ? 'Saving...'
+                  : isCreating
+                    ? 'Add Boat'
+                    : 'Save Changes'
+                : 'Save & Continue'
+            }
             continueDisabled={currentStep === TOTAL_STEPS && isSubmitting}
             showAddField={currentStep === 2}
             onAddField={handleAddFieldShortcut}
             showBack={currentStep > 1}
           >
             {currentStep === 1 ? (
-              <BasicInformationForm values={values} onChange={handleChange} />
+              <div className="flex flex-col gap-6">
+                {isCreating && (
+                  <label className="flex flex-col gap-2">
+                    <span className="text-[12px] font-semibold tracking-[0.6px] text-[#64748b] uppercase">
+                      Listed by <span className="text-[#dc2626]">*</span>
+                    </span>
+                    <select
+                      value={sellerId ?? ''}
+                      onChange={(event) => applySeller(sellers.find((seller) => seller.id === Number(event.target.value)) ?? null)}
+                      className="rounded-lg border border-[#e2e8f0] bg-white px-4 py-3 text-[16px] text-[#0f172a]"
+                    >
+                      {sellers.map((seller) => (
+                        <option key={seller.id} value={seller.id}>
+                          {seller.name} ({seller.email})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                <BasicInformationForm values={values} onChange={handleChange} />
+              </div>
             ) : currentStep === 2 ? (
               <SpecificationsForm
                 values={specValues}
@@ -400,7 +513,7 @@ export default function BoatEditForm(props: BoatEditFormProps) {
               />
             ) : currentStep === 4 ? (
               <div className="flex flex-col gap-3">
-                {!hasListing && (
+                {!hasListing && !isCreating && (
                   <p className="rounded-lg border border-[#fde68a] bg-[#fffbeb] px-4 py-2 text-[13px] text-[#92400e]">
                     This boat has no seller submission attached, so timeline/contact preferences below won&rsquo;t be saved.
                   </p>

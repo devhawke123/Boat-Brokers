@@ -207,6 +207,10 @@ function App() {
     if (Number.isInteger(sellerId)) return <SellerForm sellerId={sellerId} />
   }
 
+  if (pathname === '/admin-portal/boats/new') {
+    return <BoatEditForm create />
+  }
+
   if (pathname === '/admin-portal/boats') {
     return <Boats />
   }

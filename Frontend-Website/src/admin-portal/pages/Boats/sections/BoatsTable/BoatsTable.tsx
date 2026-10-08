@@ -13,6 +13,7 @@ export type SaleStatus = 'Live' | 'Under Offer' | 'Sold'
 type BoatsTableProps = {
   boats: ApiBoat[]
   onDeleteToggle: (boatId: number, nextDeleted: boolean) => void
+  onPermanentDelete: (boatId: number) => void
   onSaleStatusChange: (boatId: number, status: SaleStatus) => void
   onFeaturedChange: (boatId: number, isFeatured: boolean) => void
   updatingId: number | null
@@ -72,6 +73,7 @@ const pageSizeOptions = [10, 20, 50]
 export default function BoatsTable({
   boats,
   onDeleteToggle,
+  onPermanentDelete,
   onSaleStatusChange,
   onFeaturedChange,
   updatingId,
@@ -83,11 +85,14 @@ export default function BoatsTable({
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
-    return boats.filter((boat) => {
-      const matchesSearch =
-        query === '' || boat.name.toLowerCase().includes(query) || boat.seller.name.toLowerCase().includes(query)
-      return matchesTab(boat, activeTab) && matchesSearch
-    })
+    return boats
+      .filter((boat) => {
+        const matchesSearch =
+          query === '' || boat.name.toLowerCase().includes(query) || boat.seller.name.toLowerCase().includes(query)
+        return matchesTab(boat, activeTab) && matchesSearch
+      })
+      // Ids are auto-incrementing, so the highest id is the most recently created boat.
+      .sort((a, b) => b.id - a.id)
   }, [boats, activeTab, search])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
@@ -226,13 +231,28 @@ export default function BoatsTable({
                         </>
                       )}
                       {boat.isDeleted ? (
-                        <ActionButton
-                          label="Restore"
-                          variant="approve"
-                          icon={RestoreIcon}
-                          disabled={updatingId === boat.id}
-                          onClick={() => onDeleteToggle(boat.id, false)}
-                        />
+                        <>
+                          <ActionButton
+                            label="Restore"
+                            variant="approve"
+                            icon={RestoreIcon}
+                            disabled={updatingId === boat.id}
+                            onClick={() => onDeleteToggle(boat.id, false)}
+                          />
+                          <ActionButton
+                            label="Delete Permanently"
+                            variant="delete"
+                            icon={TrashIcon}
+                            disabled={updatingId === boat.id}
+                            onClick={async () => {
+                              const confirmed = await confirmDialog(
+                                `Permanently delete "${boat.name}"? This removes the boat, its photos and its listing for good and cannot be undone.`,
+                                { title: 'Delete permanently' },
+                              )
+                              if (confirmed) onPermanentDelete(boat.id)
+                            }}
+                          />
+                        </>
                       ) : (
                         <ActionButton
                           label="Delete"

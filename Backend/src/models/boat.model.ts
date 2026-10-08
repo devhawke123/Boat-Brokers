@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { ListingStatus, Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { listingInclude } from "./boatListing.model";
 
@@ -41,6 +41,37 @@ export function restoreBoat(id: number) {
   return prisma.boat.update({ where: { id }, data: { isDeleted: false }, include: boatInclude });
 }
 
+export function countBoatSales(id: number) {
+  return prisma.sale.count({ where: { boatId: id } });
+}
+
+// Hard delete. Child rows (images, custom fields, listings and their comments,
+// bookings) go with the boat via onDelete: Cascade. Returns the stored upload
+// paths that were referenced so the caller can remove the files from disk —
+// but only those no other boat still points at.
+export async function permanentlyDeleteBoat(id: number) {
+  const boat = await prisma.boat.findUnique({
+    where: { id },
+    select: { imageUrl: true, brochureUrl: true, images: { select: { path: true } } },
+  });
+  if (!boat) return [];
+
+  const candidates = [boat.imageUrl, boat.brochureUrl, ...boat.images.map((image) => image.path)].filter(
+    (value): value is string => Boolean(value),
+  );
+
+  await prisma.boat.delete({ where: { id } });
+
+  const stillUsed = new Set<string>();
+  for (const stored of candidates) {
+    const used = await prisma.boat.count({
+      where: { OR: [{ imageUrl: stored }, { brochureUrl: stored }, { images: { some: { path: stored } } }] },
+    });
+    if (used > 0) stillUsed.add(stored);
+  }
+  return [...new Set(candidates)].filter((stored) => !stillUsed.has(stored));
+}
+
 type ListingPreferences = Pick<
   Prisma.BoatListingUncheckedCreateInput,
   "sellTimeline" | "contactTime" | "listerType" | "additionalNotes" | "agreedToContact"
@@ -54,6 +85,7 @@ export function createBoatWithListing(
   imagePaths: string[],
   listingPreferences: ListingPreferences = {},
   customFields: CustomFieldInput[] = [],
+  listingStatus?: ListingStatus,
 ) {
   return prisma.$transaction(async (tx) => {
     const boat = await tx.boat.create({
@@ -69,7 +101,7 @@ export function createBoatWithListing(
     });
 
     const listing = await tx.boatListing.create({
-      data: { boatId: boat.id, sellerId, ...listingPreferences },
+      data: { boatId: boat.id, sellerId, ...(listingStatus ? { status: listingStatus } : {}), ...listingPreferences },
       include: listingInclude,
     });
 
