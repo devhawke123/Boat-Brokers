@@ -1,4 +1,4 @@
-import heroBg from '../../assets/blog/blog-hero-bg.png'
+import heroBg from '../../assets/blogpageherobanenrnew.png'
 import PageHero from '../../components/PageHero/PageHero'
 import BlogListing from './sections/BlogListing/BlogListing'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
