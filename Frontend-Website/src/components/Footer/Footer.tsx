@@ -124,6 +124,15 @@ export default function Footer() {
             <a href="mailto:info@theboatbrokers.co.uk" className="underline">
               info@theboatbrokers.co.uk
             </a>
+            <address className="not-italic">
+              10 Harbury Close
+              <br />
+              Redditch
+              <br />
+              Worcestershire
+              <br />
+              B98 0EF
+            </address>
           </div>
           <img src={britishMarine} alt="British Marine - Leading the Industry" className="h-auto w-[13.25rem]" />
         </div>
