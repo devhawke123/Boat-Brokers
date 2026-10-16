@@ -1,3 +1,5 @@
+import Seo from './components/Seo/Seo'
+import { seoForPath } from './lib/seo'
 import Home from './pages/Home/Home'
 import About from './pages/About/About'
 import Buying from './pages/Buying/Buying'
@@ -53,9 +55,7 @@ import Blogs from './admin-portal/pages/Blogs/Blogs'
 import BlogPostForm from './admin-portal/pages/BlogPostForm/BlogPostForm'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
-function App() {
-  const { pathname } = window.location
-
+function renderRoute(pathname: string) {
   if (pathname === '/about') {
     return <About />
   }
@@ -318,6 +318,18 @@ function App() {
   }
 
   return <Home />
+}
+
+function App() {
+  const { pathname } = window.location
+  const seo = seoForPath(pathname)
+
+  return (
+    <>
+      {seo && <Seo {...seo} />}
+      {renderRoute(pathname)}
+    </>
+  )
 }
 
 export default App

@@ -3,6 +3,8 @@ import Navbar from '../../components/Navbar/Navbar'
 import Button from '../../components/Button/Button'
 import Footer from '../../components/Footer/Footer'
 import BlogDetailView from '../../components/BlogDetailView/BlogDetailView'
+import Seo from '../../components/Seo/Seo'
+import { SITE_URL, absoluteUrl, organizationJsonLd } from '../../lib/seo'
 
 type BlogDetailProps = {
   slug: string
@@ -41,5 +43,60 @@ export default function BlogDetail({ slug }: BlogDetailProps) {
     )
   }
 
-  return <BlogDetailView post={post} />
+  const path = `/blog/${post.slug}`
+  const plainText = post.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  const description = truncate(plainText || post.title, 155)
+  const published = new Date(post.date)
+  const image = absoluteUrl(post.image)
+
+  return (
+    <>
+      <Seo
+        title={post.title}
+        description={description}
+        path={path}
+        image={post.image}
+        type="article"
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: post.title,
+            description,
+            image,
+            // post.date is free text from the admin; only emit it when it parses.
+            // Local date parts, not toISOString(), which shifts the day for non-UTC timezones.
+            ...(Number.isNaN(published.getTime())
+              ? {}
+              : {
+                  datePublished: [
+                    published.getFullYear(),
+                    String(published.getMonth() + 1).padStart(2, '0'),
+                    String(published.getDate()).padStart(2, '0'),
+                  ].join('-'),
+                }),
+            author: { '@type': 'Person', name: post.author },
+            publisher: { '@id': `${SITE_URL}/#organization` },
+            mainEntityOfPage: `${SITE_URL}${path}`,
+          },
+          organizationJsonLd,
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+              { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}${path}` },
+            ],
+          },
+        ]}
+      />
+      <BlogDetailView post={post} />
+    </>
+  )
+}
+
+function truncate(text: string, max: number) {
+  if (text.length <= max) return text
+  return `${text.slice(0, max - 1).replace(/\s+\S*$/, '')}…`
 }

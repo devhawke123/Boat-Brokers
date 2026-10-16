@@ -1,4 +1,6 @@
-import { useBoatBySlug } from '../../data/boats'
+import { formatPrice, useBoatBySlug } from '../../data/boats'
+import Seo from '../../components/Seo/Seo'
+import { SITE_URL, absoluteUrl, organizationJsonLd } from '../../lib/seo'
 import PageHero from '../../components/PageHero/PageHero'
 import BoatSubNav from './sections/BoatSubNav/BoatSubNav'
 import BoatDetailContent from './sections/BoatDetailContent/BoatDetailContent'
@@ -45,8 +47,70 @@ export default function BoatDetail({ slug }: BoatDetailProps) {
     )
   }
 
+  const path = `/boats/${boat.slug}`
+  const known = (value: string) => value && value !== 'N/A'
+  // boatType defaults to the plural category label ("Narrowboats").
+  const summary = [boat.length, boat.detail.sternType, boat.boatType.replace(/s$/, '')]
+    .filter(known)
+    .join(' ')
+  const description = [
+    `${boat.name}${summary ? `, a ${summary}` : ''} for sale`,
+    known(boat.builder) ? `built by ${boat.builder}` : null,
+    boat.location !== 'Location available on request' ? `located in ${boat.location}` : null,
+    boat.priceValue > 0 ? `Asking price ${formatPrice(boat.priceValue)}` : null,
+  ]
+    .filter(Boolean)
+    .join(', ')
+    .concat('. Book a viewing with The Boat Brokers.')
+  const availability =
+    boat.status === 'sold'
+      ? 'https://schema.org/SoldOut'
+      : boat.status === 'under-offer'
+        ? 'https://schema.org/LimitedAvailability'
+        : 'https://schema.org/InStock'
+
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      <Seo
+        title={`${boat.name} - Narrowboat for Sale${boat.location !== 'Location available on request' ? ` in ${boat.location}` : ''}`}
+        description={description}
+        path={path}
+        image={boat.image}
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: boat.name,
+            description: boat.detail.overview[0] ?? description,
+            image: boat.images.map((src) => absoluteUrl(src)).filter(Boolean),
+            category: 'Narrowboat',
+            url: `${SITE_URL}${path}`,
+            ...(known(boat.builder) ? { brand: { '@type': 'Brand', name: boat.builder } } : {}),
+            ...(boat.priceValue > 0
+              ? {
+                  offers: {
+                    '@type': 'Offer',
+                    price: boat.priceValue,
+                    priceCurrency: 'GBP',
+                    availability,
+                    url: `${SITE_URL}${path}`,
+                    seller: { '@id': `${SITE_URL}/#organization` },
+                  },
+                }
+              : {}),
+          },
+          organizationJsonLd,
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Boats for Sale', item: `${SITE_URL}/boats-for-sale` },
+              { '@type': 'ListItem', position: 3, name: boat.name, item: `${SITE_URL}${path}` },
+            ],
+          },
+        ]}
+      />
       <PageHero
         image={boat.image}
         activeLabel="Boats for Sale"
