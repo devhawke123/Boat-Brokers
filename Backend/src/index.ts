@@ -20,6 +20,7 @@ import { blogAdminRouter } from "./routes/blogAdmin";
 import { contactRouter } from "./routes/contact";
 import { valuationRouter } from "./routes/valuation";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import { prisma } from "./lib/prisma";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -39,8 +40,13 @@ app.use(cors({ origin: allowedOrigins.length > 1 ? allowedOrigins : allowedOrigi
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+app.get("/api/health", async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: "ok" });
+  } catch {
+    res.status(503).json({ status: "db_unavailable" });
+  }
 });
 
 app.use("/api/boats", boatsRouter);
