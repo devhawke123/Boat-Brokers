@@ -1,4 +1,5 @@
 import { useBoatBySlug } from '../../data/boats'
+import Seo from '../../components/Seo/Seo'
 import BoatBookViewing from './sections/BoatBookViewing/BoatBookViewing'
 import Button from '../../components/Button/Button'
 import Navbar from '../../components/Navbar/Navbar'
@@ -10,6 +11,7 @@ type BoatViewingProps = {
 
 export default function BoatViewing({ slug }: BoatViewingProps) {
   const { boat, loading, error } = useBoatBySlug(slug)
+  const path = `/boats/${slug}/book-viewing`
 
   const details = boat
     ? [
@@ -23,6 +25,21 @@ export default function BoatViewing({ slug }: BoatViewingProps) {
 
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      {boat ? (
+        <Seo
+          title={`Book a Viewing — ${boat.name}`}
+          description={`Book a viewing to see ${boat.name} in person with The Boat Brokers.`}
+          path={path}
+          image={boat.image}
+        />
+      ) : (
+        <Seo
+          title={loading ? 'Book a Viewing' : 'Boat Not Found'}
+          description="Book a viewing with The Boat Brokers."
+          path={path}
+          noindex
+        />
+      )}
       <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
         <Navbar activeLabel="Boats for Sale" />
         {loading ? (

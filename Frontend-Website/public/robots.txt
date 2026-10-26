@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /seller-portal/
+Disallow: /admin-portal/
+
+Sitemap: https://theboatbrokers.co.uk/sitemap.xml

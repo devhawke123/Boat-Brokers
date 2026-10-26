@@ -171,8 +171,9 @@ Sub-pages nest a full page folder inside the parent (`pages/AreasWeServe/Birming
 `src/App.tsx` is a hand-rolled `window.location.pathname` if-ladder. No router library; all links are plain `<a href>` full page loads.
 
 - **More specific checks MUST come before parent-path checks** (`/blog/:slug` before `/blog`). *Why: the ladder returns on first match.*
-- The catch-all returns `<Home />` — there is no 404 page.
-- `vercel.json` provides the SPA rewrite.
+- `/` returns `<Home />`. Any other unmatched public path returns `<NotFound />` (soft 404 in the SPA; HTTP status still depends on the VPS reverse-proxy SPA fallback).
+- Public pages set unique title/description/OG tags via `components/Seo/Seo.tsx`. Seller and admin portals set `noindex`.
+- Static `public/robots.txt` and `public/sitemap.xml` ship with the build. SPA fallback for deep links is configured on the VPS (not Vercel).
 
 ---
 

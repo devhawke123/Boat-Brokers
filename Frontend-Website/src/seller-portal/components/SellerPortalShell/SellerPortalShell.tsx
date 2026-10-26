@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import Seo from '../../../components/Seo/Seo'
 import Sidebar from '../Sidebar/Sidebar'
 import { MenuIcon } from '../Sidebar/icons'
 import sidebarLogo from '../../assets/Sidebar/sidebar-logo.png'
@@ -10,9 +11,16 @@ type SellerPortalShellProps = {
 
 export default function SellerPortalShell({ children, mainClassName = 'bg-frost' }: SellerPortalShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const path = typeof window !== 'undefined' ? window.location.pathname : '/seller-portal'
 
   return (
     <div className="flex h-svh flex-col overflow-hidden lg:flex-row">
+      <Seo
+        title="Seller Portal"
+        description="Manage your boat listings with The Boat Brokers seller portal."
+        path={path}
+        noindex
+      />
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex h-14 shrink-0 items-center gap-3 border-b border-[#1f2c4c] bg-[#0f172a] px-4 lg:hidden">

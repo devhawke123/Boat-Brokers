@@ -1,4 +1,5 @@
 import buyingHeroBg from '../../assets/buyingselling.png'
+import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import BuyingProcessSteps from './sections/BuyingProcessSteps/BuyingProcessSteps'
 import SurveyGuide from './sections/SurveyGuide/SurveyGuide'
@@ -11,6 +12,12 @@ import Footer from '../../components/Footer/Footer'
 export default function Buying() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      <Seo
+        title="Buying a Narrowboat — The Buying Process"
+        description="Buying a boat doesn't have to be complicated. From finding the right narrowboat to completing the purchase, The Boat Brokers guides you through every step."
+        path="/buying"
+        image={buyingHeroBg}
+      />
       <PageHero
         image={buyingHeroBg}
         activeLabel="Buying"

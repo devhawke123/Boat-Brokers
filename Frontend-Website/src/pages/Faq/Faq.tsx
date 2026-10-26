@@ -1,4 +1,5 @@
 import heroBg from '../../assets/faq-hero-bg.png'
+import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import FaqSection from '../../components/Faq/Faq'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -7,6 +8,12 @@ import Footer from '../../components/Footer/Footer'
 export default function Faq() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      <Seo
+        title="Frequently Asked Questions"
+        description="Clear answers to common questions about buying and selling narrowboats and canal boats with The Boat Brokers."
+        path="/faq"
+        image={heroBg}
+      />
       <PageHero
         image={heroBg}
         activeLabel=""

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import Seo from '../../../components/Seo/Seo'
 import Sidebar from '../Sidebar/Sidebar'
 import { MenuIcon } from '../Sidebar/icons'
 import AdminDialogHost from '../AdminDialog/AdminDialog'
@@ -11,9 +12,16 @@ type AdminShellProps = {
 
 export default function AdminShell({ children, mainClassName = 'bg-frost' }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const path = typeof window !== 'undefined' ? window.location.pathname : '/admin-portal'
 
   return (
     <div className="flex h-svh flex-col overflow-hidden lg:flex-row">
+      <Seo
+        title="Admin Portal"
+        description="The Boat Brokers admin portal."
+        path={path}
+        noindex
+      />
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex h-14 shrink-0 items-center gap-3 border-b border-[#1f2c4c] bg-[#0f172a] px-4 lg:hidden">

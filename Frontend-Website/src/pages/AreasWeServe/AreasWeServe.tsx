@@ -1,4 +1,5 @@
 import heroBg from '../../assets/areasweserve2.png'
+import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import AreasWeServeAbout from './sections/AreasWeServeAbout/AreasWeServeAbout'
 import AreasWeServeCoverage from './sections/AreasWeServeCoverage/AreasWeServeCoverage'
@@ -12,6 +13,12 @@ import Footer from '../../components/Footer/Footer'
 export default function AreasWeServe() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-10">
+      <Seo
+        title="Areas We Serve — Midlands Narrowboat Brokerage"
+        description="Specialist narrowboat and canal boat brokerage across the West Midlands, Worcestershire, Warwickshire, Birmingham, and Wolverhampton. Free valuations. No upfront fees."
+        path="/areas-we-serve"
+        image={heroBg}
+      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

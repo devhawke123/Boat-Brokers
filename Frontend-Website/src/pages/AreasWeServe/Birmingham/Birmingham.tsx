@@ -1,4 +1,5 @@
 import heroBg from '../../../assets/birminghamabout.jpg'
+import Seo from '../../../components/Seo/Seo'
 import PageHero from '../../../components/PageHero/PageHero'
 import BirminghamWhyUs from './sections/BirminghamWhyUs/BirminghamWhyUs'
 import BirminghamListings from './sections/BirminghamListings/BirminghamListings'
@@ -12,6 +13,12 @@ import Footer from '../../../components/Footer/Footer'
 export default function Birmingham() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      <Seo
+        title="Narrowboat Broker Birmingham"
+        description="Specialist narrowboat and canal boat broker in Birmingham. Serving the Birmingham Canal Navigations with free valuations and no upfront fees."
+        path="/areas-we-serve/birmingham"
+        image={heroBg}
+      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

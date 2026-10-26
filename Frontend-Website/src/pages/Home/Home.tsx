@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Seo from '../../components/Seo/Seo'
 import Hero from './sections/Hero/Hero'
 import AboutUs from './sections/AboutUs/AboutUs'
 import FeaturedBoats from './sections/FeaturedBoats/FeaturedBoats'
@@ -18,6 +19,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-0">
+      <Seo
+        title="Narrowboat & Canal Boat Brokers | The Boat Brokers"
+        description="The Boat Brokers — specialist narrowboat and canal boat brokerage across the Midlands. Buy and sell with expert guidance, free valuations, and no upfront fees."
+        path="/"
+      />
       <Hero />
       <AboutUs />
       <FeaturedBoats />

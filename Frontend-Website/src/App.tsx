@@ -1,6 +1,7 @@
 import Seo from './components/Seo/Seo'
 import { seoForPath } from './lib/seo'
 import Home from './pages/Home/Home'
+import NotFound from './pages/NotFound/NotFound'
 import About from './pages/About/About'
 import Buying from './pages/Buying/Buying'
 import Selling from './pages/Selling/Selling'
@@ -317,7 +318,11 @@ function renderRoute(pathname: string) {
     return <AdminPortalNotFound />
   }
 
-  return <Home />
+  if (pathname === '/' || pathname === '') {
+    return <Home />
+  }
+
+  return <NotFound />
 }
 
 function App() {

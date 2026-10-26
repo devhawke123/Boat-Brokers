@@ -1,4 +1,5 @@
 import heroBg from '../../assets/book-a-viewing-hero-bg.png'
+import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import BookAViewingCalendar from './sections/BookAViewingCalendar/BookAViewingCalendar'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -7,6 +8,12 @@ import Footer from '../../components/Footer/Footer'
 export default function BookAViewing() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
+      <Seo
+        title="Book a Viewing"
+        description="Book a viewing with The Boat Brokers and see your next narrowboat or canal boat in person. Expert guidance from appointment to completion."
+        path="/book-a-viewing"
+        image={heroBg}
+      />
       <PageHero
         image={heroBg}
         activeLabel="Book a Viewing"
