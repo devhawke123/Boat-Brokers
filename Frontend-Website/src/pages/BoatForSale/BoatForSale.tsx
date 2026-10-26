@@ -1,5 +1,4 @@
 import boatsHeroBg from '../../assets/BoatsForSale2 (2).png'
-import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import BoatsListing from './sections/BoatsListing/BoatsListing'
 import GetInTouch from './sections/GetInTouch/GetInTouch'
@@ -9,12 +8,6 @@ import Footer from '../../components/Footer/Footer'
 export default function BoatForSale() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Narrowboats & Canal Boats for Sale"
-        description="Browse carefully selected narrowboats and canal boats for sale across the Midlands. Find a boat that fits your lifestyle, plans, and budget with The Boat Brokers."
-        path="/boats-for-sale"
-        image={boatsHeroBg}
-      />
       <PageHero
         image={boatsHeroBg}
         activeLabel="Boats for Sale"

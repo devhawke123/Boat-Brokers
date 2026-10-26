@@ -1,5 +1,4 @@
 import heroBg from '../../assets/blogpageherobanenrnew.png'
-import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import BlogListing from './sections/BlogListing/BlogListing'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -8,12 +7,6 @@ import Footer from '../../components/Footer/Footer'
 export default function Blog() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Boat Brokers Blog"
-        description="Expert knowledge, guidance, and insights for buying and selling narrowboats with confidence — from The Boat Brokers."
-        path="/blog"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel="More"

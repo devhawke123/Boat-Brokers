@@ -1,5 +1,4 @@
 import aboutHeroBg from '../../assets/aboutus2.png'
-import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import OurStory from './sections/OurStory/OurStory'
 import BuySellConfidence from './sections/BuySellConfidence/BuySellConfidence'
@@ -13,12 +12,6 @@ import Footer from '../../components/Footer/Footer'
 export default function About() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="About Us"
-        description="We make buying and selling boats simple, personal, and stress-free, with expert guidance every step of the way from The Boat Brokers."
-        path="/about"
-        image={aboutHeroBg}
-      />
       <PageHero
         image={aboutHeroBg}
         activeLabel="About"

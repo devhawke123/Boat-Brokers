@@ -1,5 +1,4 @@
 import sellingHeroBg from '../../assets/sellingheronew.png'
-import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import SellingProcessSteps from './sections/SellingProcessSteps/SellingProcessSteps'
 import WhyUseABroker from './sections/WhyUseABroker/WhyUseABroker'
@@ -13,12 +12,6 @@ import Footer from '../../components/Footer/Footer'
 export default function Selling() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Sell Your Narrowboat — The Selling Process"
-        description="Ready to sell your boat? The Boat Brokers makes selling simple — professional presentation, the right buyers, free valuations, and no upfront fees."
-        path="/selling"
-        image={sellingHeroBg}
-      />
       <PageHero
         image={sellingHeroBg}
         activeLabel="Selling"

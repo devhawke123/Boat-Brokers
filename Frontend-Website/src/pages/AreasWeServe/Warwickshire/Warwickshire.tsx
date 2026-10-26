@@ -1,5 +1,4 @@
 import heroBg from '../../../assets/warwickshire-hero-bg.png'
-import Seo from '../../../components/Seo/Seo'
 import PageHero from '../../../components/PageHero/PageHero'
 import WarwickshireWhyUs from './sections/WarwickshireWhyUs/WarwickshireWhyUs'
 import WarwickshireListings from './sections/WarwickshireListings/WarwickshireListings'
@@ -13,12 +12,6 @@ import Footer from '../../../components/Footer/Footer'
 export default function Warwickshire() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Narrowboat Broker Warwickshire"
-        description="Specialist narrowboat and canal boat broker serving Warwickshire. Free valuations and expert brokerage from The Boat Brokers."
-        path="/areas-we-serve/warwickshire"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

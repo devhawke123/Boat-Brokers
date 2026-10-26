@@ -1,5 +1,4 @@
 import heroBg from '../../../assets/birminghamabout.jpg'
-import Seo from '../../../components/Seo/Seo'
 import PageHero from '../../../components/PageHero/PageHero'
 import WolverhamptonWhyUs from './sections/WolverhamptonWhyUs/WolverhamptonWhyUs'
 import WolverhamptonListings from './sections/WolverhamptonListings/WolverhamptonListings'
@@ -13,12 +12,6 @@ import Footer from '../../../components/Footer/Footer'
 export default function Wolverhampton() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Narrowboat Broker Wolverhampton"
-        description="Specialist narrowboat and canal boat broker serving Wolverhampton and the surrounding canals. Free valuations and no upfront fees from The Boat Brokers."
-        path="/areas-we-serve/wolverhampton"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

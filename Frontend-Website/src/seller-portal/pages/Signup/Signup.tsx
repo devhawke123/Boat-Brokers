@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import Seo from '../../../components/Seo/Seo'
 import Button from '../../../components/Button/Button'
 import { useSellerSignup } from '../../data/useSellerSignup'
 import loginHero from '../../assets/Login/login-hero.png'
@@ -29,12 +28,6 @@ export default function Signup() {
 
   return (
     <main className="flex h-svh items-center justify-center overflow-hidden bg-[#fcfcfc] px-6 py-6 short:py-4 nav:gap-10 nav:px-16">
-      <Seo
-        title="Seller Sign Up"
-        description="Create a seller account with The Boat Brokers."
-        path="/seller-portal/signup"
-        noindex
-      />
       <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 rounded-2xl border border-border p-6 short:gap-4 short:p-4 sm:p-8">
         <div className="flex items-center gap-3">
           <img src={logo} alt="The Boat Brokers" className="h-12 w-auto" />

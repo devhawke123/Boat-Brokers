@@ -1,5 +1,4 @@
 import heroBg from '../../../assets/west-midlands-hero-bg.png'
-import Seo from '../../../components/Seo/Seo'
 import PageHero from '../../../components/PageHero/PageHero'
 import WorcestershireWhyUs from './sections/WorcestershireWhyUs/WorcestershireWhyUs'
 import WorcestershireListings from './sections/WorcestershireListings/WorcestershireListings'
@@ -13,12 +12,6 @@ import Footer from '../../../components/Footer/Footer'
 export default function Worcestershire() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Canal Boat & Narrowboat Broker Worcestershire"
-        description="Specialist canal boat and narrowboat brokerage across Worcestershire. Buy or sell with The Boat Brokers — free valuations, no upfront fees."
-        path="/areas-we-serve/worcestershire"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

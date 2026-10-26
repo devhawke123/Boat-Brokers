@@ -1,5 +1,4 @@
 import { useBlogPostBySlug } from '../../data/blogPostDetail'
-import Seo from '../../components/Seo/Seo'
 import Navbar from '../../components/Navbar/Navbar'
 import Button from '../../components/Button/Button'
 import Footer from '../../components/Footer/Footer'
@@ -13,12 +12,10 @@ type BlogDetailProps = {
 
 export default function BlogDetail({ slug }: BlogDetailProps) {
   const { post, loading, error } = useBlogPostBySlug(slug)
-  const path = `/blog/${slug}`
 
   if (loading) {
     return (
       <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-        <Seo title="Loading post" description="Loading blog post from The Boat Brokers." path={path} noindex />
         <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
           <Navbar activeLabel="More" />
           <p className="text-base text-[#ededed]">Loading post&hellip;</p>
@@ -31,12 +28,6 @@ export default function BlogDetail({ slug }: BlogDetailProps) {
   if (!post) {
     return (
       <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-        <Seo
-          title="Post Not Found"
-          description="This blog post could not be found. Explore more articles from The Boat Brokers."
-          path={path}
-          noindex
-        />
         <section className="relative flex min-h-[min(24rem,60vh)] flex-col items-center justify-center gap-6 overflow-hidden rounded-3xl bg-navy-darkest p-8 text-center">
           <Navbar activeLabel="More" />
           <h1 className="font-accent text-4xl text-white">Post not found</h1>

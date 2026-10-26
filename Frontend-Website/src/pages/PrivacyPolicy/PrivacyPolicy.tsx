@@ -1,5 +1,4 @@
 import heroBg from '../../assets/privacy-policy-hero-bg.png'
-import Seo from '../../components/Seo/Seo'
 import PageHero from '../../components/PageHero/PageHero'
 import PrivacyPolicyContent from './sections/PrivacyPolicyContent/PrivacyPolicyContent'
 import CtaBanner from '../../components/CtaBanner/CtaBanner'
@@ -8,12 +7,6 @@ import Footer from '../../components/Footer/Footer'
 export default function PrivacyPolicy() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Privacy Policy"
-        description="Learn how The Boat Brokers collects, uses, and protects your information when you visit and interact with our website."
-        path="/privacy-policy"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel=""

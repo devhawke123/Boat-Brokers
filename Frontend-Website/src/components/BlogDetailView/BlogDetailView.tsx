@@ -1,5 +1,4 @@
 import heroBg from '../../assets/blog/blog-hero-bg.png'
-import Seo from '../Seo/Seo'
 import PageHero from '../PageHero/PageHero'
 import BlogDetailContent from '../../pages/BlogDetail/sections/BlogDetailContent/BlogDetailContent'
 import BlogDetailPostNav from '../../pages/BlogDetail/sections/BlogDetailPostNav/BlogDetailPostNav'
@@ -12,22 +11,9 @@ type BlogDetailViewProps = {
   post: BlogPostDetail
 }
 
-function excerptFromHtml(html: string, maxLen = 155): string {
-  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-  if (text.length <= maxLen) return text
-  return `${text.slice(0, maxLen - 1).trimEnd()}…`
-}
-
 export default function BlogDetailView({ post }: BlogDetailViewProps) {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title={post.title}
-        description={excerptFromHtml(post.content) || `${post.title} — insights from The Boat Brokers.`}
-        path={`/blog/${post.slug}`}
-        image={post.image || heroBg}
-        type="article"
-      />
       <PageHero
         image={heroBg}
         activeLabel=""

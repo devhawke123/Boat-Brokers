@@ -207,8 +207,8 @@ function breadcrumbJsonLd(path: string) {
 
 /**
  * Metadata for a pathname handled by App.tsx, or null when the page sets its own
- * (/boats/:slug, /blog/:slug). Private portals and unknown paths are noindex â€”
- * App's catch-all renders Home for unknown URLs, which must not become duplicates.
+ * (/boats/:slug, /blog/:slug). Private portals and unknown paths are noindex —
+ * App's catch-all renders NotFound for unknown URLs.
  */
 export function seoForPath(pathname: string): SeoMeta | null {
   const isPortal = pathname.startsWith('/seller-portal') || pathname.startsWith('/admin-portal')

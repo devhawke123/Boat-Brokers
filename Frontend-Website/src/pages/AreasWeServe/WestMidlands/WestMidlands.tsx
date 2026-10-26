@@ -1,5 +1,4 @@
 import heroBg from '../../../assets/west-midlands-hero-bg.png'
-import Seo from '../../../components/Seo/Seo'
 import PageHero from '../../../components/PageHero/PageHero'
 import WestMidlandsWhyUs from './sections/WestMidlandsWhyUs/WestMidlandsWhyUs'
 import WestMidlandsListings from './sections/WestMidlandsListings/WestMidlandsListings'
@@ -13,12 +12,6 @@ import Footer from '../../../components/Footer/Footer'
 export default function WestMidlands() {
   return (
     <main className="flex flex-col gap-6 px-6 pt-6 pb-20">
-      <Seo
-        title="Narrowboats for Sale West Midlands"
-        description="Buying or selling a narrowboat in the West Midlands? The Boat Brokers is the specialist canal boat brokerage covering the Birmingham Canal Navigations and beyond. Free valuations."
-        path="/areas-we-serve/west-midlands"
-        image={heroBg}
-      />
       <PageHero
         image={heroBg}
         activeLabel="Areas We Serve"

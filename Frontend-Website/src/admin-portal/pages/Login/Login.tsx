@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from 'react'
-import Seo from '../../../components/Seo/Seo'
 import Button from '../../../components/Button/Button'
 import { useAdminLogin } from '../../data/useAdminLogin'
 import loginHero from '../../../seller-portal/assets/Login/login-hero.png'
@@ -27,12 +26,6 @@ export default function Login() {
 
   return (
     <main className="flex h-svh items-center justify-center overflow-hidden bg-[#fcfcfc] px-6 py-6 short:py-4 nav:gap-10 nav:px-16">
-      <Seo
-        title="Admin Login"
-        description="Log in to The Boat Brokers admin portal."
-        path="/admin-portal/login"
-        noindex
-      />
       <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 rounded-2xl border border-border p-6 short:gap-4 short:p-4 sm:p-8">
         <div className="flex items-center gap-3">
           <img src={logo} alt="The Boat Brokers" className="h-12 w-auto" />
