@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import Seo from './components/Seo/Seo'
 import { seoForPath } from './lib/seo'
 import Home from './pages/Home/Home'
@@ -23,16 +24,6 @@ import Wolverhampton from './pages/AreasWeServe/Wolverhampton/Wolverhampton'
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 import Blog from './pages/Blog/Blog'
 import BlogDetail from './pages/BlogDetail/BlogDetail'
-import Login from './seller-portal/pages/Login/Login'
-import Signup from './seller-portal/pages/Signup/Signup'
-import Dashboard from './seller-portal/pages/Dashboard/Dashboard'
-import MyBoats from './seller-portal/pages/MyBoats/MyBoats'
-import AddBoat from './seller-portal/pages/AddBoat/AddBoat'
-import Comments from './seller-portal/pages/Comments/Comments'
-import CommentThread from './seller-portal/pages/CommentThread/CommentThread'
-import Profile from './seller-portal/pages/Profile/Profile'
-import HelpSupport from './seller-portal/pages/HelpSupport/HelpSupport'
-import SellerPortalNotFound from './seller-portal/pages/NotFound/NotFound'
 import AdminLogin from './admin-portal/pages/Login/Login'
 import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
 import Sellers from './admin-portal/pages/Sellers/Sellers'
@@ -55,6 +46,8 @@ import SaleDetail from './admin-portal/pages/SaleDetail/SaleDetail'
 import Blogs from './admin-portal/pages/Blogs/Blogs'
 import BlogPostForm from './admin-portal/pages/BlogPostForm/BlogPostForm'
 import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
+
+const SellerPortalApp = lazy(() => import('./seller-portal/SellerPortalApp'))
 
 function renderRoute(pathname: string) {
   if (pathname === '/about') {
@@ -141,50 +134,14 @@ function renderRoute(pathname: string) {
     return <Blog />
   }
 
-  if (pathname === '/seller-portal/login') {
-    return <Login />
-  }
-
-  if (pathname === '/seller-portal/signup') {
-    return <Signup />
-  }
-
-  if (pathname === '/seller-portal/dashboard') {
-    return <Dashboard />
-  }
-
-  if (pathname === '/seller-portal/my-boats') {
-    return <MyBoats />
-  }
-
-  if (pathname === '/seller-portal/boats/new') {
-    return <AddBoat />
-  }
-
-  if (pathname === '/seller-portal/comments') {
-    return <Comments />
-  }
-
-  if (pathname.startsWith('/seller-portal/comments/')) {
-    const listingId = Number(pathname.replace('/seller-portal/comments/', ''))
-    if (Number.isInteger(listingId)) return <CommentThread listingId={listingId} />
-  }
-
-  if (pathname === '/seller-portal/profile') {
-    return <Profile />
-  }
-
-  if (pathname === '/seller-portal/help') {
-    return <HelpSupport />
-  }
-
-  // Scoped fallback for the seller portal specifically (e.g. unbuilt signup /
-  // forgot-password links, bad listing ids) so a logged-in seller lands on a
-  // recognizable shell with a way back, instead of silently on the public
-  // marketing homepage. The public site's catch-all below is intentionally
-  // Home — see CLAUDE.md — this doesn't change that.
-  if (pathname.startsWith('/seller-portal/')) {
-    return <SellerPortalNotFound />
+  // The seller portal runs its own react-router app (see SellerPortalApp.tsx),
+  // loaded on demand so public pages don't ship its router and animation libraries.
+  if (pathname === '/seller-portal' || pathname.startsWith('/seller-portal/')) {
+    return (
+      <Suspense fallback={null}>
+        <SellerPortalApp />
+      </Suspense>
+    )
   }
 
   if (pathname === '/admin-portal/login') {

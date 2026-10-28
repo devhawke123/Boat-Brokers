@@ -13,3 +13,6 @@ coverage/
 Backend/uploads/
 .vscode/*
 !.vscode/extensions.json
+
+# Client-delivered seller portal reference (not ours to commit)
+Frontend-Website/src/seller-portal/Seller-portal-client-frontend/

@@ -1,0 +1,50 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+
+/* Base rules from the client design, scoped to the portal: SellerPortalApp
+   puts .seller-portal-body on <body> while mounted, so portals (menus,
+   dialogs) pick them up too without touching the public site. Kept in the
+   base layer (as in the client app) so Tailwind utilities still win. */
+@layer base {
+  .seller-portal-body {
+    min-width: 320px;
+    background: #f7f9fa;
+    color: #142935;
+    font-family: var(--font-sp);
+  }
+  /* The site's base layer gives h1–h6 the display serif; the portal doesn't use it. */
+  .seller-portal-body :is(h1, h2, h3, h4, h5, h6) { font-family: inherit; }
+  .seller-portal-body button,
+  .seller-portal-body input,
+  .seller-portal-body textarea,
+  .seller-portal-body select { font: inherit; }
+  .seller-portal-body button { cursor: pointer; }
+  .seller-portal-body button:disabled { cursor: not-allowed; }
+  .seller-portal-body :focus-visible { outline: 3px solid #74b8d7; outline-offset: 3px; }
+  /* Headings and panels focused from script for screen readers aren't controls. */
+  .seller-portal-body [tabindex='-1']:focus-visible { outline: none; }
+  .seller-portal-body ::selection { background: #c6e3f0; color: #082b42; }
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { scrollbar-width: none; }
+
+@layer components {
+  .tactile-control {
+    border: 1px solid #d8ebf4;
+    box-shadow: 0 1px 3px rgba(10, 55, 73, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .tactile-primary {
+    border: 1px solid #0a4f69;
+    box-shadow: 0 1px 3px rgba(10, 55, 73, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .tactile-tab-active {
+    border: 1px solid #d8ebf4;
+    box-shadow: 0 1px 3px rgba(10, 55, 73, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+}
+
+
+.wizard-radio-option:has(input:focus-visible) { z-index: 10; outline: 3px solid #74b8d7; outline-offset: -3px; }
+.wizard-radio-option input:focus-visible { outline: none; }

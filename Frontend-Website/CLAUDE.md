@@ -6,7 +6,7 @@
 
 ## 1. Stack & commands
 
-React 19 · TypeScript ~6 · Vite 8 · Tailwind CSS v4 · oxlint. No router library. No test suite.
+React 19 · TypeScript ~6 · Vite 8 · Tailwind CSS v4 · oxlint. No router library (except inside the seller portal — see §4 Routing). No test suite.
 
 Run from `Boat-Brokers/Frontend/`:
 
@@ -174,6 +174,14 @@ Sub-pages nest a full page folder inside the parent (`pages/AreasWeServe/Birming
 - `/` returns `<Home />`. Any other unmatched public path returns `<NotFound />` (soft 404 in the SPA; HTTP status still depends on the VPS reverse-proxy SPA fallback).
 - `App` sets title/description/OG/JSON-LD via `seoForPath` + `components/Seo/Seo.tsx`. Dynamic boat/blog pages set their own. Portals and unknown paths are `noindex`.
 - Static `public/robots.txt` and `public/sitemap.xml` ship with the build. SPA fallback for deep links is configured on the VPS (not Vercel).
+
+### Seller portal — the one exception
+
+`/seller-portal/*` is a single ladder branch that lazy-loads `src/seller-portal/SellerPortalApp.tsx`, which runs **react-router** (`basename="/seller-portal"`), framer-motion and lucide-react. It is a port of the client-delivered "open water" v2 design (reference copy, gitignored: `src/seller-portal/Seller-portal-client-frontend/`).
+- Inside the portal use react-router `Link`/`useNavigate` with basename-relative paths (`/boats`, not `/seller-portal/boats`). Everywhere else the no-router rule stands.
+- Portal colours are the `sp-` tokens in `index.css` (`text-sp-ink`, `bg-sp-brand`, …), prefixed because the client's `ink`/`body`/`blue-*` clash with the site tokens. Its font (`--font-sp`, Plus Jakarta Sans) and base styles apply via `.seller-portal-body` on `<body>`, so they never leak onto public pages. Site Dialect A rules don't apply to the portal's ported `v2-*.css`.
+- API records are converted to the UI's shapes in `seller-portal/lib/listingAdapter.ts`; drafts live only in the browser (IndexedDB, `lib/draftStore.ts`).
+- Old portal pieces still imported by the admin portal / public site (`pages/AddBoat/sections/*`, `components/FormField`, `components/StepFormCard`, `CommentThreadCard`, `lib/*`, `data/*`, `assets/*`) stay put.
 
 ---
 

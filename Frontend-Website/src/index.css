@@ -17,6 +17,30 @@
   --breakpoint-3xl: 120rem; /* 1920px */
 }
 
+/* —— Seller portal palette (client "open water" design) ——
+   Prefixed sp- because ink/body/blue-* clash with the site tokens below. */
+@theme {
+  --color-sp-blue-lighter: #99e3ff;
+  --color-sp-blue-light-hover: #84d4ff;
+  --color-sp-blue-light-active: #6bd1ff;
+  --color-sp-blue-normal: #1cc0ff;
+  --color-sp-blue-normal-hover: #18a3d9;
+  --color-sp-blue-normal-active: #148cba;
+  --color-sp-blue-dark: #0a4359;
+  --color-sp-blue-dark-hover: #073040;
+  --color-sp-blue-dark-active: #03151c;
+  --color-sp-blue-extended-dark-active: #0d5673;
+  --color-sp-brand: #0d5673;
+  --color-sp-brand-hover: #0a4359;
+  --color-sp-brand-deep: #0a4359;
+  --color-sp-canvas: #f7f9fa;
+  --color-sp-surface-soft: #eef3f6;
+  --color-sp-hairline: #dce4e9;
+  --color-sp-ink: #142935;
+  --color-sp-body: #536775;
+  --font-sp: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
 @font-face {
   font-family: 'Gideon Roman';
   font-weight: 400;
