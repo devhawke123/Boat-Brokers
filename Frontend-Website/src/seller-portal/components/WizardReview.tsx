@@ -3,12 +3,13 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ChevronDown, FileText, ImagePlus, Pencil } from 'lucide-react'
 import { EASE, quick, textActionVariants } from '../lib/motion'
 import { completedAdditionalDetails } from '../lib/additionalDetails'
+import { withExtraSpecGroups } from '../lib/extraSpecFields'
 import type { ClientPhoto, WizardData } from '../lib/listingAdapter'
 
 type FieldSpec = [key: Exclude<keyof WizardData, 'additionalDetails'>, label: string, unit?: string]
 
 const populated = (value: unknown) => value !== undefined && value !== null && String(value).trim() !== ''
-const groups: [string, FieldSpec[]][] = [
+const baseGroups: [string, FieldSpec[]][] = [
   [
     'History',
     [
@@ -79,6 +80,7 @@ const groups: [string, FieldSpec[]][] = [
     ],
   ],
 ]
+const groups = withExtraSpecGroups(baseGroups)
 
 function Edit({ label, onClick }: { label: string; onClick: () => void }) {
   return (

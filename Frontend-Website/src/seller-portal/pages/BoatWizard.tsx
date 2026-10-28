@@ -7,6 +7,7 @@ import ToastNotice, { type Notice } from '../components/ToastNotice'
 import AdditionalDetailsFields from '../components/AdditionalDetailsFields'
 import { getAdditionalDetails, hasIncompleteAdditionalDetails, type AdditionalDetail } from '../lib/additionalDetails'
 import { initialData, type ClientListing, type ClientPhoto, type WizardData } from '../lib/listingAdapter'
+import { EXTRA_SPEC_SECTIONS } from '../lib/extraSpecFields'
 import { useListings } from '../context/useListings'
 import { EASE } from '../lib/motion'
 import WizardReview from '../components/WizardReview'
@@ -56,12 +57,16 @@ const steps = [
     description: 'Check the story of your listing before it is ready to share.',
   },
 ]
+// Section cards each spec step already renders, so extra cards continue the numbering.
+const BUILT_IN_CARDS: Record<string, number> = { history: 3, dimensions: 2, engine: 1, heating: 1, electrical: 1, gas: 0, interior: 1 }
+
 const specSections = [
   { key: 'history', title: 'History' },
   { key: 'dimensions', title: 'Dimensions' },
   { key: 'engine', title: 'Engine' },
   { key: 'heating', title: 'Water & Heating' },
   { key: 'electrical', title: 'Electrical' },
+  { key: 'gas', title: 'Gas' },
   { key: 'interior', title: 'Interior' },
   { key: 'additional', title: 'Additional details' },
 ]
@@ -469,7 +474,27 @@ function SpecificationStep({
   }
   return (
     <div>
-      <div className="space-y-4">{groups[section.key]}</div>
+      <div className="space-y-4">
+        {groups[section.key]}
+        {EXTRA_SPEC_SECTIONS.filter((group) => group.section === section.key).map((group, index) => (
+          <SectionCard
+            key={group.title}
+            number={String((BUILT_IN_CARDS[section.key] ?? 0) + index + 1).padStart(2, '0')}
+            title={group.title}
+            description={group.description}
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              {group.fields.map(([name, label, placeholder, multiline]) =>
+                multiline ? (
+                  <TextAreaField key={name} label={label} name={name} value={data[name]} onChange={onChange} placeholder={placeholder} className="sm:col-span-2" rows={3} />
+                ) : (
+                  <Field key={name} label={label} name={name} value={data[name]} onChange={onChange} placeholder={placeholder} />
+                ),
+              )}
+            </div>
+          </SectionCard>
+        ))}
+      </div>
     </div>
   )
 }

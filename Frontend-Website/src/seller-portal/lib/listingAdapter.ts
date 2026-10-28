@@ -1,5 +1,6 @@
 import type { ApiBoatListing, ApiListingComment, ApiSeller } from './api'
 import { completedAdditionalDetails, type AdditionalDetail } from './additionalDetails'
+import { EXTRA_SPEC_KEYS, type ExtraSpecKey } from './extraSpecFields'
 
 // Shapes the client's v2 UI was built around; everything below converts our
 // API records into them and back.
@@ -109,6 +110,7 @@ export const initialData = {
   contactTime: '',
   sellerType: '',
   notes: '',
+  ...(Object.fromEntries(EXTRA_SPEC_KEYS.map((key) => [key, ''])) as Record<ExtraSpecKey, string>),
 }
 
 export type WizardKey = keyof typeof initialData
@@ -156,11 +158,12 @@ const COLUMNS: [WizardKey, string][] = [
   ['solarPanels', 'solarPanels'],
   ['insulation', 'insulation'],
   ['saloonSeating', 'saloonSeating'],
-  ['galleyEquipment', 'appliances'],
+  ['galleyEquipment', 'galleyExtraNotes'],
   ['interiorNotes', 'interiorExtraNotes'],
   ['videoUrl', 'videoUrl'],
   ['virtualTourUrl', 'virtualTourUrl'],
   ['city', 'location'],
+  ...EXTRA_SPEC_KEYS.map((key): [WizardKey, string] => [key, key]),
 ]
 
 // Wizard fields with no Boat column ride along as fixed-label custom fields.

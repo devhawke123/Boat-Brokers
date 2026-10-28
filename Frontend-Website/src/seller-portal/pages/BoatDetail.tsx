@@ -35,12 +35,13 @@ import type { ClientListing, TextKey, WizardData } from '../lib/listingAdapter'
 import type { Notice } from '../components/ToastNotice'
 import { directionalArrowVariants, EASE, inventoryMotion } from '../lib/motion'
 import { completedAdditionalDetails } from '../lib/additionalDetails'
+import { withExtraSpecGroups } from '../lib/extraSpecFields'
 
 const DetailTheme = createContext(false)
 
 type FieldSpec = [key: string, label: string, unit?: string]
 
-const groups: [string, FieldSpec[]][] = [
+const baseGroups: [string, FieldSpec[]][] = [
   [
     'History',
     [
@@ -111,6 +112,7 @@ const groups: [string, FieldSpec[]][] = [
     ],
   ],
 ]
+const groups = withExtraSpecGroups(baseGroups)
 const statusPanel: Record<string, string> = {
   Pending: 'border-[#ead29b] bg-[#fff7e5] text-[#805000]',
   Approved: 'border-[#b4deca] bg-[#edf9f2] text-[#086a44]',
