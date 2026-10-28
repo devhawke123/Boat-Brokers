@@ -36,10 +36,10 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
         {specChips.map((chip) => (
           <div
             key={chip.label}
-            className="flex items-center gap-4 rounded-2xl border border-[#f3f4f6] bg-white p-4 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)] sm:w-[11rem] sm:shrink-0"
+            className="flex min-w-0 flex-col items-start gap-3 rounded-2xl border border-[#f3f4f6] bg-white p-3 shadow-[0px_10px_40px_-10px_rgba(11,58,88,0.08)] sm:w-[11rem] sm:shrink-0 sm:flex-row sm:items-center sm:gap-4 sm:p-4"
           >
-            <img src={chip.icon} alt="" aria-hidden="true" className="size-10 shrink-0" />
-            <span className="flex flex-col gap-0.5">
+            <img src={chip.icon} alt="" aria-hidden="true" className="size-8 shrink-0 sm:size-10" />
+            <span className="flex min-w-0 flex-col gap-0.5 wrap-anywhere">
               <span className="text-xs text-[#6e6e6e]">{chip.label}</span>
               <span className="font-body text-base font-bold text-navy-dark">{chip.value}</span>
             </span>
@@ -61,9 +61,9 @@ export default function BoatDetailContent({ boat }: BoatDetailContentProps) {
               <h3 className="font-accent text-lg text-navy-dark">Key Specifications</h3>
               <dl className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
                 {boat.detail.keySpecs.map((spec) => (
-                  <div key={spec.label} className="flex items-center justify-between border-b border-[#f3f4f6] py-2">
-                    <dt className="text-sm text-[#6e6e6e]">{spec.label}</dt>
-                    <dd className="text-sm font-medium text-navy-dark">{spec.value}</dd>
+                  <div key={spec.label} className="flex items-baseline justify-between gap-4 border-b border-[#f3f4f6] py-2">
+                    <dt className="shrink-0 text-sm text-[#6e6e6e]">{spec.label}</dt>
+                    <dd className="min-w-0 text-right text-sm font-medium text-navy-dark wrap-anywhere">{spec.value}</dd>
                   </div>
                 ))}
               </dl>
