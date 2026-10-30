@@ -190,7 +190,6 @@
   background: var(--v2-glass-fill);
   border-color: rgb(255 255 255 / .82);
   backdrop-filter: var(--v2-glass-filter);
-  -webkit-backdrop-filter: var(--v2-glass-filter);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), inset 0 -1px 0 rgb(255 255 255 / .28), 0 8px 28px rgb(18 60 89 / .055);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
