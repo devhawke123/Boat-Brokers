@@ -1,4 +1,8 @@
-.v2-login-page { min-height: 100dvh; color: #123c59; background: #f5faff; }
+.v2-login-page { min-height: 100dvh; color: #123c59; background: #f5faff; font-family: var(--font-sp); }
+.v2-login-page :is(h1, h2, h3, h4, h5, h6),
+.v2-login-page button,
+.v2-login-page input { font-family: inherit; }
+.v2-login-eyebrow { margin: 0 0 10px; color: #64839a; font-size: 8px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
 .v2-login-shell { width: 100%; min-height: 100dvh; display: grid; grid-template-columns: 1.12fr 1fr; }
 .v2-login-carousel { position: relative; min-height: 100dvh; overflow: hidden; isolation: isolate; background: #c1e1ed; }
 .v2-login-media, .v2-login-slide { position: absolute; inset: 0; width: 100%; height: 100%; }

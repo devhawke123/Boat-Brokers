@@ -1,105 +1,234 @@
-import { useState, type FormEvent } from 'react'
-import Button from '../../../components/Button/Button'
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import '@fontsource-variable/plus-jakarta-sans'
+import { AccountButton, AccountField } from '../../../seller-portal/components/V2AccountSettings'
+import { EASE, inventoryMotion } from '../../../seller-portal/lib/motion'
 import { useAdminLogin } from '../../data/useAdminLogin'
-import loginHero from '../../../seller-portal/assets/Login/login-hero.png'
-import emailIcon from '../../../seller-portal/assets/Login/email-icon.svg'
-import lockIcon from '../../../seller-portal/assets/Login/lock-icon.svg'
-import eyeIcon from '../../../seller-portal/assets/Login/eye-icon.svg'
-import logo from '../../../assets/The_Boat_Brokers_Blue_Logo.png'
+import '../../../seller-portal/pages/v2-login.css'
+
+const slides = [
+  {
+    source: '/seller-portal-assets/auth/first-horizon.mp4',
+    video: true,
+    position: 'center',
+    title: (
+      <>
+        Your next chapter,
+        <br />
+        on the water.
+      </>
+    ),
+    caption: 'A little more horizon. A clearer way to sell.',
+  },
+  {
+    source: '/seller-portal-assets/auth/marina-yacht.jpg',
+    position: 'center 65%',
+    title: (
+      <>
+        From first listing
+        <br />
+        to new beginnings.
+      </>
+    ),
+    caption: 'Every detail, every conversation, all in one place.',
+  },
+  {
+    source: '/seller-portal-assets/auth/coastal-yacht.jpg',
+    position: 'center 65%',
+    title: (
+      <>
+        Make room for
+        <br />
+        what comes next.
+      </>
+    ),
+    caption: 'Your boat’s next adventure starts here.',
+  },
+  {
+    source: '/seller-portal-assets/auth/open-water.jpg',
+    position: '43% center',
+    title: (
+      <>
+        A world
+        <br />
+        of possibility.
+      </>
+    ),
+    caption: 'One workspace. A wider horizon.',
+  },
+]
+
+function LoginCarousel() {
+  const [active, setActive] = useState(0)
+  const reduced = useReducedMotion()
+  const slide = slides[active]
+  return (
+    <section className="v2-login-carousel" aria-label="Life on the water" aria-roledescription="carousel">
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={slide.source}
+          className="v2-login-media"
+          initial={reduced ? false : { opacity: 0, scale: 1.025 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ ...inventoryMotion.media, duration: reduced ? 0 : 0.7 }}
+        >
+          {slide.video ? (
+            <video
+              className="v2-login-slide"
+              src={slide.source}
+              poster="/seller-portal-assets/auth/open-water.jpg"
+              autoPlay
+              muted
+              playsInline
+              preload="metadata"
+              style={{ objectPosition: slide.position }}
+              aria-label="Yacht on the water; click or press Space to pause or play"
+              tabIndex={0}
+              onEnded={() => setActive(1)}
+              onClick={(event) => {
+                const video = event.currentTarget
+                if (video.paused) video.play().catch(() => {})
+                else video.pause()
+              }}
+              onKeyDown={(event) => {
+                if (event.key === ' ' || event.key === 'Enter') {
+                  event.preventDefault()
+                  event.currentTarget.click()
+                }
+              }}
+            />
+          ) : (
+            <img className="v2-login-slide" src={slide.source} alt="" style={{ objectPosition: slide.position }} />
+          )}
+        </motion.div>
+      </AnimatePresence>
+      <div className="v2-login-image-wash" />
+      <a className="v2-login-brand" href="/admin-portal/login" aria-label="The Boat Brokers admin sign in">
+        <img src="/seller-portal-assets/boat-brokers-wordmark-blue.png" alt="The Boat Brokers" />
+      </a>
+      <div className="v2-login-caption" aria-live="polite">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={active}
+            initial={reduced ? false : { opacity: 0, y: 8, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 0.5, ease: EASE }}
+          >
+            <h2>{slide.title}</h2>
+            <p>{slide.caption}</p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <div className="v2-login-dots" role="group" aria-label="Choose a slide">
+        {slides.map((item, index) => (
+          <button
+            type="button"
+            key={item.source}
+            aria-label={`Show ${item.video ? 'video' : 'photo'} ${index + 1} of ${slides.length}`}
+            aria-pressed={index === active}
+            onClick={() => setActive(index)}
+          >
+            <motion.span
+              initial={false}
+              animate={{ width: index === active ? 20 : 6, opacity: index === active ? 1 : 0.4 }}
+              transition={{ duration: reduced ? 0 : 0.35, ease: EASE }}
+            />
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false)
   const { login, loading, error } = useAdminLogin()
+  const reduced = useReducedMotion()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const formRef = useRef<HTMLFormElement>(null)
+
+  useEffect(() => {
+    document.title = 'Admin sign in · The Boat Brokers'
+  }, [])
+
+  function update(field: string, setter: (value: string) => void) {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setter(event.target.value)
+      setFieldErrors((current) => ({ ...current, [field]: '' }))
+    }
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    const next: Record<string, string> = {}
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = 'Enter a valid email address.'
+    if (!password) next.password = 'Enter your password.'
+    setFieldErrors(next)
+    if (Object.keys(next).length) {
+      window.requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus())
+      return
+    }
 
-    const form = new FormData(event.currentTarget)
-    const email = String(form.get('email') ?? '')
-    const password = String(form.get('password') ?? '')
-
-    const admin = await login(email, password)
+    const admin = await login(email.trim(), password)
     if (admin) {
       window.location.href = '/admin-portal/dashboard'
     }
   }
 
   return (
-    <main className="flex h-svh items-center justify-center overflow-hidden bg-[#fcfcfc] px-6 py-6 short:py-4 nav:gap-10 nav:px-16">
-      <div className="flex w-full max-w-[33rem] flex-col items-start gap-6 rounded-2xl border border-border p-6 short:gap-4 short:p-4 sm:p-8">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="The Boat Brokers" className="h-12 w-auto" />
-          <span className="h-9 w-px bg-border" />
-          <span className="text-label font-semibold tracking-[2px] text-gold uppercase">Admin Portal</span>
-        </div>
-
-        <div className="flex w-full flex-col gap-4 short:gap-2">
-          <h1 className="font-display text-h3 capitalize text-ink">Welcome back, admin.</h1>
-          <p className="text-body text-text-body">
-            Log in to manage boats, sales, buyers, sellers, and availability from the admin dashboard.
-          </p>
-        </div>
-
-        <form className="flex w-full flex-col items-center gap-5 short:gap-3" onSubmit={handleSubmit}>
-          <div className="flex w-full flex-col gap-4 short:gap-3">
-            <label className="flex w-full flex-col gap-2">
-              <span className="text-body font-medium text-ink">Username or Email</span>
-              <span className="relative flex w-full items-center">
-                <img src={emailIcon} alt="" aria-hidden="true" className="absolute left-4 size-4" />
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete="username"
-                  placeholder="admin@example.com"
-                  className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] py-3 pr-4 pl-12 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
-                />
-              </span>
-            </label>
-
-            <label className="flex w-full flex-col gap-2">
-              <span className="text-body font-medium text-ink">Password</span>
-              <span className="relative flex w-full items-center">
-                <img src={lockIcon} alt="" aria-hidden="true" className="absolute left-4 size-4" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  className="h-[3.25rem] w-full rounded-md border border-[#cbcad7] bg-[#f8f8f8] py-3 pr-12 pl-12 text-body-sm text-ink placeholder:text-text-muted focus:border-navy-dark focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-4 flex items-center justify-center"
-                >
-                  <img src={eyeIcon} alt="" aria-hidden="true" className="h-3.5 w-[1.125rem]" />
-                </button>
-              </span>
-            </label>
-          </div>
-
-          <div className="flex w-full flex-col items-center gap-5">
-            {error && <p className="w-full text-body-sm text-red-600">{error}</p>}
-
-            <Button
-              type="submit"
-              variant="dark"
-              label={loading ? 'Logging in…' : 'Log in'}
-              icon="none"
-              disabled={loading}
-              className="w-full disabled:cursor-not-allowed disabled:opacity-70"
-            />
-          </div>
-        </form>
-
-        <div className="h-px w-full bg-border" />
-
-        <p className="w-full text-center text-caption text-text-muted">Design &amp; Develop By Blue Hawke</p>
-      </div>
-
-      <div className="hidden max-h-[70.375rem] w-full max-w-[44.1875rem] self-stretch overflow-clip rounded-xl nav:block">
-        <img src={loginHero} alt="A narrowboat at sunset" className="size-full object-cover" />
+    <main className="v2-login-page">
+      <div className="v2-login-shell">
+        <LoginCarousel />
+        <section className="v2-login-form-side" aria-labelledby="v2-login-title">
+          <motion.div
+            className="v2-login-form-content"
+            initial={reduced ? false : { opacity: 0, y: 28, filter: 'blur(12px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transitionEnd: { filter: 'none' } }}
+            transition={{ duration: reduced ? 0 : 1.05, ease: EASE }}
+            onAnimationComplete={() => document.getElementById('v2-login-title')?.focus({ preventScroll: true })}
+          >
+            <p className="v2-login-eyebrow">Admin portal</p>
+            <h1 id="v2-login-title" tabIndex={-1}>
+              Welcome back.
+            </h1>
+            <p className="v2-login-intro">Sign in to your admin workspace.</p>
+            <form className="v2-login-form" noValidate onSubmit={handleSubmit} ref={formRef}>
+              <AccountField
+                label="Email address"
+                type="email"
+                name="email"
+                autoComplete="username"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={update('email', setEmail)}
+                error={fieldErrors.email}
+                required
+              />
+              <AccountField
+                label="Password"
+                name="password"
+                secret
+                autoComplete="current-password"
+                placeholder="Your password"
+                value={password}
+                onChange={update('password', setPassword)}
+                error={fieldErrors.password}
+                required
+              />
+              {error && (
+                <p className="v2-login-error" role="alert">
+                  {error}
+                </p>
+              )}
+              <AccountButton kind="primary" arrow="right" type="submit" disabled={loading}>
+                {loading ? 'Signing in…' : 'Sign in'}
+              </AccountButton>
+            </form>
+          </motion.div>
+        </section>
       </div>
     </main>
   )

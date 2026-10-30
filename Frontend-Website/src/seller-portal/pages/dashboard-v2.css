@@ -173,12 +173,13 @@
 @media (max-width: 800px) { .v2-workspace { display: flex; flex-direction: column; padding: 14px; gap: 22px; } .v2-sidebar { position: static; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 0; padding: 14px; border-radius: 17px; } .v2-brand { padding: 0 5px; } .v2-brand img { width: 44px; height: 34px; } .v2-brand > span,.v2-nav-section,.v2-sidebar-bottom { display: none; } .v2-nav { margin-left: auto; margin-top: 0; display: flex; gap: 3px; } .v2-nav a { padding: 0 10px; font-size: 10px; min-height: 44px; } .v2-nav-count,.v2-nav-active-dot { display: none; } .v2-main { padding: 0 6px; } .v2-hero { min-height: 430px; padding-top: 32px; } .v2-hero h1 { font-size: 32px; } .v2-portfolio-value { font-size: 45px; } }
 @media (max-width: 560px) { .v2-workspace { padding: 10px; } .v2-main { padding: 0 5px; } .v2-sidebar { gap: 5px; padding: 10px 8px; } .v2-nav a { padding: 0 8px; gap: 6px; font-size: 9px; } .v2-nav svg { width: 15px; } .v2-header { gap: 8px; } .v2-header-actions { gap: 3px; } .v2-header p { max-width: 140px; font-size: 8px; line-height: 1.7; } .v2-icon-button { width: 29px; } .v2-header-divider { display: none; } .v2-create { padding: 0 10px; gap: 6px; font-size: 9px; } .v2-create > .v2-arrow { display: none; } .v2-breadcrumb { font-size: 9px; } .v2-hero { flex-direction: column; gap: 22px; padding-top: 32px; min-height: 0; padding-bottom: 24px; } .v2-hero-copy { width: 100%; } .v2-hero h1 { font-size: 34px; } .v2-portfolio-value { font-size: 49px; } .v2-portfolio-label { margin-top: 23px; } .v2-hero-metrics { margin-top: 20px; gap: 8px; } .v2-hero-metrics a { flex: 1; min-width: 0; padding: 11px 10px; } .v2-hero-metrics a + a { padding-left: 10px; } .v2-draft-card { margin: 0; width: 100%; background: #f8fcffe8; } .v2-draft-body { margin-top: 17px; } .v2-draft-body p { max-width: none; } .v2-draft-action { margin-top: 17px; } .v2-statistics { grid-template-columns: 1fr; gap: 12px; } .v2-status { grid-column: auto; } .v2-status-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .v2-panel { padding: 22px; } .v2-panel-header h2 { font-size: 13px; } .v2-panel-subtitle { font-size: 9px; } .v2-chart-label,.v2-chart-context { font-size: 8px; } .v2-update-heading strong { font-size: 11px; } .v2-update-message { font-size: 10px; } .v2-update-row { padding: 15px 0; } .v2-status-tile { min-height: 115px; } .v2-tile-label { font-size: 10px; } .v2-tile-caption { font-size: 8px; } }
 @media (max-width: 800px) {
+  .v2-sidebar { z-index: 50; }
   .v2-sidebar-bottom { display: block; margin: 0; padding: 0; }
   .v2-sidebar-bottom > .v2-tutorial { display: none; }
-  .v2-account { padding: 0; border: 0; }
+  .v2-account { margin-top: 0; padding: 0; border: 0; }
   .v2-profile-trigger { min-height: 44px; width: 44px; padding: 4px; justify-content: center; }
   .v2-profile-copy, .v2-profile-chevron { display: none; }
-  .v2-account .v2-account-popover { bottom: auto; top: calc(100% + 10px); right: 0; left: auto; width: 250px; max-width: calc(100vw - 40px); }
+  .v2-account .v2-account-popover { bottom: auto; top: calc(100% + 10px); right: 0; left: auto; width: 250px; max-width: calc(100vw - 40px); background: #fcfeff; }
 }
 /* Shared regular frost: keep alpha on the fill, never on the whole card. */
 .v2-sidebar,
@@ -209,6 +210,9 @@
 .v2-help-availability { color: #54758d; font-weight: 500; }
 .v2-help-widget .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: rgb(18 60 89 / .1); }
 .v2-help-widget a { text-decoration-color: #a8c0d0; }
-.v2-help-trigger { background: #1cc0ff; box-shadow: 0 7px 20px rgb(18 60 89 / .18), inset 0 1px 0 rgb(255 255 255 / .3); }
+.v2-help-trigger { background: #1cc0ff; opacity: .42; box-shadow: 0 7px 20px rgb(18 60 89 / .08), inset 0 1px 0 rgb(255 255 255 / .3); transition: opacity .2s ease, box-shadow .2s ease; }
+.v2-help-trigger:hover,
+.v2-help-trigger:focus-visible,
+.v2-help-trigger[aria-expanded="true"] { opacity: 1; box-shadow: 0 7px 20px rgb(18 60 89 / .18), inset 0 1px 0 rgb(255 255 255 / .3); }
 .v2-help-trigger:focus-visible { outline-color: #123c59; }
 @media (prefers-reduced-motion: reduce) { .dashboard-v2 *, .dashboard-v2 *::before, .dashboard-v2 *::after { transition-duration: 0s !important; scroll-behavior: auto !important; } .dashboard-v2 a:hover .v2-arrow { transform: none; } }
