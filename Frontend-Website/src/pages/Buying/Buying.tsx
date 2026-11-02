@@ -16,6 +16,9 @@ export default function Buying() {
         activeLabel="Buying"
         title="The Buying Process"
         body="Buying a boat doesn’t have to be complicated. From finding the right boat to completing the purchase, we’re here to guide you through every step."
+        overlayClassName="bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45))]"
+        titleClassName="[text-shadow:0px_0px_10px_black]"
+        bodyClassName="max-w-[35rem] text-base leading-[26px] text-[#ededed] [text-shadow:0px_0px_10px_black] sm:text-xl sm:leading-[30px]"
         animateEntrance
       />
       <BuyingProcessSteps />

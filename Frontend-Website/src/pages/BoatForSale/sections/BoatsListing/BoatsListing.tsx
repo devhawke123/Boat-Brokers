@@ -308,7 +308,7 @@ export default function BoatsListing() {
               type="text"
               value={filters.search}
               onChange={(e) => updateFilters({ search: e.target.value })}
-              placeholder="Search by boat name, builder, or keywords..."
+              placeholder="Search boat"
               className="w-full rounded-[10px] border border-[#e2e8f0] bg-white py-3.5 pr-4 pl-11 text-base text-[#1e293b] placeholder:text-[#9ca3af]"
             />
           </div>

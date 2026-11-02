@@ -1,6 +1,5 @@
 ﻿import { useState } from 'react'
 import plus from '../../assets/icons/plus.svg'
-import arrowRightWhite from '../../assets/icons/arrow-right-white.svg'
 import Button from '../Button/Button'
 import { faqs, type FaqItem } from '../../data/faqs'
 
@@ -19,6 +18,20 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
 
   const left = faqs.slice(0, 2)
   const right = faqs.slice(2)
+
+  const renderAnswer = (faq: FaqItem, isOpen: boolean, padded: boolean) => (
+    <div
+      className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+        isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+      }`}
+    >
+      <div className="min-h-0 overflow-hidden">
+        <div className={padded ? 'px-6 pb-6' : 'px-0 pb-6 sm:px-6'}>
+          <p className={`text-text-body ${padded ? 'text-body' : 'text-body-sm'}`}>{faq.answer}</p>
+        </div>
+      </div>
+    </div>
+  )
 
   const renderItem = (faq: FaqItem, index: number) => {
     const isOpen = openIndex === index
@@ -43,14 +56,10 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
               src={plus}
               alt=""
               aria-hidden="true"
-              className={`size-7 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-45' : ''}`}
+              className={`size-7 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`}
             />
           </button>
-          {isOpen && (
-            <div className="px-6 pb-6">
-              <p className="text-body text-text-body">{faq.answer}</p>
-            </div>
-          )}
+          {renderAnswer(faq, isOpen, true)}
         </div>
       )
     }
@@ -74,14 +83,10 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
             src={plus}
             alt=""
             aria-hidden="true"
-            className={`size-[22px] shrink-0 transition-transform duration-200 sm:size-7 ${isOpen ? 'rotate-45' : ''}`}
+            className={`size-[22px] shrink-0 transition-transform duration-300 sm:size-7 ${isOpen ? 'rotate-45' : ''}`}
           />
         </button>
-        {isOpen && (
-          <div className="px-0 pb-6 sm:px-6">
-            <p className="text-body-sm text-text-body">{faq.answer}</p>
-          </div>
-        )}
+        {renderAnswer(faq, isOpen, false)}
       </div>
     )
   }
@@ -117,17 +122,8 @@ export default function Faq({ hideHeader = false, singleColumn = false, hideCta 
 
       {!hideCta && (
         <div>
-          <Button
-          
-          label=" View More FAQs"
-          href= "/faq"
-          className="inline-flex items-center gap-1.5 rounded-xl border-none bg-navy-dark px-5 py-3 text-base font-semibold text-white shadow-btn"
-        >
-         
-
-          <img src={arrowRightWhite} alt="" aria-hidden="true" className="size-[18px]" />
-        </Button></div>
-        
+          <Button variant="dark" label="View More FAQs" href="/faq" />
+        </div>
       )}
     </section>
   )

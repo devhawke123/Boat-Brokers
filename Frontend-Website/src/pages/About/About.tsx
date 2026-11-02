@@ -18,7 +18,9 @@ export default function About() {
         title="About Us"
         titleFont="accent"
         body="We make buying and selling boats simple, personal, and stress-free, with expert guidance every step of the way."
-        bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]"
+        overlayClassName="bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45))]"
+        titleClassName="[text-shadow:0px_0px_10px_black]"
+        bodyClassName="max-w-[35rem] text-sm leading-[26px] text-[#ededed] [text-shadow:0px_0px_10px_black] sm:text-xl sm:leading-[30px]"
         contentClassName="mt-20 sm:mt-0"
         animateEntrance
       />

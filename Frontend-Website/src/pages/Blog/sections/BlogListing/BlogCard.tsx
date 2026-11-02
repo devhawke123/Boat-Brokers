@@ -7,20 +7,20 @@ type BlogCardProps = {
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <article className="flex flex-col items-start rounded-xl border border-[#bedfeb] bg-[#fafeff] p-4 pb-8 transition-colors duration-150 hover:bg-[#e8f9ff] sm:p-5 sm:pb-8">
-      <a href={`/blog/${post.slug}`} className="mb-6 aspect-[378/284] w-full overflow-hidden rounded-lg">
+    <article className="flex flex-col items-start rounded-xl border border-[#bedfeb] bg-[#fafeff] p-4 pb-6 transition-colors duration-150 hover:bg-[#e8f9ff] sm:p-5 sm:pb-6">
+      <a href={`/blog/${post.slug}`} className="mb-4 aspect-[16/10] w-full max-h-40 overflow-hidden rounded-lg sm:mb-5 sm:max-h-44">
         <img src={post.image} alt={post.title} className="size-full object-cover" />
       </a>
 
-      <p className="mb-3 text-[10px] font-bold tracking-[1px] text-navy-dark uppercase">
+      <p className="mb-2 text-[10px] font-bold tracking-[1px] text-navy-dark uppercase">
         {post.date} · {post.category}
       </p>
 
-      <h3 className="mb-4 font-display text-xl leading-[1.3] tracking-[-1px] text-[#0a1a2f] capitalize">
+      <h3 className="mb-3 font-display text-xl leading-[1.3] tracking-[-1px] text-[#0a1a2f] capitalize">
         <a href={`/blog/${post.slug}`}>{post.title}</a>
       </h3>
 
-      <p className="mb-6 line-clamp-2 text-base leading-[26px] text-[#4a5568]">{post.excerpt}</p>
+      <p className="mb-4 line-clamp-3 text-base leading-[26px] text-[#4a5568]">{post.excerpt}</p>
 
       <a
         href={`/blog/${post.slug}`}

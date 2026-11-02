@@ -48,6 +48,7 @@ type PageHeroProps = {
   eyebrow?: ReactNode
   title: ReactNode
   titleFont?: 'display' | 'accent'
+  titleClassName?: string
   body?: ReactNode
   bodyClassName?: string
   overlayClassName?: string
@@ -76,6 +77,7 @@ export default function PageHero({
   eyebrow,
   title,
   titleFont = 'display',
+  titleClassName = '',
   body,
   bodyClassName = 'max-w-[35rem] text-base leading-[26px] text-[#ededed] sm:text-xl sm:leading-[30px]',
   overlayClassName = 'bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,rgba(0,0,0,0)_35%,rgba(0,0,0,0.15)_100%)]',
@@ -113,7 +115,7 @@ export default function PageHero({
       >
         {eyebrow && (animateEntrance ? <div className={reveal('')}>{eyebrow}</div> : eyebrow)}
         <h1
-          className={`${reveal('hero-reveal-delay-1')} ${titleFontClassNames[titleFont]} ${titleSizeClassNames[size]} text-white capitalize`}
+          className={`${reveal('hero-reveal-delay-1')} ${titleFontClassNames[titleFont]} ${titleSizeClassNames[size]} text-white capitalize ${titleClassName}`}
         >
           {title}
         </h1>

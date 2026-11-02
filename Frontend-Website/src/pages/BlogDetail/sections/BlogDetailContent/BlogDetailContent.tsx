@@ -100,13 +100,13 @@ export default function BlogDetailContent({ post }: BlogDetailContentProps) {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            <div className="hidden flex-col items-start justify-between gap-6 rounded-lg border-2 border-navy-dark bg-white p-10 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] sm:flex sm:flex-row sm:items-center">
+            <div className="flex flex-col items-start justify-between gap-6 rounded-lg border-2 border-navy-dark bg-white p-6 shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1)] sm:flex-row sm:items-center sm:p-10">
               <div className="flex flex-col gap-2">
-                <h4 className="font-display text-2xl text-[#0a1f44] capitalize">{midCta.heading}</h4>
-                <p className="text-lg leading-[32.4px] text-[#374151]">{midCta.description}</p>
+                <h4 className="font-display text-xl text-[#0a1f44] capitalize sm:text-2xl">{midCta.heading}</h4>
+                <p className="text-base leading-[28px] text-[#374151] sm:text-lg sm:leading-[32.4px]">{midCta.description}</p>
               </div>
-              <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
-                <a href={`tel:${midCta.phone.replace(/\s/g, '')}`} className="text-right text-xl font-bold tracking-[-0.33px] text-[#0a1f44]">
+              <div className="flex w-full shrink-0 flex-col items-start gap-3 sm:w-auto sm:items-end">
+                <a href={`tel:${midCta.phone.replace(/\s/g, '')}`} className="text-xl font-bold tracking-[-0.33px] text-[#0a1f44] sm:text-right">
                   {midCta.phone}
                 </a>
                 <Button variant="dark" label="Contact Us" href="/contact" />

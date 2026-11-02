@@ -1,4 +1,3 @@
-import { Fragment } from 'react'
 import storyMain from '../../../../assets/about-story-main.png'
 import storyAccent from '../../../../assets/about-story-accent.png'
 import Button from '../../../../components/Button/Button'
@@ -70,26 +69,19 @@ export default function OurStory() {
           </div>
         </div>
 
-        <ul className="grid grid-cols-4 items-start gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-6">
-          {stats.map((stat, index) => (
-            <Fragment key={stat.value}>
-              <li className="flex flex-col items-center gap-1 text-center sm:flex-row sm:items-center sm:gap-1.5 sm:text-left">
-                <span className="font-display text-xl tracking-[-1px] text-black capitalize sm:text-[3.375rem] sm:tracking-[-2px]">
-                  {stat.value}
-                </span>
-                <span className="font-body text-[10px] leading-[14px] text-[#6e6e6e] sm:max-w-[8.125rem] sm:text-sm sm:leading-normal sm:font-light">
-                  {stat.label}
-                </span>
-              </li>
-              {index < stats.length - 1 && (
-                <li
-                  className="hidden self-center font-accent text-[2rem] text-black opacity-50 sm:block"
-                  aria-hidden="true"
-                >
-                  /
-                </li>
-              )}
-            </Fragment>
+        <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+          {stats.map((stat) => (
+            <li
+              key={stat.value}
+              className="flex flex-col gap-2 rounded-xl border border-border bg-frost/40 p-5 sm:gap-3 sm:p-6"
+            >
+              <span className="font-display text-[2.125rem] leading-none tracking-[-2px] text-ink capitalize sm:text-h2">
+                {stat.value}
+              </span>
+              <span className="font-body text-body-sm text-text-body sm:text-body">
+                {stat.label}
+              </span>
+            </li>
           ))}
         </ul>
       </div>

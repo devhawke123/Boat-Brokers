@@ -48,7 +48,9 @@ export default function OurPurpose() {
               index === 2 ? 'sm:col-span-2 lg:col-span-1' : ''
             } ${index === 1 ? 'lg:mt-16' : ''}`}
           >
-            <img src={pillar.icon} alt="" aria-hidden="true" className="h-16 w-auto" />
+            <span className="inline-flex w-fit items-center justify-center rounded-[6px] bg-badge-bg p-2.5">
+              <img src={pillar.icon} alt="" aria-hidden="true" className="size-5 object-contain" />
+            </span>
             <h3 className="font-display text-[1.75rem] leading-[1.3] tracking-[-1px] text-black capitalize">
               {pillar.title}
             </h3>

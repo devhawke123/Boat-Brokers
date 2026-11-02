@@ -22,9 +22,10 @@ export default function BlogDetailView({ post }: BlogDetailViewProps) {
         scrollHint
         maxWidthClassName="max-w-[66.875rem]"
         gapClassName="gap-4"
-        overlayClassName="bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.1)_35%,rgba(0,0,0,0.4)_100%)]"
+        titleClassName="[text-shadow:0px_0px_10px_black]"
+        overlayClassName="bg-[linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45))]"
         eyebrow={
-          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold tracking-[2.4px] text-[#d1d5db] uppercase">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold tracking-[2.4px] text-[#d1d5db] uppercase [text-shadow:0px_0px_10px_black]">
             <span>{post.date}</span>
             <span className="size-1 rounded-full bg-[#d1d5db]" />
             <span className="text-blue">{post.readTime}</span>

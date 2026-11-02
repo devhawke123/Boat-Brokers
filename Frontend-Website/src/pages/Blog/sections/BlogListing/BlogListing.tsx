@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useBlogPosts } from '../../../../data/blogPosts'
+import Button from '../../../../components/Button/Button'
 import BlogCard from './BlogCard'
 import { IconChevronDown, IconGrid, IconList, IconSearch } from './icons'
 
@@ -154,13 +155,11 @@ export default function BlogListing() {
       )}
 
       {hasMore && (
-        <button
-          type="button"
+        <Button
+          variant="dark"
+          label="Load More"
           onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#0d5673] px-6 py-3 text-base font-semibold text-white shadow-btn transition-[transform,opacity] duration-150 ease-out hover:opacity-90 active:scale-[0.98]"
-        >
-          Load More
-        </button>
+        />
       )}
     </section>
   )

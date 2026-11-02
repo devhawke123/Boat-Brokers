@@ -14,6 +14,17 @@ const gallery = [
   { src: tourKitchen, label: 'Kitchen' },
 ]
 
+function RoomCard({ src, label }: { src: string; label: string }) {
+  return (
+    <div className="media-frame h-[15.1875rem] w-full rounded-[9px]">
+      <img src={src} alt={label} />
+      <span className="absolute top-[19px] right-[20px] z-[1] rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export default function VirtualTour() {
   const [active, setActive] = useState(0)
 
@@ -94,8 +105,16 @@ export default function VirtualTour() {
           </a>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-8 sm:flex-row sm:gap-[3.375rem]">
-          <div className="order-2 flex shrink-0 items-center justify-center gap-6 sm:order-1 sm:flex-col">
+        {/* Small screens: stacked rooms, no arrows / no horizontal scroll */}
+        <div className="flex w-full flex-col gap-6 sm:hidden">
+          {gallery.map((item) => (
+            <RoomCard key={item.label} src={item.src} label={item.label} />
+          ))}
+        </div>
+
+        {/* sm+: arrow controls + three-up grid */}
+        <div className="hidden w-full items-center gap-[3.375rem] sm:flex">
+          <div className="flex shrink-0 flex-col items-center justify-center gap-6">
             <button
               type="button"
               onClick={goPrev}
@@ -117,17 +136,9 @@ export default function VirtualTour() {
             </button>
           </div>
 
-          <div className="order-1 flex w-full flex-1 snap-x snap-mandatory gap-10 overflow-x-auto pb-2 sm:order-2 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+          <div className="grid w-full flex-1 grid-cols-3 gap-10">
             {visible.map((item) => (
-              <div
-                key={item.label}
-                className="media-frame h-[15.1875rem] w-[80%] shrink-0 snap-start rounded-[9px] sm:w-full"
-              >
-                <img src={item.src} alt={item.label} />
-                <span className="absolute top-[19px] right-[20px] z-[1] rounded-full bg-white px-3.5 py-2 font-display text-base whitespace-nowrap text-black capitalize">
-                  {item.label}
-                </span>
-              </div>
+              <RoomCard key={item.label} src={item.src} label={item.label} />
             ))}
           </div>
         </div>

@@ -66,15 +66,19 @@ const testimonials: Testimonial[] = [
   },
 ]
 
-const total = testimonials.length
+const pageSize = 2
+const pageCount = Math.ceil(testimonials.length / pageSize)
 
 export default function Testimonials() {
-  const [index, setIndex] = useState(0)
+  const [page, setPage] = useState(0)
 
-  const showPair = [testimonials[index], testimonials[(index + 1) % total]]
+  const start = page * pageSize
+  const showPair = testimonials.slice(start, start + pageSize)
+  const canPrev = page > 0
+  const canNext = page < pageCount - 1
 
-  const goPrev = () => setIndex((current) => (current - 1 + total) % total)
-  const goNext = () => setIndex((current) => (current + 1) % total)
+  const goPrev = () => setPage((current) => Math.max(0, current - 1))
+  const goNext = () => setPage((current) => Math.min(pageCount - 1, current + 1))
 
   return (
     <section className="section flex flex-col items-center gap-8 short:gap-4 rounded-2xl bg-navy-darkest px-section-x sm:gap-12">
@@ -92,13 +96,11 @@ export default function Testimonials() {
         </p>
       </div>
 
-      <div className="flex w-full flex-wrap justify-center gap-8">
-        {showPair.map((testimonial, pairIndex) => (
+      <div className="grid min-h-[22rem] w-full grid-cols-1 items-stretch gap-8 sm:min-h-[26rem] sm:grid-cols-2">
+        {showPair.map((testimonial) => (
           <article
             key={testimonial.name}
-            className={`flex w-full max-w-[38.125rem] flex-1 flex-col gap-6 rounded-xl border border-navy-dark bg-[rgba(17,73,96,0.59)] p-6 sm:min-w-72 sm:gap-10 sm:p-8 ${
-              pairIndex === 1 ? 'hidden sm:flex' : ''
-            }`}
+            className="flex min-h-[22rem] w-full flex-col gap-6 rounded-xl border border-navy-dark bg-[rgba(17,73,96,0.59)] p-6 sm:min-h-[26rem] sm:gap-10 sm:p-8"
           >
             <div className="flex items-center gap-1" aria-hidden="true">
               <img src={star} alt="" className="size-[18px]" />
@@ -110,42 +112,50 @@ export default function Testimonials() {
             <p className="font-accent text-[17px] leading-[1.2] text-frost sm:text-[1.3125rem]">
               {testimonial.quote}
             </p>
-            <p className="text-body-sm font-light text-[#81a1b4] sm:text-base">{testimonial.body}</p>
-            <div className="flex flex-col gap-2">
+            <p className="flex-1 text-body-sm font-light text-[#81a1b4] sm:text-base">{testimonial.body}</p>
+            <div className="mt-auto flex flex-col gap-2">
               <p className="font-accent text-[17px] text-frost sm:text-[1.3125rem]">{testimonial.name}</p>
               <p className="text-xs font-light text-[#4eceff] sm:text-sm">{testimonial.date}</p>
             </div>
           </article>
         ))}
+        {showPair.length === 1 && <div className="hidden min-h-[26rem] sm:block" aria-hidden="true" />}
       </div>
 
       <div className="flex items-center gap-3 sm:gap-4">
         <button
           type="button"
-          className="flex h-8 w-9 items-center justify-center rounded-md bg-text-muted sm:h-10 sm:w-12 sm:rounded-lg"
+          className={`flex h-8 w-9 items-center justify-center rounded-md sm:h-10 sm:w-12 sm:rounded-lg ${
+            canPrev ? 'bg-blue' : 'cursor-not-allowed bg-text-muted opacity-40'
+          }`}
           onClick={goPrev}
-          aria-label="Previous testimonial"
+          disabled={!canPrev}
+          aria-label="Previous testimonials"
         >
           <img src={arrowLeft} alt="" aria-hidden="true" className="size-4 sm:size-6" />
         </button>
         <div className="flex w-20 flex-col items-center gap-2 sm:w-[6.1875rem]">
           <p className="font-accent text-xl text-blue sm:text-[1.875rem]">
-            {String(index + 1).padStart(2, '0')} <span className="text-sm text-text-muted">/ {total}</span>
+            {String(page + 1).padStart(2, '0')}{' '}
+            <span className="text-sm text-text-muted">/ {pageCount}</span>
           </p>
           <div className="flex w-full items-center gap-[3px]">
-            {testimonials.map((testimonial, i) => (
+            {Array.from({ length: pageCount }, (_, i) => (
               <span
-                key={testimonial.name}
-                className={`h-0.5 flex-1 rounded-full bg-blue ${i === index ? 'opacity-100' : 'opacity-[0.16]'}`}
+                key={i}
+                className={`h-0.5 flex-1 rounded-full bg-blue ${i === page ? 'opacity-100' : 'opacity-[0.16]'}`}
               />
             ))}
           </div>
         </div>
         <button
           type="button"
-          className="flex h-8 w-9 items-center justify-center rounded-md bg-blue sm:h-10 sm:w-12 sm:rounded-lg"
+          className={`flex h-8 w-9 items-center justify-center rounded-md sm:h-10 sm:w-12 sm:rounded-lg ${
+            canNext ? 'bg-blue' : 'cursor-not-allowed bg-text-muted opacity-40'
+          }`}
           onClick={goNext}
-          aria-label="Next testimonial"
+          disabled={!canNext}
+          aria-label="Next testimonials"
         >
           <img src={arrowLeft} alt="" aria-hidden="true" className="size-4 rotate-180 sm:size-6" />
         </button>
