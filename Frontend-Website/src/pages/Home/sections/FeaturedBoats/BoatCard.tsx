@@ -1,6 +1,3 @@
-import arrowUpRightLight from '../../../../assets/icons/arrow-up-right.svg'
-import arrowUpRightDark from '../../../../assets/icons/arrow-up-right-white.svg'
-
 export type Boat = {
   name: string
   price: string
@@ -16,6 +13,33 @@ type BoatCardProps = {
   boat: Boat
 }
 
+function ArrowUpRightIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 36L36 12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.5 12H36V31.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export default function BoatCard({ boat }: BoatCardProps) {
   return (
     <article className="group flex flex-col gap-4 rounded-xl transition-colors duration-300 lg:gap-8 lg:hover:bg-[#e8f6ff] lg:hover:pb-8">
@@ -23,29 +47,29 @@ export default function BoatCard({ boat }: BoatCardProps) {
         <div className="absolute inset-0 p-3 transition-[padding] duration-300 lg:p-5 lg:group-hover:p-10">
           <img src={boat.image} alt={boat.name} className="size-full rounded-lg object-cover" />
         </div>
-        <dl className="relative z-[1] mt-auto mb-3 ml-3 mr-3 hidden max-w-[17.5rem] flex-col gap-1 self-stretch rounded-lg border border-white/15 bg-[linear-gradient(45deg,rgba(210,200,200,0.12)_0%,rgba(248,252,255,0.10)_50%,rgba(235,242,255,0.08)_100%)] px-3 py-2 text-[10px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background,box-shadow,border-color,backdrop-filter] duration-300 lg:flex lg:mb-2 lg:ml-2 lg:mr-2 lg:max-w-[12.5rem] lg:gap-0.5 lg:px-2 lg:py-1.5 xl:mr-0 xl:mb-6 xl:ml-6 xl:max-w-[17.5rem] xl:gap-2 xl:px-5 xl:py-3 xl:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#EBF2FF0A] lg:group-hover:shadow-none lg:group-hover:backdrop-blur-[2px]">
+        <dl className="relative z-[1] mt-auto mb-3 ml-3 mr-3 hidden max-w-[17.5rem] flex-col gap-1 self-stretch rounded-lg border border-white/15 bg-[#0000006b] px-3 py-2 text-[10px] backdrop-blur-md transition-[background,border-color,backdrop-filter] duration-300 lg:flex lg:mb-2 lg:ml-2 lg:mr-2 lg:max-w-[12.5rem] lg:gap-0.5 lg:px-2 lg:py-1.5 xl:mr-0 xl:mb-6 xl:ml-6 xl:max-w-[17.5rem] xl:gap-2 xl:px-5 xl:py-3 xl:text-sm lg:group-hover:border-white/10 lg:group-hover:bg-[#00000080] lg:group-hover:backdrop-blur-[2px]">
           <div className="flex w-full items-center gap-2 xl:gap-3">
             <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Length/Beam:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.lengthBeam}</dd>
+            <dd className="m-0 w-[5.625rem] font-light text-frost/90 xl:w-[9.5625rem]">{boat.lengthBeam}</dd>
           </div>
           <div className="flex w-full items-center gap-2 xl:gap-3">
             <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Stern:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.stern}</dd>
+            <dd className="m-0 w-[5.625rem] font-light text-frost/90 xl:w-[9.5625rem]">{boat.stern}</dd>
           </div>
           <div className="flex w-full items-center gap-2 xl:gap-3">
             <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Year Built:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.yearBuilt}</dd>
+            <dd className="m-0 w-[5.625rem] font-light text-frost/90 xl:w-[9.5625rem]">{boat.yearBuilt}</dd>
           </div>
           <div className="flex w-full items-center gap-2 xl:gap-3">
             <dt className="w-[4.6875rem] font-normal text-frost uppercase tracking-[0.5px] xl:w-[7.6875rem] xl:tracking-[0.84px]">Builder:</dt>
-            <dd className="m-0 w-[5.625rem] font-light text-taupe xl:w-[9.5625rem]">{boat.builder}</dd>
+            <dd className="m-0 w-[5.625rem] font-light text-frost/90 xl:w-[9.5625rem]">{boat.builder}</dd>
           </div>
         </dl>
       </div>
 
       <div className="flex items-end justify-between px-0 transition-[padding] duration-300 lg:group-hover:px-7">
         <div className="flex flex-col gap-1 lg:gap-2">
-          <h3 className="font-display text-h4 text-frost capitalize transition-colors duration-300 lg:group-hover:text-[1.75rem] lg:group-hover:text-ink">
+          <h3 className="font-display text-h4 text-frost capitalize transition-[color,font-size] duration-300 lg:group-hover:text-[1.75rem] lg:group-hover:text-ink">
             {boat.name}
           </h3>
           <p className="text-base text-gold transition-colors duration-300 lg:text-2xl lg:group-hover:text-[#0a5928]">
@@ -54,21 +78,10 @@ export default function BoatCard({ boat }: BoatCardProps) {
         </div>
         <a
           href={boat.href}
-          className="relative flex size-11 shrink-0 items-center justify-center rounded-full border border-blue-lighter transition-colors duration-300 lg:size-20 lg:group-hover:border-transparent lg:group-hover:bg-blue"
+          className="relative flex size-11 shrink-0 items-center justify-center rounded-full border border-blue-lighter text-blue-hover transition-colors duration-300 lg:size-20 lg:group-hover:border-transparent lg:group-hover:bg-blue lg:group-hover:text-white"
           aria-label={`View ${boat.name}`}
         >
-          <img
-            src={arrowUpRightLight}
-            alt=""
-            aria-hidden="true"
-            className="absolute size-6 lg:size-12 lg:group-hover:hidden"
-          />
-          <img
-            src={arrowUpRightDark}
-            alt=""
-            aria-hidden="true"
-            className="absolute hidden lg:size-8 lg:group-hover:block"
-          />
+          <ArrowUpRightIcon className="size-6 lg:size-12" />
         </a>
       </div>
     </article>

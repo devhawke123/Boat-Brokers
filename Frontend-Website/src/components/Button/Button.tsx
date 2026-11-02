@@ -1,6 +1,4 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
-import arrowRightWhite from '../../assets/ArrowRight.png'
-import arrowRightDark from '../../assets/ArrowRightButton.svg'
 
 export type ButtonVariant = 'dark' | 'light' | 'outline-white' | 'outline-dark'
 
@@ -21,18 +19,38 @@ type ButtonAsAnchor = CommonProps &
 
 type ButtonProps = ButtonAsButton | ButtonAsAnchor
 
-const arrowByVariant: Record<ButtonVariant, string> = {
-  dark: arrowRightWhite,
-  light: arrowRightDark,
-  'outline-white': arrowRightWhite,
-  'outline-dark': arrowRightDark,
-}
-
 const variantClasses: Record<ButtonVariant, string> = {
   dark: 'border-2 border-transparent bg-navy-dark text-white hover:border-navy-dark hover:bg-white hover:text-navy-dark',
   light: 'border-2 border-transparent bg-white text-black hover:border-black hover:bg-black hover:text-white',
   'outline-white': 'border-2 border-white bg-transparent text-white hover:bg-white hover:text-navy-dark',
   'outline-dark': 'border-2 border-navy-dark bg-transparent text-navy-dark hover:bg-navy-dark hover:text-white',
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg
+      className="size-[18px] shrink-0"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M2.8125 9H15.1875"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.125 3.9375L15.1875 9L10.125 14.0625"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
 }
 
 export default function Button({
@@ -57,9 +75,7 @@ export default function Button({
         <span className="font-body text-base font-semibold">{label}</span>
         {sublabel && <span className="font-body text-caption font-normal">{sublabel}</span>}
       </span>
-      {icon === 'arrow-right' && (
-        <img className="size-[18px] shrink-0" src={arrowByVariant[variant]} alt="" aria-hidden="true" />
-      )}
+      {icon === 'arrow-right' && <ArrowRightIcon />}
     </>
   )
 

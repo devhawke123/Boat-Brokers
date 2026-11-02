@@ -18,7 +18,6 @@ type NavLink = {
 }
 
 const navLinks: NavLink[] = [
-  { label: 'Home', href: '/' },
   { label: 'Boats for Sale', href: '/boats-for-sale' },
   {
     label: 'Buying',
@@ -56,12 +55,7 @@ const navLinks: NavLink[] = [
       { label: 'Contact Us', href: '/contact' },
     ],
   },
-  {
-    label: 'More',
-    href: '/blog',
-    hasDropdown: true,
-    dropdownItems: [{ label: 'Blog', href: '/blog' }],
-  },
+  { label: 'Blog', href: '/blog' },
 ]
 
 type NavbarProps = {
@@ -84,21 +78,25 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
     const updatePosition = () => {
       const rect = headerRef.current!.getBoundingClientRect()
       setMobilePanelStyle({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.left + window.scrollX,
+        top: rect.bottom + 8,
+        left: rect.left,
         width: rect.width,
       })
     }
 
     updatePosition()
     window.addEventListener('resize', updatePosition)
-    return () => window.removeEventListener('resize', updatePosition)
+    window.addEventListener('scroll', updatePosition, { passive: true })
+    return () => {
+      window.removeEventListener('resize', updatePosition)
+      window.removeEventListener('scroll', updatePosition)
+    }
   }, [isMenuOpen])
 
   return (
     <header
       ref={headerRef}
-      className="absolute inset-x-section-x top-section-y z-20 mx-auto max-w-[100rem] rounded-3xl bg-[rgba(23,23,23,0.25)] backdrop-blur-[15px]"
+      className="fixed inset-x-[calc(1.5rem+var(--spacing-section-x))] top-[calc(1.5rem+var(--spacing-section-y))] z-20 mx-auto max-w-[100rem] rounded-3xl bg-[rgba(23,23,23,0.25)] backdrop-blur-[15px]"
     >
       <div className="flex items-center justify-between gap-3 px-4 py-3 2xl:gap-6 2xl:px-5">
         <a href="/" className="flex shrink-0 items-center" aria-label="The Boat Brokers home">
@@ -173,7 +171,7 @@ export default function Navbar({ activeLabel = 'Home' }: NavbarProps) {
           <div
             id="mobile-nav-panel"
             style={{
-              position: 'absolute',
+              position: 'fixed',
               top: mobilePanelStyle.top,
               left: mobilePanelStyle.left,
               width: mobilePanelStyle.width,
