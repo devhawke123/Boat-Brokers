@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'r
 import { motion, useReducedMotion } from 'framer-motion'
 import '@fontsource-variable/plus-jakarta-sans'
 import { AuthLoginCarousel } from '../../../seller-portal/components/AuthLoginCarousel'
-import { AccountButton, AccountField } from '../../../seller-portal/components/V2AccountSettings'
+import { AccountButton, AccountField, AuthFormAlert } from '../../../seller-portal/components/V2AccountSettings'
 import { EASE } from '../../../seller-portal/lib/motion'
 import { useAdminLogin } from '../../data/useAdminLogin'
 import '../../../seller-portal/pages/v2-login.css'
@@ -74,6 +74,7 @@ export default function Login() {
                 value={email}
                 onChange={update('email', setEmail)}
                 error={fieldErrors.email}
+                markedInvalid={Boolean(error)}
                 required
               />
               <AccountField
@@ -85,13 +86,10 @@ export default function Login() {
                 value={password}
                 onChange={update('password', setPassword)}
                 error={fieldErrors.password}
+                markedInvalid={Boolean(error)}
                 required
               />
-              {error && (
-                <p className="v2-login-error" role="alert">
-                  {error}
-                </p>
-              )}
+              {error && <AuthFormAlert>{error}</AuthFormAlert>}
               <AccountButton kind="primary" arrow="right" type="submit" disabled={loading}>
                 {loading ? 'Signing in…' : 'Sign in'}
               </AccountButton>

@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthLoginCarousel } from '../components/AuthLoginCarousel'
-import { AccountButton, AccountField } from '../components/V2AccountSettings'
+import { AccountButton, AccountField, AuthFormAlert } from '../components/V2AccountSettings'
 import { useSession } from '../context/useSession'
 import { createSeller, loginSeller, requestSellerPasswordReset, resetSellerPassword } from '../lib/api'
 import { EASE } from '../lib/motion'
@@ -180,6 +180,7 @@ export default function V2Login() {
                       value={email}
                       onChange={update('email', setEmail)}
                       error={errors.email}
+                      markedInvalid={Boolean(errors.form) && !signingUp && !recovering}
                       required
                     />
                   )}
@@ -193,6 +194,7 @@ export default function V2Login() {
                       value={password}
                       onChange={update('password', setPassword)}
                       error={errors.password}
+                      markedInvalid={Boolean(errors.form) && !signingUp && !resetting}
                       required
                     />
                   )}
@@ -214,11 +216,7 @@ export default function V2Login() {
                       Forgot password?
                     </Link>
                   )}
-                  {errors.form && (
-                    <p className="v2-login-error" role="alert">
-                      {errors.form}
-                    </p>
-                  )}
+                  {errors.form && <AuthFormAlert>{errors.form}</AuthFormAlert>}
                   <AccountButton kind="primary" arrow="right" type="submit" disabled={submitting}>
                     {resetting ? 'Update password' : recovering ? 'Send reset link' : signingUp ? 'Create account' : 'Sign in'}
                   </AccountButton>
