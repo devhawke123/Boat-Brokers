@@ -112,6 +112,10 @@ jobs:
             cd "${{ secrets.DEPLOY_PATH }}/Backend"
             npm ci --omit=dev
             npx prisma generate
+            # First push of 20261103100000 used invalid MySQL SQL and left a
+            # failed row in _prisma_migrations (P3009). Mark it rolled back so
+            # the fixed migration can apply. No-op if it is not currently failed.
+            npx prisma migrate resolve --rolled-back "20261103100000_add_seller_password_reset" || true
             npx prisma migrate deploy
             command -v pm2 >/dev/null || npm install -g pm2
             pm2 startOrRestart ecosystem.config.cjs

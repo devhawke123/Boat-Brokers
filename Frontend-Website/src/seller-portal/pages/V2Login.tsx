@@ -189,6 +189,13 @@ export default function V2Login() {
     setResetEmailSent(false)
     setPasswordResetDone(false)
   }
+  // Drop leftover signup/login errors when switching auth screens (e.g. signup
+  // "Email already in use" must not sit on top of forgot-password).
+  useEffect(() => {
+    setErrors({})
+    setResetEmailSent(false)
+    setPasswordResetDone(false)
+  }, [mode])
   function update(field: string, setter: (value: string) => void) {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value)
