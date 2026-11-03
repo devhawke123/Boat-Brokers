@@ -198,6 +198,14 @@ export function loginSeller(email: string, password: string): Promise<ApiSeller>
   return apiPost<ApiSeller>('/sellers/login', { email, password })
 }
 
+export function requestSellerPasswordReset(email: string): Promise<void> {
+  return apiPost<void>('/sellers/forgot-password', { email })
+}
+
+export function resetSellerPassword(token: string, password: string): Promise<void> {
+  return apiPost<void>('/sellers/reset-password', { token, password })
+}
+
 export function changeSellerPassword(id: number, currentPassword: string, newPassword: string): Promise<void> {
   return apiPut<void>(`/sellers/${id}/password`, { currentPassword, newPassword })
 }

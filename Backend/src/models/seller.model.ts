@@ -13,6 +13,10 @@ export function findSellerByEmail(email: string) {
   return prisma.seller.findUnique({ where: { email } });
 }
 
+export function findSellerByPasswordResetToken(passwordResetToken: string) {
+  return prisma.seller.findFirst({ where: { passwordResetToken } });
+}
+
 export function createSeller(data: Prisma.SellerCreateInput) {
   return prisma.seller.create({ data });
 }

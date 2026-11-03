@@ -206,6 +206,9 @@ model Seller {
   email       String        @unique
   // Hashed password (e.g. bcrypt) used for seller-portal login
   password    String?
+  // SHA-256 of the one-time reset token emailed to the seller; null when unused/cleared.
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
   phone       String?
   location    String?
   // Local path under /uploads (see Backend/src/lib/upload.ts), not an external link.

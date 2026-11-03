@@ -362,6 +362,102 @@ ${dashboardUrl}
   }
 }
 
+// Acknowledgement only — no action required. Used after self-serve or admin password changes.
+export async function sendSellerPasswordChangedEmail(params: {
+  to: string
+  sellerName: string
+  changedBy: "you" | "an administrator"
+}) {
+  const { to, sellerName, changedBy } = params
+  const firstName = sellerName.trim().split(/\s+/)[0] || sellerName
+  const loginUrl = `${CLIENT_ORIGIN}/seller-portal/login`
+
+  const html = renderEmailShell({
+    eyebrow: "Security Notice",
+    heading: `Your password was changed, ${escapeHtml(firstName)}`,
+    bodyHtml: `
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 20px; font-family: Arial, sans-serif;">
+            This is a quick acknowledgement that the password for your The Boat Brokers seller account was just changed by ${changedBy === "you" ? "you" : "an administrator"}.
+          </p>
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 28px; font-family: Arial, sans-serif;">
+            If you expected this, you can ignore this email. If you didn&rsquo;t, please contact us right away so we can secure your account.
+          </p>`,
+    ctaLabel: "Go to seller sign in",
+    ctaUrl: loginUrl,
+  })
+
+  const text = `Your password was changed, ${firstName}
+
+This is a quick acknowledgement that the password for your The Boat Brokers seller account was just changed by ${changedBy === "you" ? "you" : "an administrator"}.
+
+If you expected this, you can ignore this email. If you didn't, please contact us right away.
+
+${loginUrl}
+
+- The Boat Brokers`
+
+  try {
+    const response = await resend.emails.send({
+      from: `The Boat Brokers <${FROM_EMAIL}>`,
+      to,
+      subject: "Your seller password was changed",
+      html,
+      text,
+    })
+    if (response.error) console.error("Resend API Error sending seller-password-changed email:", response.error)
+  } catch (err) {
+    console.error("Exception sending seller-password-changed email:", err)
+  }
+}
+
+// Password-reset link for seller portal. Fire-and-forget safe like welcome email.
+export async function sendSellerPasswordResetEmail(params: {
+  to: string
+  sellerName: string
+  resetUrl: string
+}) {
+  const { to, sellerName, resetUrl } = params
+  const firstName = sellerName.trim().split(/\s+/)[0] || sellerName
+
+  const html = renderEmailShell({
+    eyebrow: "Password Reset",
+    heading: `Reset your password, ${escapeHtml(firstName)}`,
+    bodyHtml: `
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 20px; font-family: Arial, sans-serif;">
+            We received a request to reset the password for your The Boat Brokers seller account.
+          </p>
+          <p style="font-size:15px; line-height:24px; color:#374151; margin:0 0 28px; font-family: Arial, sans-serif;">
+            This link expires in one hour. If you didn&rsquo;t ask for a reset, you can ignore this email.
+          </p>`,
+    ctaLabel: "Choose a new password",
+    ctaUrl: resetUrl,
+  })
+
+  const text = `Reset your password, ${firstName}
+
+We received a request to reset the password for your The Boat Brokers seller account.
+
+Choose a new password (link expires in one hour):
+${resetUrl}
+
+If you didn't ask for a reset, you can ignore this email.
+
+- The Boat Brokers`
+
+  try {
+    const response = await resend.emails.send({
+      from: `The Boat Brokers <${FROM_EMAIL}>`,
+      to,
+      subject: "Reset your seller password",
+      html,
+      text,
+    })
+    if (response.error) console.error("Resend API Error sending seller-password-reset email:", response.error)
+  } catch (err) {
+    console.error("Exception sending seller-password-reset email:", err)
+  }
+}
+
 // Sent when an admin rejects a pending viewing request or cancels an approved one.
 export async function sendBookingRejectedEmail(params: {
   to: string;

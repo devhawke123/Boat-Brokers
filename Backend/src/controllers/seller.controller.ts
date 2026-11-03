@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "crypto";
 import type { Request, Response } from "express";
 import { hashPassword, verifyPassword } from "../lib/password";
 import {
@@ -6,17 +7,31 @@ import {
   findAllSellers,
   findSellerByEmail,
   findSellerById,
+  findSellerByPasswordResetToken,
   updateSeller,
 } from "../models/seller.model";
 import {
   changeSellerPasswordSchema,
   createSellerSchema,
+  forgotSellerPasswordSchema,
+  resetSellerPasswordSchema,
   sellerLoginSchema,
   updateSellerSchema,
   updateSellerStatusSchema,
 } from "../schemas/seller.schema";
 import { serializeSeller } from "../views/seller.view";
-import { sendSellerWelcomeEmail } from "../lib/email";
+import {
+  sendSellerPasswordChangedEmail,
+  sendSellerPasswordResetEmail,
+  sendSellerWelcomeEmail,
+} from "../lib/email";
+
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://theboatbrokers.co.uk";
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
+
+function hashResetToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export async function listSellers(_req: Request, res: Response) {
   const sellers = await findAllSellers();
@@ -62,6 +77,13 @@ export async function updateSellerHandler(req: Request, res: Response) {
     ...rest,
     ...(password ? { password: hashPassword(password) } : {}),
   });
+  if (password) {
+    await sendSellerPasswordChangedEmail({
+      to: seller.email,
+      sellerName: seller.name,
+      changedBy: "an administrator",
+    });
+  }
   res.json(serializeSeller(seller));
 }
 
@@ -91,6 +113,11 @@ export async function changeSellerPasswordHandler(req: Request, res: Response) {
   }
 
   await updateSeller(id, { password: hashPassword(parsed.data.newPassword) });
+  await sendSellerPasswordChangedEmail({
+    to: existing.email,
+    sellerName: existing.name,
+    changedBy: "you",
+  });
   res.status(204).send();
 }
 
@@ -131,4 +158,51 @@ export async function sellerLoginHandler(req: Request, res: Response) {
     return res.status(401).json({ error: "Invalid email or password" });
   }
   res.json(serializeSeller(seller));
+}
+
+// Always 204 — don't reveal whether the email exists.
+export async function forgotSellerPasswordHandler(req: Request, res: Response) {
+  const parsed = forgotSellerPasswordSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const seller = await findSellerByEmail(parsed.data.email.trim());
+
+  if (seller) {
+    const rawToken = randomBytes(32).toString("hex");
+    await updateSeller(seller.id, {
+      passwordResetToken: hashResetToken(rawToken),
+      passwordResetExpires: new Date(Date.now() + RESET_TOKEN_TTL_MS),
+    });
+    const resetUrl = `${CLIENT_ORIGIN}/seller-portal/reset-password?token=${encodeURIComponent(rawToken)}`;
+    await sendSellerPasswordResetEmail({
+      to: seller.email,
+      sellerName: seller.name,
+      resetUrl,
+    });
+  }
+
+  res.status(204).send();
+}
+
+export async function resetSellerPasswordHandler(req: Request, res: Response) {
+  const parsed = resetSellerPasswordSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const tokenHash = hashResetToken(parsed.data.token);
+  const seller = await findSellerByPasswordResetToken(tokenHash);
+  if (!seller || !seller.passwordResetExpires || seller.passwordResetExpires.getTime() < Date.now()) {
+    return res.status(400).json({ error: "This reset link is invalid or has expired. Please request a new one." });
+  }
+
+  await updateSeller(seller.id, {
+    password: hashPassword(parsed.data.password),
+    passwordResetToken: null,
+    passwordResetExpires: null,
+  });
+  await sendSellerPasswordChangedEmail({
+    to: seller.email,
+    sellerName: seller.name,
+    changedBy: "you",
+  });
+  res.status(204).send();
 }

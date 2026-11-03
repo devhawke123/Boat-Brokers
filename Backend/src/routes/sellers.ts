@@ -3,8 +3,10 @@ import {
   changeSellerPasswordHandler,
   createSellerHandler,
   deleteSellerHandler,
+  forgotSellerPasswordHandler,
   getSeller,
   listSellers,
+  resetSellerPasswordHandler,
   sellerLoginHandler,
   updateSellerHandler,
   updateSellerStatusHandler,
@@ -16,6 +18,8 @@ export const sellersRouter = Router();
 
 sellersRouter.get("/", listSellers);
 sellersRouter.post("/login", sellerLoginHandler);
+sellersRouter.post("/forgot-password", forgotSellerPasswordHandler);
+sellersRouter.post("/reset-password", resetSellerPasswordHandler);
 sellersRouter.get("/:id", getSeller);
 sellersRouter.post("/", createSellerHandler);
 sellersRouter.put("/:id", updateSellerHandler);

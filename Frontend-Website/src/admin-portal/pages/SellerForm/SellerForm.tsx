@@ -39,7 +39,18 @@ export default function SellerForm({ sellerId }: SellerFormProps) {
     setError(null)
     try {
       if (isEdit && sellerId !== undefined) {
-        await updateSeller(sellerId, { name, email, phone: phone || undefined, location: location || undefined })
+        if (password && password.length < 8) {
+          setError('New password must be at least 8 characters.')
+          setSaving(false)
+          return
+        }
+        await updateSeller(sellerId, {
+          name,
+          email,
+          phone: phone || undefined,
+          location: location || undefined,
+          ...(password ? { password } : {}),
+        })
         invalidateSellersCache()
         window.location.href = `/admin-portal/sellers/${sellerId}`
       } else {
@@ -96,15 +107,18 @@ export default function SellerForm({ sellerId }: SellerFormProps) {
             <TextField label="Email" required value={email} onChange={setEmail} placeholder="jane@example.com" />
           </FieldRow>
 
-          {!isEdit && (
+          <div className="flex flex-col gap-1">
             <TextField
-              label="Password"
-              required
+              label={isEdit ? 'New password' : 'Password'}
+              required={!isEdit}
               value={password}
               onChange={setPassword}
               placeholder="At least 8 characters"
             />
-          )}
+            {isEdit && (
+              <p className="text-xs text-[#64748b]">Leave blank to keep the current password. The seller will get an email if you set a new one.</p>
+            )}
+          </div>
 
           <FieldRow>
             <TextField label="Phone" value={phone} onChange={setPhone} placeholder="07123 456789" />

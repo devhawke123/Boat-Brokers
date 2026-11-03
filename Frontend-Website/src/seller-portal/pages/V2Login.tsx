@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AccountButton, AccountField } from '../components/V2AccountSettings'
 import { useSession } from '../context/useSession'
-import { createSeller, loginSeller } from '../lib/api'
+import { createSeller, loginSeller, requestSellerPasswordReset, resetSellerPassword } from '../lib/api'
 import { EASE, inventoryMotion } from '../lib/motion'
 import './v2-login.css'
 
@@ -149,27 +149,45 @@ export default function V2Login() {
   const { seller, setSeller } = useSession()
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const reduced = useReducedMotion()
   const recovering = location.pathname === '/forgot-password'
+  const resetting = location.pathname === '/reset-password'
   const signingUp = location.pathname === '/signup'
-  const mode = recovering ? 'reset' : signingUp ? 'signup' : 'login'
+  const resetToken = searchParams.get('token')?.trim() ?? ''
+  const mode = resetting ? 'set-password' : recovering ? 'reset' : signingUp ? 'signup' : 'login'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
+  const [resetEmailSent, setResetEmailSent] = useState(false)
+  const [passwordResetDone, setPasswordResetDone] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
   const from: unknown = location.state?.from
   const destination =
-    typeof from === 'string' && from.startsWith('/') && !/^\/(?:login|signup|forgot-password)(?:[/?#]|$)/.test(from) ? from : '/dashboard'
+    typeof from === 'string' &&
+    from.startsWith('/') &&
+    !/^\/(?:login|signup|forgot-password|reset-password)(?:[/?#]|$)/.test(from)
+      ? from
+      : '/dashboard'
   useEffect(() => {
-    document.title = `${recovering ? 'Reset password' : signingUp ? 'Create account' : 'Sign in'} · The Boat Brokers`
-  }, [recovering, signingUp])
+    const title = resetting
+      ? 'Choose a new password'
+      : recovering
+        ? 'Reset password'
+        : signingUp
+          ? 'Create account'
+          : 'Sign in'
+    document.title = `${title} · The Boat Brokers`
+  }, [recovering, resetting, signingUp])
   function clearForm() {
     setPassword('')
     setConfirmation('')
     setErrors({})
+    setResetEmailSent(false)
+    setPasswordResetDone(false)
   }
   function update(field: string, setter: (value: string) => void) {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -181,21 +199,29 @@ export default function V2Login() {
     event.preventDefault()
     const next: Record<string, string> = {}
     if (signingUp && !name.trim()) next.name = 'Enter your full name.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = 'Enter a valid email address.'
-    if (signingUp && password.length < 8) next.password = 'Use at least 8 characters.'
-    if (!recovering && !signingUp && !password) next.password = 'Enter your password.'
-    if (signingUp && confirmation !== password) next.confirmation = 'Your passwords must match.'
+    if (!resetting && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = 'Enter a valid email address.'
+    if ((signingUp || resetting) && password.length < 8) next.password = 'Use at least 8 characters.'
+    if (!recovering && !signingUp && !resetting && !password) next.password = 'Enter your password.'
+    if ((signingUp || resetting) && confirmation !== password) next.confirmation = 'Your passwords must match.'
+    if (resetting && !resetToken) next.form = 'This reset link is missing or invalid. Please request a new one.'
     setErrors(next)
     if (Object.keys(next).length) {
       window.requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus())
       return
     }
-    if (recovering) {
-      setErrors({ form: 'Password reset is currently unavailable. Please contact support for help accessing your account.' })
-      return
-    }
     setSubmitting(true)
     try {
+      if (recovering) {
+        await requestSellerPasswordReset(email.trim())
+        setResetEmailSent(true)
+        return
+      }
+      if (resetting) {
+        await resetSellerPassword(resetToken, password)
+        clearForm()
+        setPasswordResetDone(true)
+        return
+      }
       const account = signingUp
         ? await createSeller({ name: name.trim(), email: email.trim(), password })
         : await loginSeller(email.trim(), password)
@@ -209,6 +235,28 @@ export default function V2Login() {
     }
   }
   if (seller) return <Navigate to={destination} replace />
+  const title = resetting
+    ? passwordResetDone
+      ? 'Password updated.'
+      : 'Choose a new password.'
+    : recovering
+      ? resetEmailSent
+        ? 'Check your inbox.'
+        : 'A fresh start.'
+      : signingUp
+        ? 'Come aboard.'
+        : 'Welcome back.'
+  const intro = resetting
+    ? passwordResetDone
+      ? 'You can sign in with your new password.'
+      : 'Pick something memorable — at least 8 characters.'
+    : recovering
+      ? resetEmailSent
+        ? 'If an account exists for that email, we sent a reset link. It expires in one hour.'
+        : 'Reset access to your seller workspace.'
+      : signingUp
+        ? 'Create your seller workspace.'
+        : 'Sign in to your seller workspace.'
   return (
     <main className="v2-login-page">
       <div className="v2-login-shell">
@@ -225,92 +273,99 @@ export default function V2Login() {
               onAnimationComplete={() => document.getElementById('v2-login-title')?.focus({ preventScroll: true })}
             >
               <h1 id="v2-login-title" tabIndex={-1}>
-                {recovering ? 'A fresh start.' : signingUp ? 'Come aboard.' : 'Welcome back.'}
+                {title}
               </h1>
-              <p className="v2-login-intro">
-                {recovering
-                  ? 'Reset access to your seller workspace.'
-                  : signingUp
-                    ? 'Create your seller workspace.'
-                    : 'Sign in to your seller workspace.'}
-              </p>
-              <form className="v2-login-form" noValidate onSubmit={submit} ref={formRef}>
-                {signingUp && (
-                  <AccountField
-                    label="Full name"
-                    name="name"
-                    autoComplete="name"
-                    placeholder="Your full name"
-                    value={name}
-                    onChange={update('name', setName)}
-                    error={errors.name}
-                    required
-                  />
-                )}
-                <AccountField
-                  label="Email address"
-                  type="email"
-                  name="email"
-                  autoComplete={signingUp ? 'email' : 'username'}
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={update('email', setEmail)}
-                  error={errors.email}
-                  required
-                />
-                {!recovering && (
-                  <AccountField
-                    label="Password"
-                    name="password"
-                    secret
-                    autoComplete={signingUp ? 'new-password' : 'current-password'}
-                    placeholder={signingUp ? 'At least 8 characters' : 'Your password'}
-                    value={password}
-                    onChange={update('password', setPassword)}
-                    error={errors.password}
-                    required
-                  />
-                )}
-                {signingUp && (
-                  <AccountField
-                    label="Confirm password"
-                    name="confirmation"
-                    secret
-                    autoComplete="new-password"
-                    placeholder="Re-enter your password"
-                    value={confirmation}
-                    onChange={update('confirmation', setConfirmation)}
-                    error={errors.confirmation}
-                    required
-                  />
-                )}
-                {!recovering && !signingUp && (
-                  <Link className="v2-login-forgot" to="/forgot-password" state={location.state} onClick={clearForm}>
-                    Forgot password?
-                  </Link>
-                )}
-                {errors.form && (
-                  <p className="v2-login-error" role="alert">
-                    {errors.form}
-                  </p>
-                )}
-                <AccountButton kind="primary" arrow="right" type="submit" disabled={submitting}>
-                  {recovering ? 'Send reset link' : signingUp ? 'Create account' : 'Sign in'}
+              <p className="v2-login-intro">{intro}</p>
+              {passwordResetDone ? (
+                <AccountButton kind="primary" arrow="right" type="button" onClick={() => navigate('/login', { replace: true })}>
+                  Back to sign in
                 </AccountButton>
-              </form>
-              {recovering ? (
+              ) : resetEmailSent ? (
                 <Link className="v2-login-back" to="/login" state={location.state} onClick={clearForm}>
                   <ArrowLeft size={14} />
                   Back to sign in
                 </Link>
               ) : (
+                <form className="v2-login-form" noValidate onSubmit={submit} ref={formRef}>
+                  {signingUp && (
+                    <AccountField
+                      label="Full name"
+                      name="name"
+                      autoComplete="name"
+                      placeholder="Your full name"
+                      value={name}
+                      onChange={update('name', setName)}
+                      error={errors.name}
+                      required
+                    />
+                  )}
+                  {!resetting && (
+                    <AccountField
+                      label="Email address"
+                      type="email"
+                      name="email"
+                      autoComplete={signingUp ? 'email' : 'username'}
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={update('email', setEmail)}
+                      error={errors.email}
+                      required
+                    />
+                  )}
+                  {!recovering && (
+                    <AccountField
+                      label={resetting ? 'New password' : 'Password'}
+                      name="password"
+                      secret
+                      autoComplete={signingUp || resetting ? 'new-password' : 'current-password'}
+                      placeholder={signingUp || resetting ? 'At least 8 characters' : 'Your password'}
+                      value={password}
+                      onChange={update('password', setPassword)}
+                      error={errors.password}
+                      required
+                    />
+                  )}
+                  {(signingUp || resetting) && (
+                    <AccountField
+                      label="Confirm password"
+                      name="confirmation"
+                      secret
+                      autoComplete="new-password"
+                      placeholder="Re-enter your password"
+                      value={confirmation}
+                      onChange={update('confirmation', setConfirmation)}
+                      error={errors.confirmation}
+                      required
+                    />
+                  )}
+                  {!recovering && !signingUp && !resetting && (
+                    <Link className="v2-login-forgot" to="/forgot-password" state={location.state} onClick={clearForm}>
+                      Forgot password?
+                    </Link>
+                  )}
+                  {errors.form && (
+                    <p className="v2-login-error" role="alert">
+                      {errors.form}
+                    </p>
+                  )}
+                  <AccountButton kind="primary" arrow="right" type="submit" disabled={submitting}>
+                    {resetting ? 'Update password' : recovering ? 'Send reset link' : signingUp ? 'Create account' : 'Sign in'}
+                  </AccountButton>
+                </form>
+              )}
+              {(recovering || resetting) && !resetEmailSent && !passwordResetDone ? (
+                <Link className="v2-login-back" to="/login" state={location.state} onClick={clearForm}>
+                  <ArrowLeft size={14} />
+                  Back to sign in
+                </Link>
+              ) : !recovering && !resetting ? (
                 <p className="v2-login-switch">
                   {signingUp ? 'Already have an account?' : 'New here?'}{' '}
                   <Link to={signingUp ? '/login' : '/signup'} state={location.state} onClick={clearForm}>
                     {signingUp ? 'Sign in' : 'Sign up'}
                   </Link>
                 </p>
-              )}
+              ) : null}
             </motion.div>
           </AnimatePresence>
         </section>

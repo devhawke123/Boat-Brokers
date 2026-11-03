@@ -20,6 +20,15 @@ export const changeSellerPasswordSchema = z.object({
   newPassword: z.string().min(8),
 });
 
+export const forgotSellerPasswordSchema = z.object({
+  email: z.string().email(),
+});
+
+export const resetSellerPasswordSchema = z.object({
+  token: z.string().min(1),
+  password: z.string().min(8),
+});
+
 export const updateSellerStatusSchema = z.object({
   status: z.enum(["NEW", "CONTACTED", "LISTED", "LOST"]),
 });
@@ -28,4 +37,6 @@ export type CreateSellerInput = z.infer<typeof createSellerSchema>;
 export type UpdateSellerInput = z.infer<typeof updateSellerSchema>;
 export type SellerLoginInput = z.infer<typeof sellerLoginSchema>;
 export type ChangeSellerPasswordInput = z.infer<typeof changeSellerPasswordSchema>;
+export type ForgotSellerPasswordInput = z.infer<typeof forgotSellerPasswordSchema>;
+export type ResetSellerPasswordInput = z.infer<typeof resetSellerPasswordSchema>;
 export type UpdateSellerStatusInput = z.infer<typeof updateSellerStatusSchema>;

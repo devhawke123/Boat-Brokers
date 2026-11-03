@@ -44,13 +44,14 @@ function CommentsRedirect() {
 function PortalRoutes() {
   const { pathname } = useLocation()
   const wizardActive = /^\/boats\/new(?:\/|$)/.test(pathname)
-  const authScreen = ['/login', '/signup', '/forgot-password'].includes(pathname)
+  const authScreen = ['/login', '/signup', '/forgot-password', '/reset-password'].includes(pathname)
   return (
     <>
       <Routes>
         <Route path="/login" element={<V2Login />} />
         <Route path="/signup" element={<V2Login />} />
         <Route path="/forgot-password" element={<V2Login />} />
+        <Route path="/reset-password" element={<V2Login />} />
         <Route element={<Access />}>
           <Route path="/dashboard" element={<DashboardV2 />} />
           <Route path="/boats" element={<V2Boats />} />
