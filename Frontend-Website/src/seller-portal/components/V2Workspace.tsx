@@ -95,7 +95,7 @@ function SellerGuide() {
     >
       <div className="v2-tutorial-visual">
         <motion.img
-          src="/seller-portal-assets/yacht-horizon.jpg"
+          src="/seller-portal-assets/narrowboat-morning-blue.png"
           alt=""
           loading="lazy"
           variants={{

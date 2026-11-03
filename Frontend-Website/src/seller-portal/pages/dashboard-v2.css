@@ -13,7 +13,7 @@
   isolation: isolate;
 }
 .v2-backdrop { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; background: #eaf1f7; }
-.v2-backdrop::before { content: ''; position: absolute; inset: -145px 0 145px; background: url('/seller-portal-assets/yacht-horizon.jpg') center / cover no-repeat; filter: saturate(.65); mask-image: linear-gradient(180deg, #000 0%, #000 62%, #000c 74%, #0005 88%, transparent 100%); }
+.v2-backdrop::before { content: ''; position: absolute; inset: -145px 0 145px; background: url('/seller-portal-assets/narrowboat-morning-blue.png') center / cover no-repeat; filter: saturate(.65); mask-image: linear-gradient(180deg, #000 0%, #000 62%, #000c 74%, #0005 88%, transparent 100%); }
 .v2-backdrop::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #edf6fdf7 0%, #edf6fdd6 28%, #edf6fd52 68%, #edf6fd85 100%), linear-gradient(180deg, #eef8ff42 0%, #edf6fd00 46%, #eaf1f700 100%); }
 .v2-workspace { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 36px; max-width: 1720px; margin: auto; padding: 24px; min-height: 100dvh; }
 .v2-sidebar { position: sticky; top: 24px; align-self: start; min-height: calc(100dvh - 48px); display: flex; flex-direction: column; padding: 27px 14px 14px; border: 1px solid rgba(255,255,255,.85); border-radius: 23px; background: rgba(251,253,255,.79); box-shadow: 0 12px 45px #23405724, inset 0 1px 0 #fff; backdrop-filter: blur(18px); }
