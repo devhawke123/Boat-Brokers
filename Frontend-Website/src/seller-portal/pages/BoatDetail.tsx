@@ -168,6 +168,29 @@ function Photo({ src, alt, className = '' }: { src?: string; alt: string; classN
   )
 }
 
+function preloadPhoto(src?: string) {
+  return new Promise<void>((resolve) => {
+    if (!src) {
+      resolve()
+      return
+    }
+    const image = new Image()
+    const finish = () => resolve()
+    image.onload = finish
+    image.onerror = finish
+    image.src = src
+    if (image.complete) finish()
+  })
+}
+
+// Soft crossfade + short drift — full-width slides bounce when the next file is still buffering.
+const gallerySlideTransition = { duration: 0.38, ease: [0.22, 1, 0.36, 1] as const }
+const gallerySlideVariants = {
+  enter: (direction: number) => ({ opacity: 0, x: direction * 36 }),
+  center: { opacity: 1, x: 0 },
+  exit: (direction: number) => ({ opacity: 0, x: direction * -36 }),
+}
+
 function SellerAvatar({ name }: { name?: string }) {
   const initials =
     name
@@ -367,7 +390,18 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
   const photoDragStart = useRef<{ x: number; y: number } | null>(null)
   const thumbnailScrollStart = useRef<{ x: number; scrollLeft: number } | null>(null)
   const thumbnailDragged = useRef(false)
+  const photoAdvanceLock = useRef(false)
   const reduced = useReducedMotion()
+  const photos = listing?.photos ?? []
+
+  useEffect(() => {
+    if (photos.length < 2) return
+    for (const offset of [-2, -1, 1, 2]) {
+      const index = (active + offset + photos.length) % photos.length
+      void preloadPhoto(photos[index]?.src)
+    }
+  }, [active, photos])
+
   if (!listing)
     return (
       <section className="py-12">
@@ -387,7 +421,6 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
     ...data,
     ...Object.fromEntries(additionalDetails.map((item, index) => [`additional-${index}`, item.description])),
   }
-  const photos = listing.photos
   const canEdit = listing.status === 'Draft' || listing.status === 'Rejected'
   const comments = listing.comments
   const image = photos[active]
@@ -428,14 +461,28 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
       setCopiedContact('')
     }
   }
-  function changePhoto(direction: number) {
+
+  async function goToPhoto(index: number, direction: number) {
+    if (photoAdvanceLock.current || !photos.length || index === active) return
+    photoAdvanceLock.current = true
     setSlideDirection(direction)
-    setActive((current) => (current + direction + photos.length) % photos.length)
+    try {
+      // Wait until the target is decoded so the fade reveals a real frame, not a blank.
+      await preloadPhoto(photos[index]?.src)
+      setActive(index)
+    } finally {
+      window.setTimeout(() => {
+        photoAdvanceLock.current = false
+      }, reduced ? 0 : 320)
+    }
+  }
+
+  function changePhoto(direction: number) {
+    void goToPhoto((active + direction + photos.length) % photos.length, direction)
   }
   function selectPhoto(index: number) {
     const forwardDistance = (index - active + photos.length) % photos.length
-    setSlideDirection(forwardDistance <= photos.length / 2 ? 1 : -1)
-    setActive(index)
+    void goToPhoto(index, forwardDistance <= photos.length / 2 ? 1 : -1)
   }
   function startPhotoDrag(event: PointerEvent<HTMLDivElement>) {
     if (photos.length < 2 || event.button !== 0 || (event.target as Element).closest('button')) return
@@ -536,12 +583,8 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
                     initial={reduced ? false : 'enter'}
                     animate="center"
                     exit="exit"
-                    variants={{
-                      enter: (direction) => ({ x: `${direction * 100}%` }),
-                      center: { x: '0%' },
-                      exit: (direction) => ({ x: `${direction * -100}%` }),
-                    }}
-                    transition={{ duration: reduced ? 0 : 0.32, ease: EASE }}
+                    variants={gallerySlideVariants}
+                    transition={reduced ? { duration: 0 } : gallerySlideTransition}
                     className="pointer-events-none absolute inset-0"
                   >
                     <Photo src={image?.src} alt={image?.name || listing.name} />
@@ -916,12 +959,8 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
                 initial={reduced ? false : 'enter'}
                 animate="center"
                 exit="exit"
-                variants={{
-                  enter: (direction) => ({ x: `${direction * 100}%` }),
-                  center: { x: '0%' },
-                  exit: (direction) => ({ x: `${direction * -100}%` }),
-                }}
-                transition={{ duration: reduced ? 0 : 0.32, ease: EASE }}
+                variants={gallerySlideVariants}
+                transition={reduced ? { duration: 0 } : gallerySlideTransition}
                 // Transforms from the slide animation create a stacking context that
                 // can sit above later siblings — keep this layer non-interactive so
                 // prev/next arrows remain clickable.
