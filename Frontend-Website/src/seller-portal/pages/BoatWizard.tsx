@@ -816,7 +816,7 @@ function MediaStep({ data, onChange, photos, setPhotos, setBrochure, setToast, s
                   exit: (direction: number) => ({ opacity: 0, x: `${direction * -100}%` }),
                 }}
                 transition={{ duration: reducedMotion ? 0 : 0.32, ease: EASE }}
-                className="absolute inset-0 h-full w-full object-contain"
+                className="pointer-events-none absolute inset-0 h-full w-full object-contain"
               />
             )}
           </AnimatePresence>
@@ -825,18 +825,20 @@ function MediaStep({ data, onChange, photos, setPhotos, setBrochure, setToast, s
               <motion.button
                 type="button"
                 aria-label="Previous photo"
+                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => changePreview(-1)}
                 whileTap={reducedMotion ? undefined : { scale: 0.94 }}
-                className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-sp-brand-deep"
+                className="absolute left-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-sp-brand-deep shadow-sm"
               >
                 <ChevronLeft size={20} />
               </motion.button>
               <motion.button
                 type="button"
                 aria-label="Next photo"
+                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => changePreview(1)}
                 whileTap={reducedMotion ? undefined : { scale: 0.94 }}
-                className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-sp-brand-deep"
+                className="absolute right-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-sp-brand-deep shadow-sm"
               >
                 <ChevronRight size={20} />
               </motion.button>

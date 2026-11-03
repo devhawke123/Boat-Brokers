@@ -542,24 +542,25 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
                       exit: (direction) => ({ x: `${direction * -100}%` }),
                     }}
                     transition={{ duration: reduced ? 0 : 0.32, ease: EASE }}
-                    className="absolute inset-0"
+                    className="pointer-events-none absolute inset-0"
                   >
                     <Photo src={image?.src} alt={image?.name || listing.name} />
                   </motion.div>
                 </AnimatePresence>
                 {photos.length > 0 && (
                   <>
-                    <span className="absolute left-4 top-4 rounded-md bg-white/95 px-3 py-1.5 text-[11px] font-medium text-sp-brand-deep">
+                    <span className="pointer-events-none absolute left-4 top-4 z-10 rounded-md bg-white/95 px-3 py-1.5 text-[11px] font-medium text-sp-brand-deep">
                       {String(active + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
                     </span>
                     <button
                       type="button"
+                      onPointerDown={(event) => event.stopPropagation()}
                       onClick={() => {
                         galleryRef.current?.showModal()
                         setGalleryOpen(true)
                       }}
                       aria-label="Open photo gallery"
-                      className="absolute bottom-4 right-4 grid h-10 w-10 place-items-center rounded-lg bg-white text-sp-brand-deep"
+                      className="absolute bottom-4 right-4 z-10 grid h-10 w-10 place-items-center rounded-lg bg-white text-sp-brand-deep"
                     >
                       <Expand size={v2 ? 20 : 17} />
                     </button>
@@ -921,7 +922,10 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
                   exit: (direction) => ({ x: `${direction * -100}%` }),
                 }}
                 transition={{ duration: reduced ? 0 : 0.32, ease: EASE }}
-                className="absolute inset-0"
+                // Transforms from the slide animation create a stacking context that
+                // can sit above later siblings — keep this layer non-interactive so
+                // prev/next arrows remain clickable.
+                className="pointer-events-none absolute inset-0"
               >
                 <Photo src={image?.src} alt={image?.name || listing.name} className="!object-contain" />
               </motion.div>
@@ -931,16 +935,18 @@ export default function BoatDetail({ listing, variant, onNotice }: BoatDetailPro
                 <button
                   type="button"
                   aria-label="Previous photo"
+                  onPointerDown={(event) => event.stopPropagation()}
                   onClick={() => changePhoto(-1)}
-                  className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white"
+                  className="absolute left-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-sm"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
                   type="button"
                   aria-label="Next photo"
+                  onPointerDown={(event) => event.stopPropagation()}
                   onClick={() => changePhoto(1)}
-                  className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white"
+                  className="absolute right-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-sm"
                 >
                   <ChevronRight size={20} />
                 </button>
