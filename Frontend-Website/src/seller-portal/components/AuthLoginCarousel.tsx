@@ -74,11 +74,15 @@ function SlideMedia({
   }
 
   if (slide.video) {
+    // Poster is a still from this same clip (not slide 4) so first paint isn't a
+    // blank wash while the ~5MB video buffers. Keep the element visible so the
+    // poster shows; photos still fade in via `ready`.
     return (
       <video
         className="v2-login-slide"
         src={slide.source}
-        style={mediaStyle}
+        poster="/seller-portal-assets/auth/narrowboat-canal-journey-poster.jpg"
+        style={{ objectFit: 'cover', objectPosition: slide.position }}
         muted
         playsInline
         preload="metadata"
@@ -86,10 +90,6 @@ function SlideMedia({
         autoPlay={!reduced}
         aria-label="Narrowboat on the canal; click or press Space to pause or play"
         tabIndex={0}
-        onLoadedData={() => setReady(true)}
-        onLoadStart={() => setReady(false)}
-        onEmptied={() => setReady(false)}
-        onError={() => setReady(false)}
         onEnded={onEnded}
         onClick={(event) => {
           const video = event.currentTarget
