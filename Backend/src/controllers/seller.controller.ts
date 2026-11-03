@@ -25,8 +25,8 @@ import {
   sendSellerPasswordResetEmail,
   sendSellerWelcomeEmail,
 } from "../lib/email";
+import { publicSiteOrigin } from "../lib/publicOrigin";
 
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://theboatbrokers.co.uk";
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
 function hashResetToken(token: string) {
@@ -173,7 +173,7 @@ export async function forgotSellerPasswordHandler(req: Request, res: Response) {
       passwordResetToken: hashResetToken(rawToken),
       passwordResetExpires: new Date(Date.now() + RESET_TOKEN_TTL_MS),
     });
-    const resetUrl = `${CLIENT_ORIGIN}/seller-portal/reset-password?token=${encodeURIComponent(rawToken)}`;
+    const resetUrl = `${publicSiteOrigin()}/seller-portal/reset-password?token=${encodeURIComponent(rawToken)}`;
     await sendSellerPasswordResetEmail({
       to: seller.email,
       sellerName: seller.name,

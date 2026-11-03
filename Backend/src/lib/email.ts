@@ -1,10 +1,11 @@
 import { Resend } from "resend";
 import type { ListingStatus } from "@prisma/client";
+import { publicSiteOrigin } from "./publicOrigin";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.FROM_EMAIL || "no-reply@theboatbrokers.co.uk";
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || "https://theboatbrokers.co.uk";
+const CLIENT_ORIGIN = publicSiteOrigin();
 
 type StatusEmailInfo = { label: string; badgeBg: string; badgeText: string; message: string };
 
