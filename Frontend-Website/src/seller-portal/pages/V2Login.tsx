@@ -102,7 +102,8 @@ export default function V2Login() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
       // Keep messages on the field (like signup), not a separate form gap below Forgot password.
-      if (recovering || signingUp) setErrors({ email: message })
+      // Email-format API errors belong under email; credential failures stay under password.
+      if (recovering || signingUp || /valid email/i.test(message)) setErrors({ email: message })
       else setErrors({ password: message })
     } finally {
       setSubmitting(false)
