@@ -12,7 +12,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { AlertCircle, ArrowLeft, ArrowRight, Eye, EyeOff, KeyRound, ShieldCheck, UserRound, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Eye, EyeOff, KeyRound, ShieldCheck, UserRound, X } from 'lucide-react'
 import { directionalArrowVariants, EASE, inventoryMotion, quick } from '../lib/motion'
 import { changeSellerPassword, updateSeller, uploadSellerAvatar } from '../lib/api'
 import { useListings } from '../context/useListings'
@@ -61,7 +61,7 @@ type AccountFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string
   error?: string
   secret?: boolean
-  /** Border/ARIA invalid without field copy — e.g. form-level login failure. */
+  /** Red border without field copy — e.g. login failed with a form-level message. */
   markedInvalid?: boolean
 }
 
@@ -72,7 +72,7 @@ export function AccountField({ label, error, secret = false, markedInvalid = fal
   const Icon = visible ? EyeOff : Eye
   const invalid = Boolean(error) || markedInvalid
   return (
-    <div className={`v2-settings-field${invalid ? ' is-invalid' : ''}`}>
+    <div className="v2-settings-field">
       <label htmlFor={id}>{label}</label>
       <div className="v2-settings-input-wrap">
         <input
@@ -111,20 +111,9 @@ export function AccountField({ label, error, secret = false, markedInvalid = fal
       </div>
       {error && (
         <p id={`${id}-error`} role="alert" className="v2-settings-error">
-          <AlertCircle size={15} strokeWidth={2.25} aria-hidden="true" />
-          <span>{error}</span>
+          {error}
         </p>
       )}
-    </div>
-  )
-}
-
-/** High-visibility form-level alert for auth / account flows (40+ readability). */
-export function AuthFormAlert({ children }: { children: ReactNode }) {
-  return (
-    <div className="v2-auth-alert" role="alert" aria-live="assertive">
-      <AlertCircle className="v2-auth-alert-icon" size={22} strokeWidth={2.25} aria-hidden="true" />
-      <p className="v2-auth-alert-text">{children}</p>
     </div>
   )
 }
@@ -425,7 +414,11 @@ export default function V2AccountSettings({
                         placeholder="City or region"
                       />
                     </div>
-                    {errors.form && <AuthFormAlert>{errors.form}</AuthFormAlert>}
+                    {errors.form && (
+                      <p role="alert" className="v2-settings-error">
+                        {errors.form}
+                      </p>
+                    )}
                   </form>
                 )}
                 {view === 'password' && (

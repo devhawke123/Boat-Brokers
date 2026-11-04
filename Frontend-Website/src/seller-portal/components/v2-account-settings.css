@@ -221,12 +221,7 @@
   background: #fcfeff;
 }
 .v2-settings-input-wrap input[aria-invalid="true"] {
-  border-color: #b42318;
-  background: #fff8f7;
-  box-shadow: 0 0 0 3px #f044381f;
-}
-.v2-settings-field.is-invalid > label {
-  color: #912018;
+  border-color: #c68b92;
 }
 .v2-settings-eye {
   position: absolute;
@@ -254,44 +249,10 @@
   outline-offset: 2px;
 }
 .v2-settings-error {
-  margin-top: 8px;
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  color: #912018;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.45;
-}
-.v2-settings-error svg {
-  flex-shrink: 0;
-  margin-top: 1px;
-  color: #d92d20;
-}
-.v2-auth-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  width: 100%;
-  margin: 0;
-  padding: 14px 16px;
-  border: 1.5px solid #fda29b;
-  border-radius: 12px;
-  background: #fef3f2;
-  box-shadow: 0 1px 0 #fff inset, 0 4px 14px #91201814;
-}
-.v2-auth-alert-icon {
-  flex-shrink: 0;
-  margin-top: 1px;
-  color: #d92d20;
-}
-.v2-auth-alert-text {
-  margin: 0;
-  color: #912018;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: -0.01em;
+  margin-top: 6px;
+  color: #a7475a;
+  font-size: 9px;
+  line-height: 1.6;
 }
 .v2-settings-text-link {
   justify-self: start;
