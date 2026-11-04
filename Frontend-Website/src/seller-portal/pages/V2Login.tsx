@@ -60,7 +60,7 @@ export default function V2Login() {
     setResetEmailSent(false)
     setPasswordResetDone(false)
   }, [mode])
-  function update(field: string, setter: (value: string) => void) {
+  function update(setter: (value: string) => void) {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value)
       setErrors({})
@@ -168,7 +168,7 @@ export default function V2Login() {
                       autoComplete="name"
                       placeholder="Your full name"
                       value={name}
-                      onChange={update('name', setName)}
+                      onChange={update(setName)}
                       error={errors.name}
                       required
                     />
@@ -181,7 +181,7 @@ export default function V2Login() {
                       autoComplete={signingUp ? 'email' : 'username'}
                       placeholder="you@example.com"
                       value={email}
-                      onChange={update('email', setEmail)}
+                      onChange={update(setEmail)}
                       error={errors.email}
                       markedInvalid={!signingUp && !recovering && Boolean(errors.password) && !errors.email}
                       required
@@ -195,7 +195,7 @@ export default function V2Login() {
                       autoComplete={signingUp || resetting ? 'new-password' : 'current-password'}
                       placeholder={signingUp || resetting ? 'At least 8 characters' : 'Your password'}
                       value={password}
-                      onChange={update('password', setPassword)}
+                      onChange={update(setPassword)}
                       error={errors.password}
                       required
                     />
@@ -208,7 +208,7 @@ export default function V2Login() {
                       autoComplete="new-password"
                       placeholder="Re-enter your password"
                       value={confirmation}
-                      onChange={update('confirmation', setConfirmation)}
+                      onChange={update(setConfirmation)}
                       error={errors.confirmation}
                       required
                     />
