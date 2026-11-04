@@ -8,7 +8,7 @@ import { useAdminLogin } from '../../data/useAdminLogin'
 import '../../../seller-portal/pages/v2-login.css'
 
 export default function Login() {
-  const { login, loading, error } = useAdminLogin()
+  const { login, loading, error, clearError } = useAdminLogin()
   const reduced = useReducedMotion()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,6 +23,7 @@ export default function Login() {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value)
       setFieldErrors((current) => ({ ...current, [field]: '' }))
+      clearError()
     }
   }
 
@@ -74,7 +75,7 @@ export default function Login() {
                 value={email}
                 onChange={update('email', setEmail)}
                 error={fieldErrors.email}
-                markedInvalid={Boolean(error)}
+                markedInvalid={Boolean(error) && !fieldErrors.email}
                 required
               />
               <AccountField
@@ -85,15 +86,9 @@ export default function Login() {
                 placeholder="Your password"
                 value={password}
                 onChange={update('password', setPassword)}
-                error={fieldErrors.password}
-                markedInvalid={Boolean(error)}
+                error={fieldErrors.password || error || undefined}
                 required
               />
-              {error && (
-                <p className="v2-login-error" role="alert">
-                  {error}
-                </p>
-              )}
               <AccountButton kind="primary" arrow="right" type="submit" disabled={loading}>
                 {loading ? 'Signing in…' : 'Sign in'}
               </AccountButton>

@@ -63,7 +63,7 @@ export default function V2Login() {
   function update(field: string, setter: (value: string) => void) {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value)
-      setErrors((current) => ({ ...current, [field]: '', form: '' }))
+      setErrors({})
     }
   }
   async function submit(event: FormEvent) {
@@ -74,7 +74,7 @@ export default function V2Login() {
     if ((signingUp || resetting) && password.length < 8) next.password = 'Use at least 8 characters.'
     if (!recovering && !signingUp && !resetting && !password) next.password = 'Enter your password.'
     if ((signingUp || resetting) && confirmation !== password) next.confirmation = 'Your passwords must match.'
-    if (resetting && !resetToken) next.form = 'This reset link is missing or invalid. Please request a new one.'
+    if (resetting && !resetToken) next.password = 'This reset link is missing or invalid. Please request a new one.'
     setErrors(next)
     if (Object.keys(next).length) {
       window.requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus())
@@ -100,7 +100,10 @@ export default function V2Login() {
       setSeller(account)
       navigate(destination, { replace: true })
     } catch (err) {
-      setErrors({ form: err instanceof Error ? err.message : 'Something went wrong. Please try again.' })
+      const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
+      // Keep messages on the field (like signup), not a separate form gap below Forgot password.
+      if (recovering || signingUp) setErrors({ email: message })
+      else setErrors({ password: message })
     } finally {
       setSubmitting(false)
     }
@@ -180,7 +183,7 @@ export default function V2Login() {
                       value={email}
                       onChange={update('email', setEmail)}
                       error={errors.email}
-                      markedInvalid={Boolean(errors.form) && !signingUp && !recovering}
+                      markedInvalid={!signingUp && !recovering && Boolean(errors.password) && !errors.email}
                       required
                     />
                   )}
@@ -194,7 +197,6 @@ export default function V2Login() {
                       value={password}
                       onChange={update('password', setPassword)}
                       error={errors.password}
-                      markedInvalid={Boolean(errors.form) && !signingUp && !resetting}
                       required
                     />
                   )}
@@ -215,11 +217,6 @@ export default function V2Login() {
                     <Link className="v2-login-forgot" to="/forgot-password" state={location.state} onClick={clearForm}>
                       Forgot password?
                     </Link>
-                  )}
-                  {errors.form && (
-                    <p className="v2-login-error" role="alert">
-                      {errors.form}
-                    </p>
                   )}
                   <AccountButton kind="primary" arrow="right" type="submit" disabled={submitting}>
                     {resetting ? 'Update password' : recovering ? 'Send reset link' : signingUp ? 'Create account' : 'Sign in'}

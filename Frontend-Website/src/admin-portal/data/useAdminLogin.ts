@@ -23,5 +23,9 @@ export function useAdminLogin() {
     }
   }
 
-  return { ...state, login }
+  function clearError() {
+    setState((current) => (current.error ? { ...current, error: null } : current))
+  }
+
+  return { ...state, login, clearError }
 }
