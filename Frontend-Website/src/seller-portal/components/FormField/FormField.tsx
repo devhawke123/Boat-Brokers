@@ -3,8 +3,8 @@ import selectChevron from '../../assets/AddBoat/select-chevron.svg'
 
 export function Label({ children, required }: { children: string; required?: boolean }) {
   return (
-    <span className="text-[12px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
-      {children} {required && <span className="text-[#ef4444]">*</span>}
+    <span className="text-[14px] font-bold tracking-[0.6px] text-[#64748b] uppercase">
+      {children} {required && <span className="text-[#ff1e1e]">*</span>}
     </span>
   )
 }
@@ -44,7 +44,7 @@ export function TextField({
           value={value}
           placeholder={placeholder}
           onChange={handleChange}
-          className={`h-full w-full rounded-lg bg-transparent text-[16px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none ${prefix ? 'pl-1' : 'px-4'} ${suffix ? 'pr-10' : ''}`}
+          className={`h-full w-full rounded-lg bg-transparent text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none ${prefix ? 'pl-1' : 'px-4'} ${suffix ? 'pr-10' : ''}`}
         />
         {suffix && (
           <span className="pointer-events-none absolute right-4 text-[12px] font-medium tracking-[0.1px] text-[#94a3b8]">
@@ -78,7 +78,7 @@ export function SelectField({
         <select
           value={value}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
-          className="h-full w-full appearance-none rounded-lg bg-transparent px-4 pr-10 text-[16px] text-[#0f172a] focus:outline-none"
+          className="h-full w-full appearance-none rounded-lg bg-transparent px-4 pr-10 text-[14px] text-[#0f172a] focus:outline-none"
         >
           <option value="" disabled className="text-[#c2c4c8]">
             {placeholder}
@@ -121,7 +121,7 @@ export function TextareaField({
         maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-32 w-full resize-none rounded-lg border border-[#e2e8f0] bg-white p-4 text-[16px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
+        className="h-32 w-full resize-none rounded-lg border border-[#e2e8f0] bg-white p-4 text-[14px] text-[#0f172a] placeholder:text-[#c2c4c8] focus:outline-none"
       />
       <div className="flex justify-end">
         <span className="text-[12px] font-medium tracking-[-0.06px] text-[#94a3b8]">

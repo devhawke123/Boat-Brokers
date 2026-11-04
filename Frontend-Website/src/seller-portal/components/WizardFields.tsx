@@ -23,9 +23,9 @@ export function ValidationMessage({ id, children }: { id: string; children: Reac
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: reducedMotion ? 0 : 0.28, ease: EASE }}
-          className="overflow-hidden text-[11px] leading-4 text-[#a51f36]"
+          className="overflow-hidden text-[12px] leading-4 text-[#ff1e1e]"
         >
-          <span className="block pt-1.5">{children}</span>
+          <span className="block pt-1">{children}</span>
         </motion.div>
       )}
     </AnimatePresence>
@@ -97,7 +97,7 @@ export function Field({
   }
   return (
     <label className={`wizard-field block min-w-0 ${className}`}>
-      <span className="mb-2 block text-[12px] font-bold text-[#425a69]">
+      <span className="mb-1 block text-[14px] font-bold text-[#425a69]">
         {label}
         {required && (
           <span className="ml-1 text-[#ac5c42]" aria-label="required">
@@ -107,7 +107,7 @@ export function Field({
       </span>
       <span className="relative block">
         <input
-          className={`${inputClass} ${suffix || trailingAction ? 'pr-14' : ''} ${error ? 'border-[#b44953]' : ''}`}
+          className={`${inputClass} ${suffix || trailingAction ? 'pr-14' : ''} ${error ? 'border-[#ff1e1e]' : ''}`}
           aria-label={label}
           aria-required={required || undefined}
           aria-invalid={error ? true : undefined}
@@ -256,7 +256,7 @@ export function SelectField({
 
   return (
     <div className={`wizard-select min-w-0 ${className}`}>
-      <span className={labelHidden ? 'sr-only' : 'mb-2 block text-[12px] font-bold text-[#425a69]'}>
+      <span className={labelHidden ? 'sr-only' : 'mb-1 block text-[14px] font-bold text-[#425a69]'}>
         {label}
         {required && (
           <span className="ml-1 text-[#ac5c42]" aria-label="required">
@@ -278,7 +278,7 @@ export function SelectField({
         aria-activedescendant={open ? `${id}-option-${highlighted}` : undefined}
         onClick={() => (open ? setOpen(false) : openMenu())}
         onKeyDown={onKeyDown}
-        className={`${inputBaseClass} ${size === 'sm' ? 'min-h-9 px-3 py-1.5 text-[12px]' : 'min-h-11 px-3.5 py-2.5 text-[14px]'} flex items-center justify-between gap-3 text-left focus:border-[#428eb0] focus:ring-[3px] focus:ring-[#dceef5] ${error ? 'border-[#b44953]' : ''} ${!value ? 'text-[#8797a1]' : ''}`}
+        className={`${inputBaseClass} ${size === 'sm' ? 'min-h-9 px-3 py-1.5 text-[12px]' : 'min-h-11 px-3.5 py-2.5 text-[14px]'} flex items-center justify-between gap-3 text-left focus:border-[#428eb0] focus:ring-[3px] focus:ring-[#dceef5] ${error ? 'border-[#ff1e1e]' : ''} ${!value ? 'text-[#8797a1]' : ''}`}
       >
         <span className="min-w-0 truncate">{value || placeholder}</span>
         <motion.span
@@ -353,9 +353,9 @@ export function TextAreaField({ label, name, value, onChange, placeholder, hint,
   const messageId = useId()
   return (
     <label className={`wizard-field block min-w-0 ${className}`}>
-      <span className="mb-2 block text-[12px] font-bold text-[#425a69]">{label}</span>
+      <span className="mb-1 block text-[14px] font-bold text-[#425a69]">{label}</span>
       <textarea
-        className={`${inputClass} resize-y leading-relaxed ${error ? 'border-[#b44953]' : ''}`}
+        className={`${inputClass} resize-y leading-relaxed ${error ? 'border-[#ff1e1e]' : ''}`}
         aria-label={label}
         aria-invalid={error ? true : undefined}
         aria-describedby={error || hint ? messageId : undefined}
@@ -418,7 +418,7 @@ export function RadioCards({
   const reducedMotion = useReducedMotion()
   return (
     <fieldset className="wizard-radio-group min-w-0">
-      <legend className="mb-2 text-[12px] font-bold text-[#425a69]">{label}</legend>
+      <legend className="mb-1 text-[14px] font-bold text-[#425a69]">{label}</legend>
       <div className="overflow-hidden rounded-[10px] border border-sp-hairline divide-y divide-sp-hairline">
         {options.map((item) => {
           const option = typeof item === 'string' ? { value: item, title: item } : item

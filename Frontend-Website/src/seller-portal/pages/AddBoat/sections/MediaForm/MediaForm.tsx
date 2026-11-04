@@ -121,7 +121,7 @@ export default function MediaForm({
         </span>
         <span className="text-[12px] font-medium text-[#64748b]">{values.photos.length}/{PHOTOS_MIN} uploaded</span>
       </div>
-      {photosError && <p className="text-[11px] font-medium text-[#ef4444]">{photosError}</p>}
+      {photosError && <p className="text-[12px] font-medium text-[#ff1e1e]">{photosError}</p>}
       <div className="flex flex-col gap-4 lg:flex-row">
         <div
           onDragOver={(e) => {
@@ -329,7 +329,7 @@ export default function MediaForm({
             onChange={handleBrochureInputChange}
           />
         </div>
-        {brochureError && <p className="text-[11px] font-medium text-[#ef4444]">{brochureError}</p>}
+        {brochureError && <p className="text-[12px] font-medium text-[#ff1e1e]">{brochureError}</p>}
         <div className="flex items-center gap-1.5">
           <img src={infoIconSmall} alt="" aria-hidden="true" className="size-2.5" />
           <span className="text-[10px] text-[#64748b]">
