@@ -14,6 +14,7 @@ import AdminInventory from '../components/AdminInventory'
 import AdminLeads from '../components/AdminLeads'
 import AdminBuyers from '../components/AdminBuyers'
 import AdminSales from '../components/AdminSales'
+import AdminBlogs from '../components/AdminBlogs'
 import { AdminProfileMenu } from '../components/AdminProfileMenu'
 import '../styles/dashboard-v2.css'
 import '../styles/admin-workspace.css'
@@ -22,7 +23,8 @@ import '../styles/portal-typography.css'
 
 // Ported from boat-brokers/src/pages/AdminWorkspace.jsx. Paths are basename
 // relative (the router basename is /admin-portal). Overview, Leads, Boat
-// Buyers, Boats & Sellers and Sales are live; remaining section modules are placeholders.
+// Buyers, Boats & Sellers, Sales and Blogs are live; remaining section modules
+// are placeholders.
 
 type NavItem = { slug: string; label: string; Icon: ComponentType<LucideProps> }
 
@@ -171,7 +173,9 @@ export default function AdminWorkspace() {
                     ? <AdminInventory onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
                     : section === 'sales' && !rest
                       ? <AdminSales onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
-                      : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
+                      : section === 'blogs'
+                        ? <AdminBlogs onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
+                        : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
           </motion.div>
         </main>
       </div>
