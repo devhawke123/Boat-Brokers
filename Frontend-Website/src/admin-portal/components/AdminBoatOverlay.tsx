@@ -1,14 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
 import { useBoatListings, invalidateListingsCache } from '../../seller-portal/data/useBoatListings'
 import { useSellers } from '../../seller-portal/data/useSellers'
 import { addListingComment, updateListingStatus } from '../../seller-portal/lib/api'
-import { deleteBoat, permanentlyDeleteBoat, restoreBoat, updateBoatSaleStatus } from '../../lib/api'
+import { deleteBoat, fetchBoats, permanentlyDeleteBoat, restoreBoat, updateBoatSaleStatus, type ApiBoat } from '../../lib/api'
 import { useSales } from '../data/useSales'
 import { getStoredAdmin } from '../lib/session'
-import { activeSaleFor, saleMatchesBoat, toInventoryBoat, toInventorySeller } from '../lib/inventory'
+import { activeSaleFor, hasListing, mergeInventoryBoats, saleMatchesBoat, toInventorySeller } from '../lib/inventory'
 import type { Availability, InventoryBoat } from '../lib/inventory'
 import type { SaleStage } from '../lib/saleRecords'
 import { BoatDrawer, BoatActionModal, SellerDrawer, SellerForm } from './AdminInventory'
@@ -36,10 +36,19 @@ export default function AdminBoatOverlay({
   const [action, setAction] = useState<'archive' | 'restore' | 'approve' | 'request-changes' | 'delete' | null>(null)
   const [saleForm, setSaleForm] = useState<SaleStage | null>(null)
   const [saleView, setSaleView] = useState<number | null>(null)
+  const [catalogBoats, setCatalogBoats] = useState<ApiBoat[]>([])
 
-  const adminBoats = useMemo(() => listings.map(toInventoryBoat), [listings])
+  useEffect(() => {
+    let cancelled = false
+    fetchBoats({ includeDeleted: true })
+      .then(boats => { if (!cancelled) setCatalogBoats(boats) })
+      .catch(() => { if (!cancelled) setCatalogBoats([]) })
+    return () => { cancelled = true }
+  }, [])
+
   const sellers = useMemo(() => apiSellers.map(toInventorySeller), [apiSellers])
-  const boat = adminBoats.find(item => item.id === selectedBoat)
+  const adminBoats = useMemo(() => mergeInventoryBoats(listings, catalogBoats, sellers), [listings, catalogBoats, sellers])
+  const boat = adminBoats.find(item => item.id === selectedBoat || item.boatId === Number(selectedBoat) || item.id === `boat-${selectedBoat}`)
   const seller = boat && (sellers.find(item => item.id === boat.sellerId) ?? boat.seller)
   const activeSale = boat ? activeSaleFor(boat, sales) : null
   const embeddedSale = saleView != null ? sales.find(sale => sale.id === saleView) : null
@@ -49,6 +58,7 @@ export default function AdminBoatOverlay({
     invalidateListingsCache()
     refetchListings()
     refetchSales()
+    void fetchBoats({ includeDeleted: true }).then(setCatalogBoats).catch(() => undefined)
   }
 
   async function setAvailability(target: InventoryBoat, value: Availability) {
@@ -62,6 +72,10 @@ export default function AdminBoatOverlay({
   }
 
   async function comment(target: InventoryBoat, message: string) {
+    if (!hasListing(target) || target.listingId == null) {
+      onNotice({ type: 'error', title: 'No listing comments', description: 'Comments are available once this boat has a seller listing.' })
+      return false
+    }
     try {
       await addListingComment(target.listingId, message, getStoredAdmin()?.name || 'Admin', { fromSeller: false })
       refresh()
@@ -73,12 +87,17 @@ export default function AdminBoatOverlay({
 
   async function perform(payload: { comment?: string }) {
     if (!boat || !action) return false
+    if ((action === 'approve' || action === 'request-changes') && !hasListing(boat)) {
+      onNotice({ type: 'error', title: 'No listing yet', description: 'This boat is in the catalog only. Listing review actions need a seller submission.' })
+      return false
+    }
     const admin = getStoredAdmin()?.name || 'Admin'
+    const listingId = boat.listingId as number
     try {
-      if (action === 'approve') await updateListingStatus(boat.listingId, 'APPROVED')
+      if (action === 'approve') await updateListingStatus(listingId, 'APPROVED')
       else if (action === 'request-changes') {
-        await updateListingStatus(boat.listingId, 'REJECTED')
-        await addListingComment(boat.listingId, payload.comment ?? '', admin, { fromSeller: false })
+        await updateListingStatus(listingId, 'REJECTED')
+        await addListingComment(listingId, payload.comment ?? '', admin, { fromSeller: false })
       } else if (action === 'archive') await deleteBoat(boat.boatId)
       else if (action === 'restore') await restoreBoat(boat.boatId)
       else if (action === 'delete') await permanentlyDeleteBoat(boat.boatId)

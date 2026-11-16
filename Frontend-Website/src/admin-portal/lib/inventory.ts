@@ -1,3 +1,4 @@
+import type { ApiBoat as CatalogBoat } from '../../lib/api'
 import type { ApiBoatListing, ApiSeller, ListingStatus } from '../../seller-portal/lib/api'
 import { listingFromApi } from '../../seller-portal/lib/listingAdapter'
 import type { WizardData } from '../../seller-portal/lib/listingAdapter'
@@ -30,7 +31,8 @@ export type InventoryComment = { id: number; author: string; text: string; at: s
 
 export type InventoryBoat = {
   id: string
-  listingId: number
+  // null when the boat exists in the catalog but has no seller listing yet
+  listingId: number | null
   boatId: number
   code: string
   name: string
@@ -50,6 +52,8 @@ export type InventoryBoat = {
   brochureUrl: string | null
   comments: InventoryComment[]
 }
+
+const emptyDetails = { additionalDetails: [] } as unknown as WizardData
 
 export type InventorySeller = {
   id: string
@@ -110,11 +114,88 @@ export function toInventorySeller(seller: ApiSeller): InventorySeller {
   }
 }
 
+function sellerForCatalogBoat(boat: CatalogBoat, sellers: InventorySeller[]): InventorySeller {
+  const match = sellers.find(item => item.apiId === boat.sellerId || item.apiId === boat.seller.id)
+  if (match) return match
+  return {
+    id: String(boat.seller.id),
+    apiId: boat.seller.id,
+    code: '',
+    name: boat.seller.name,
+    email: boat.seller.email,
+    phone: boat.seller.phone ?? '',
+    location: '',
+    status: 'New',
+    joined: '',
+  }
+}
+
+// Catalog boats with no listing still belong in admin inventory (featured,
+// sale status, archive). Treat them as approved/published when live.
+export function toInventoryBoatFromCatalog(boat: CatalogBoat, sellers: InventorySeller[] = []): InventoryBoat {
+  const seller = sellerForCatalogBoat(boat, sellers)
+  const archived = Boolean(boat.isDeleted)
+  const code = typeof (boat as { boatId?: string }).boatId === 'string'
+    ? (boat as { boatId?: string }).boatId || String(boat.id)
+    : String(boat.id)
+  const photos = (boat.images || [])
+    .map(image => image.path)
+    .filter((path): path is string => Boolean(path))
+    .map((src, index) => ({ src, name: `${boat.name} ${index + 1}` }))
+  if (!photos.length && boat.imageUrl) photos.push({ src: boat.imageUrl, name: boat.name })
+  return {
+    id: `boat-${boat.id}`,
+    listingId: null,
+    boatId: boat.id,
+    code,
+    name: boat.name,
+    type: boat.boatType || 'Boat',
+    price: boat.price,
+    photos,
+    sellerId: seller.id,
+    seller,
+    status: 'APPROVED',
+    approval: 'Approved',
+    archived,
+    published: !archived,
+    featured: Boolean(boat.isFeatured),
+    availability: boat.isSold ? 'Sold' : boat.isUnderOffer ? 'Under offer' : 'Available',
+    submittedAt: boat.createdAt,
+    details: {
+      ...emptyDetails,
+      overview: boat.overview || '',
+      berths: boat.noOfBerths || '',
+      yearBuilt: boat.yearBuilt || boat.year || '',
+      builder: boat.builder || boat.hullBuilder || '',
+      length: boat.boatLength || boat.lengthBeam || '',
+      city: boat.location || '',
+    } as WizardData,
+    brochureUrl: boat.brochureUrl,
+    comments: [],
+  }
+}
+
+// Prefer listing-backed rows (comments/approval). Add every catalog boat that
+// has no listing so admin inventory matches the full boats catalog.
+export function mergeInventoryBoats(
+  listings: ApiBoatListing[],
+  catalogBoats: CatalogBoat[],
+  sellers: InventorySeller[] = [],
+): InventoryBoat[] {
+  const fromListings = listings.map(toInventoryBoat)
+  const listedBoatIds = new Set(fromListings.map(item => item.boatId))
+  const catalogOnly = catalogBoats
+    .filter(boat => !listedBoatIds.has(boat.id))
+    .map(boat => toInventoryBoatFromCatalog(boat, sellers))
+  return [...fromListings, ...catalogOnly].sort((a, b) => b.submittedAt.localeCompare(a.submittedAt) || a.name.localeCompare(b.name))
+}
+
 export const publicationStatus = (boat: InventoryBoat): Publication => boat.archived ? 'Archived' : boat.published ? 'Published' : 'Not published'
-export const canReviewListing = (boat: InventoryBoat) => !boat.archived && boat.status === 'PENDING'
+export const canReviewListing = (boat: InventoryBoat) => boat.listingId != null && !boat.archived && boat.status === 'PENDING'
 // Without a separate publish flag, requesting changes on an approved listing
 // (status REJECTED) is the only non-archive way to take it off the storefront.
-export const canRequestListingChanges = (boat: InventoryBoat) => !boat.archived && boat.status !== 'REJECTED'
+export const canRequestListingChanges = (boat: InventoryBoat) => boat.listingId != null && !boat.archived && boat.status !== 'REJECTED'
+export const hasListing = (boat: InventoryBoat) => boat.listingId != null
 
 // The newest sale that has not been cancelled is the boat's live transaction.
 // Some API rows can omit nested boat/buyer/seller when a related record was deleted.

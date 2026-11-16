@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import { Archive, ArrowUpRight, Check, ChevronLeft, ChevronRight, Expand, Mail, MapPin, Pencil, Phone, Plus, RotateCcw, Sailboat, Search, Send, Star, Trash2, Users, X } from 'lucide-react'
@@ -8,13 +8,13 @@ import { addListingComment, createSeller, updateListingStatus, updateSeller } fr
 import { completedAdditionalDetails } from '../../seller-portal/lib/additionalDetails'
 import { EASE, directionalArrowVariants, inventoryMotion } from '../../seller-portal/lib/motion'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
-import { deleteBoat, permanentlyDeleteBoat, restoreBoat, updateBoatFeatured, updateBoatSaleStatus } from '../../lib/api'
+import { deleteBoat, fetchBoats, permanentlyDeleteBoat, restoreBoat, updateBoatFeatured, updateBoatSaleStatus, type ApiBoat } from '../../lib/api'
 import { updateSellerStatus } from '../lib/api'
 import type { ApiSale } from '../lib/api'
 import { getStoredAdmin } from '../lib/session'
 import { useSales, invalidateSalesCache } from '../data/useSales'
 import { approvalStatuses } from '../lib/adminOverview'
-import { activeSaleFor, boatSpecificationGroups, canRequestListingChanges, canReviewListing, featuredRefusal, publicationStatus, saleMatchesBoat, sellerStageValue, sellerStages, toInventoryBoat, toInventorySeller } from '../lib/inventory'
+import { activeSaleFor, boatSpecificationGroups, canRequestListingChanges, canReviewListing, featuredRefusal, hasListing, mergeInventoryBoats, publicationStatus, saleMatchesBoat, sellerStageValue, sellerStages, toInventorySeller } from '../lib/inventory'
 import type { Availability, InventoryBoat, InventoryComment, InventoryPhoto, InventorySeller, SellerStage } from '../lib/inventory'
 import type { SaleStage } from '../lib/saleRecords'
 import SaleRecordModal from './SaleRecordModal'
@@ -242,6 +242,9 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   const { listings, loading: listingsLoading, error: listingsError, refetch: refetchListings } = useBoatListings()
   const { sellers: apiSellers, loading: sellersLoading, error: sellersError, refetch: refetchSellers } = useSellers()
   const { sales, refetch: refetchSales } = useSales()
+  const [catalogBoats, setCatalogBoats] = useState<ApiBoat[]>([])
+  const [catalogLoading, setCatalogLoading] = useState(true)
+  const [catalogError, setCatalogError] = useState<string | null>(null)
   const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
@@ -250,11 +253,30 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   const [profileSellerId, setProfileSellerId] = useState<string | null>(null)
   const [action, setAction] = useState<BoatAction | null>(null)
   const [saleForm, setSaleForm] = useState<SaleStage | null>(null)
-  const adminBoats = useMemo(() => listings.map(toInventoryBoat), [listings])
   const sellers = useMemo(() => apiSellers.map(toInventorySeller), [apiSellers])
+  const adminBoats = useMemo(() => mergeInventoryBoats(listings, catalogBoats, sellers), [listings, catalogBoats, sellers])
   const view = params.get('view') === 'sellers' ? 'sellers' : 'boats'
-  const loading = view === 'boats' ? listingsLoading : sellersLoading
-  const loadError = view === 'boats' ? listingsError : sellersError
+  const boatsLoading = listingsLoading || catalogLoading
+  const boatsError = listingsError || catalogError
+  const loading = view === 'boats' ? boatsLoading : sellersLoading
+  const loadError = view === 'boats' ? boatsError : sellersError
+
+  async function refetchCatalog() {
+    setCatalogLoading(true)
+    try {
+      const boats = await fetchBoats({ includeDeleted: true })
+      setCatalogBoats(boats)
+      setCatalogError(null)
+    } catch (error) {
+      setCatalogError(error instanceof Error ? error.message : 'Failed to load boats.')
+    } finally {
+      setCatalogLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    void refetchCatalog()
+  }, [])
   const rawStatus = params.get('status') || ''
   const review = rawStatus === 'In review' ? 'Awaiting review' : rawStatus
   const status = (view === 'boats' ? approvalStatuses as string[] : sellerStages as string[]).includes(review) ? review : ''
@@ -267,7 +289,7 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   const profileSeller = sellers.find(item => item.id === profileSellerId)
   const boatSeller = boat && sellerFor(boat)
   const query = search.toLowerCase().trim()
-  const filteredBoats = adminBoats.filter(item => (!status || item.approval === status) && (publication === 'All publications' || publicationStatus(item) === publication) && (!saleFilter || (item.status === 'APPROVED' && item.availability === saleFilter)) && [item.name, item.type, sellerFor(item).name].some(value => value?.toLowerCase().includes(query)))
+  const filteredBoats = adminBoats.filter(item => (!status || item.approval === status) && (publication === 'All publications' || publicationStatus(item) === publication) && (!saleFilter || item.availability === saleFilter) && [item.name, item.type, sellerFor(item).name].some(value => value?.toLowerCase().includes(query)))
   const filteredSellers = sellers.filter(item => (!status || item.status === status) && [item.name, item.email, item.phone, item.location].some(value => value.toLowerCase().includes(query)))
   const rows = view === 'boats' ? filteredBoats : filteredSellers
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE))
@@ -279,11 +301,12 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   function open(key: string, id: string) { change({ [key]: id }) }
   // Overview and every other admin screen read the same module caches, so a
   // refetch after each mutation keeps them current.
-  function refresh(...targets: ('listings' | 'sellers')[]) {
+  function refresh(...targets: ('listings' | 'sellers' | 'boats')[]) {
     if (targets.includes('listings')) refetchListings()
     if (targets.includes('sellers')) refetchSellers()
+    if (targets.includes('boats') || targets.includes('listings')) void refetchCatalog()
   }
-  async function attempt(task: () => Promise<unknown>, success: Notice | null, ...targets: ('listings' | 'sellers')[]) {
+  async function attempt(task: () => Promise<unknown>, success: Notice | null, ...targets: ('listings' | 'sellers' | 'boats')[]) {
     try {
       await task()
       refresh(...targets)
@@ -312,10 +335,15 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   }
   async function perform(payload: { comment?: string }) {
     if (!boat || !action) return false
+    if ((action === 'approve' || action === 'request-changes') && !hasListing(boat)) {
+      onNotice({ type: 'error', title: 'No listing yet', description: 'This boat is in the catalog only. Listing review actions need a seller submission.' })
+      return false
+    }
     const admin = getStoredAdmin()?.name || 'Admin'
+    const listingId = boat.listingId as number
     const tasks: Record<BoatAction, () => Promise<unknown>> = {
-      approve: () => updateListingStatus(boat.listingId, 'APPROVED'),
-      'request-changes': async () => { await updateListingStatus(boat.listingId, 'REJECTED'); await addListingComment(boat.listingId, payload.comment ?? '', admin, { fromSeller: false }) },
+      approve: () => updateListingStatus(listingId, 'APPROVED'),
+      'request-changes': async () => { await updateListingStatus(listingId, 'REJECTED'); await addListingComment(listingId, payload.comment ?? '', admin, { fromSeller: false }) },
       archive: () => deleteBoat(boat.boatId),
       restore: () => restoreBoat(boat.boatId),
       delete: () => permanentlyDeleteBoat(boat.boatId),
@@ -327,7 +355,7 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
       restore: { type: 'success', title: 'Listing restored', description: boat.status === 'APPROVED' ? 'The last approved version is public again.' : 'Restored without publishing.' },
       delete: { type: 'success', title: 'Listing deleted', description: `${boat.name} has been permanently removed.` },
     }
-    const done = await attempt(tasks[action], notices[action], 'listings')
+    const done = await attempt(tasks[action], notices[action], 'listings', 'boats')
     if (!done) return false
     if (action === 'delete') change({ boat: null })
     setAction(null)
@@ -336,15 +364,19 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   function toggleFeatured(item: InventoryBoat) {
     const refusal = featuredRefusal(item, adminBoats)
     if (refusal) { onNotice({ type: 'warning', title: 'Not marked as featured', description: refusal }); return }
-    void attempt(() => updateBoatFeatured(item.boatId, !item.featured), { type: 'success', title: item.featured ? 'Removed from featured' : 'Marked as featured', description: item.name }, 'listings')
+    void attempt(() => updateBoatFeatured(item.boatId, !item.featured), { type: 'success', title: item.featured ? 'Removed from featured' : 'Marked as featured', description: item.name }, 'listings', 'boats')
   }
   function setAvailability(target: InventoryBoat, value: Availability) {
-    void attempt(() => updateBoatSaleStatus(target.boatId, { isSold: false, isUnderOffer: value === 'Under offer' }), { type: 'success', title: 'Sale status updated', description: `${target.name} is now ${value.toLowerCase()}. Publication is unchanged.` }, 'listings')
+    void attempt(() => updateBoatSaleStatus(target.boatId, { isSold: false, isUnderOffer: value === 'Under offer' }), { type: 'success', title: 'Sale status updated', description: `${target.name} is now ${value.toLowerCase()}. Publication is unchanged.` }, 'listings', 'boats')
   }
   function comment(target: InventoryBoat, message: string) {
-    return attempt(() => addListingComment(target.listingId, message, getStoredAdmin()?.name || 'Admin', { fromSeller: false }), null, 'listings')
+    if (!hasListing(target) || target.listingId == null) {
+      onNotice({ type: 'error', title: 'No listing comments', description: 'Comments are available once this boat has a seller listing.' })
+      return Promise.resolve(false)
+    }
+    return attempt(() => addListingComment(target.listingId!, message, getStoredAdmin()?.name || 'Admin', { fromSeller: false }), null, 'listings')
   }
-  const countLoading = view === 'boats' ? listingsLoading && !listings.length : sellersLoading && !apiSellers.length
+  const countLoading = view === 'boats' ? boatsLoading && !adminBoats.length : sellersLoading && !apiSellers.length
   const filterItems = ['', ...(view === 'boats' ? approvalStatuses : sellerStages)].map(value => ({ value, label: value || (view === 'boats' ? 'All boats' : 'All sellers'), count: countLoading ? '—' : view === 'boats' ? adminBoats.filter(item => !value || item.approval === value).length : sellers.filter(item => !value || item.status === value).length }))
   return <InventoryNoticeContext.Provider value={{ notice, onClose: onDismissNotice }}>
     <div className="leads-heading"><h1>Boats &amp; Sellers</h1>{view === 'sellers' && <AccountButton kind="primary" onClick={() => setSellerForm({})}><Plus size={16} />Add seller</AccountButton>}</div>
@@ -375,14 +407,14 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
             <td><SellerIdentity seller={sellerFor(item)} /></td>
             <td className="inventory-price">{money(item.price)}</td>
             <td><Badge>{item.approval}</Badge></td>
-            <td><Badge>{publicationStatus(item)}</Badge></td><td data-sale-status style={{ cursor: 'default' }}><Badge>{item.status === 'APPROVED' ? item.availability : 'Not available'}</Badge></td>
+            <td><Badge>{publicationStatus(item)}</Badge></td><td data-sale-status style={{ cursor: 'default' }}><Badge>{item.listingId == null || item.status === 'APPROVED' ? item.availability : 'Not available'}</Badge></td>
           </motion.tr>) : visibleSellers.map(item => <motion.tr key={item.id} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ ...inventoryMotion.row, duration: reduced ? 0 : inventoryMotion.row.duration }} onClick={() => open('seller', item.id)}>
             <td><SellerIdentity seller={item} email><AdminActionButton type="button" className="inventory-seller-name" aria-label={`View seller ${item.name}`} onClick={event => { event.stopPropagation(); open('seller', item.id) }}>{item.name}</AdminActionButton></SellerIdentity></td>
             <td>{adminBoats.filter(boat => boat.sellerId === item.id).length}</td><td><Badge>{item.status}</Badge></td>
           </motion.tr>)}</AdminResultsBody>
         </table>
       </div>
-      {!rows.length && (loading || loadError ? <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}>{view === 'boats' ? <Sailboat size={25} /> : <Users size={25} />}<h2>{loading ? `Loading ${view}…` : `Couldn’t load ${view}`}</h2>{loadError && !loading && <><p>{loadError}</p><AccountButton onClick={() => refresh(view === 'boats' ? 'listings' : 'sellers')}>Try again</AccountButton></>}</motion.div> : <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}><Search size={25} /><h2>No {view} found</h2><p>Try another search or filter.</p><AccountButton onClick={() => { setSearch(''); change({ status: null, publication: null, availability: null, sale: null }) }}>Clear filters</AccountButton></motion.div>)}
+      {!rows.length && (loading || loadError ? <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}>{view === 'boats' ? <Sailboat size={25} /> : <Users size={25} />}<h2>{loading ? `Loading ${view}…` : `Couldn’t load ${view}`}</h2>{loadError && !loading && <><p>{loadError}</p><AccountButton onClick={() => refresh(view === 'boats' ? 'listings' : 'sellers', ...(view === 'boats' ? ['boats' as const] : []))}>Try again</AccountButton></>}</motion.div> : <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}><Search size={25} /><h2>No {view} found</h2><p>Try another search or filter.</p><AccountButton onClick={() => { setSearch(''); change({ status: null, publication: null, availability: null, sale: null }) }}>Clear filters</AccountButton></motion.div>)}
       <footer className="leads-pagination"><p role="status">{rows.length ? `${(activePage - 1) * PAGE_SIZE + 1}–${Math.min(activePage * PAGE_SIZE, rows.length)} of ${rows.length} ${view}` : `0 ${view}`}</p><div><AdminActionButton type="button" aria-label="Previous page" disabled={activePage === 1} onClick={() => setPage(activePage - 1)}><ChevronLeft size={16} /></AdminActionButton><span>{activePage} / {pages}</span><AdminActionButton type="button" aria-label="Next page" disabled={activePage === pages} onClick={() => setPage(activePage + 1)}><ChevronRight size={16} /></AdminActionButton></div></footer>
     </section>
     <AnimatePresence>{seller && <SellerDrawer key={`seller-${seller.id}`} seller={seller} boats={adminBoats.filter(item => item.sellerId === seller.id)} behind={Boolean(boat)} onClose={() => change({ seller: null, boat: null })} onBoat={id => change({ boat: id })} onEdit={() => setSellerForm(seller)} onAddBoat={() => navigate(`/boats/new/basic?seller=${encodeURIComponent(seller.id)}`)} onStatus={stage => setSellerStage(seller, stage)} />}{boat && boatSeller && <BoatDrawer key={`boat-${boat.id}`} behind={Boolean(profileSeller)} boat={boat} seller={boatSeller} activeSale={activeSaleFor(boat, sales)} hasSaleHistory={sales.some(sale => saleMatchesBoat(sale, boat.boatId))} onClose={() => change({ boat: null })} onSeller={() => setProfileSellerId(boatSeller.id)} onAction={setAction} onAvailability={value => setAvailability(boat, value)} onComment={message => comment(boat, message)} onSale={id => navigate(`/sales?sale=${id}`)} onRecordSale={setSaleForm} />}</AnimatePresence>
