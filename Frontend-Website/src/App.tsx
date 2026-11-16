@@ -24,30 +24,9 @@ import Wolverhampton from './pages/AreasWeServe/Wolverhampton/Wolverhampton'
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 import Blog from './pages/Blog/Blog'
 import BlogDetail from './pages/BlogDetail/BlogDetail'
-import AdminLogin from './admin-portal/pages/Login/Login'
-import AdminDashboard from './admin-portal/pages/Dashboard/Dashboard'
-import Sellers from './admin-portal/pages/Sellers/Sellers'
-import SellerForm from './admin-portal/pages/SellerForm/SellerForm'
-import SellerDetail from './admin-portal/pages/SellerDetail/SellerDetail'
-import Boats from './admin-portal/pages/Boats/Boats'
-import Listings from './admin-portal/pages/Listings/Listings'
-import ListingComments from './admin-portal/pages/ListingComments/ListingComments'
-import BoatEditForm from './admin-portal/pages/BoatEditForm/BoatEditForm'
-import Availability from './admin-portal/pages/Availability/Availability'
-import Buyers from './admin-portal/pages/Buyers/Buyers'
-import BuyerForm from './admin-portal/pages/BuyerForm/BuyerForm'
-import BuyerDetail from './admin-portal/pages/BuyerDetail/BuyerDetail'
-import Leads from './admin-portal/pages/Leads/Leads'
-import LeadForm from './admin-portal/pages/LeadForm/LeadForm'
-import LeadDetail from './admin-portal/pages/LeadDetail/LeadDetail'
-import Sales from './admin-portal/pages/Sales/Sales'
-import SaleForm from './admin-portal/pages/SaleForm/SaleForm'
-import SaleDetail from './admin-portal/pages/SaleDetail/SaleDetail'
-import Blogs from './admin-portal/pages/Blogs/Blogs'
-import BlogPostForm from './admin-portal/pages/BlogPostForm/BlogPostForm'
-import AdminPortalNotFound from './admin-portal/pages/NotFound/NotFound'
 
 const SellerPortalApp = lazy(() => import('./seller-portal/SellerPortalApp'))
+const AdminPortalApp = lazy(() => import('./admin-portal/AdminPortalApp'))
 
 function renderRoute(pathname: string) {
   if (pathname === '/about') {
@@ -144,135 +123,13 @@ function renderRoute(pathname: string) {
     )
   }
 
-  if (pathname === '/admin-portal/login') {
-    return <AdminLogin />
-  }
-
-  if (pathname === '/admin-portal/dashboard') {
-    return <AdminDashboard />
-  }
-
-  if (pathname === '/admin-portal/sellers') {
-    return <Sellers />
-  }
-
-  if (pathname === '/admin-portal/sellers/new') {
-    return <SellerForm />
-  }
-
-  if (pathname.startsWith('/admin-portal/sellers/') && pathname.endsWith('/edit')) {
-    const sellerId = Number(pathname.replace('/admin-portal/sellers/', '').replace('/edit', ''))
-    if (Number.isInteger(sellerId)) return <SellerForm sellerId={sellerId} />
-  }
-
-  if (pathname === '/admin-portal/boats/new') {
-    return <BoatEditForm create />
-  }
-
-  if (pathname === '/admin-portal/boats') {
-    return <Boats />
-  }
-
-  if (pathname.startsWith('/admin-portal/boats/') && pathname.endsWith('/edit')) {
-    const boatId = Number(pathname.replace('/admin-portal/boats/', '').replace('/edit', ''))
-    if (Number.isInteger(boatId)) return <BoatEditForm boatId={boatId} />
-  }
-
-  if (pathname === '/admin-portal/listings') {
-    return <Listings />
-  }
-
-  if (pathname.startsWith('/admin-portal/listings/') && pathname.endsWith('/edit')) {
-    const listingId = Number(pathname.replace('/admin-portal/listings/', '').replace('/edit', ''))
-    if (Number.isInteger(listingId)) return <BoatEditForm listingId={listingId} />
-  }
-
-  if (pathname.startsWith('/admin-portal/listings/')) {
-    const listingId = Number(pathname.replace('/admin-portal/listings/', ''))
-    if (Number.isInteger(listingId)) return <ListingComments listingId={listingId} />
-  }
-
-  if (pathname.startsWith('/admin-portal/sellers/')) {
-    const sellerId = Number(pathname.replace('/admin-portal/sellers/', ''))
-    if (Number.isInteger(sellerId)) return <SellerDetail sellerId={sellerId} />
-  }
-
-  if (pathname === '/admin-portal/availability') {
-    return <Availability />
-  }
-
-  if (pathname === '/admin-portal/buyers') {
-    return <Buyers />
-  }
-
-  if (pathname === '/admin-portal/buyers/new') {
-    return <BuyerForm />
-  }
-
-  if (pathname.startsWith('/admin-portal/buyers/') && pathname.endsWith('/edit')) {
-    const buyerId = Number(pathname.replace('/admin-portal/buyers/', '').replace('/edit', ''))
-    if (Number.isInteger(buyerId)) return <BuyerForm buyerId={buyerId} />
-  }
-
-  if (pathname.startsWith('/admin-portal/buyers/')) {
-    const buyerId = Number(pathname.replace('/admin-portal/buyers/', ''))
-    if (Number.isInteger(buyerId)) return <BuyerDetail buyerId={buyerId} />
-  }
-
-  if (pathname === '/admin-portal/leads') {
-    return <Leads />
-  }
-
-  if (pathname === '/admin-portal/leads/new') {
-    return <LeadForm />
-  }
-
-  if (pathname.startsWith('/admin-portal/leads/') && pathname.endsWith('/edit')) {
-    const leadId = Number(pathname.replace('/admin-portal/leads/', '').replace('/edit', ''))
-    if (Number.isInteger(leadId)) return <LeadForm leadId={leadId} />
-  }
-
-  if (pathname.startsWith('/admin-portal/leads/')) {
-    const leadId = Number(pathname.replace('/admin-portal/leads/', ''))
-    if (Number.isInteger(leadId)) return <LeadDetail leadId={leadId} />
-  }
-
-  if (pathname === '/admin-portal/sales') {
-    return <Sales />
-  }
-
-  if (pathname === '/admin-portal/sales/new') {
-    return <SaleForm />
-  }
-
-  if (pathname.startsWith('/admin-portal/sales/') && pathname.endsWith('/edit')) {
-    const saleId = Number(pathname.replace('/admin-portal/sales/', '').replace('/edit', ''))
-    if (Number.isInteger(saleId)) return <SaleForm saleId={saleId} />
-  }
-
-  if (pathname.startsWith('/admin-portal/sales/')) {
-    const saleId = Number(pathname.replace('/admin-portal/sales/', ''))
-    if (Number.isInteger(saleId)) return <SaleDetail saleId={saleId} />
-  }
-
-  if (pathname === '/admin-portal/blogs') {
-    return <Blogs />
-  }
-
-  if (pathname === '/admin-portal/blogs/new') {
-    return <BlogPostForm />
-  }
-
-  if (pathname.startsWith('/admin-portal/blogs/') && pathname.endsWith('/edit')) {
-    const postId = Number(pathname.replace('/admin-portal/blogs/', '').replace('/edit', ''))
-    if (Number.isInteger(postId)) return <BlogPostForm postId={postId} />
-  }
-
-  // Scoped fallback for the admin portal, same reasoning as the seller
-  // portal one above — nav items for not-yet-built modules land here
-  // instead of the public 404.
-  if (pathname.startsWith('/admin-portal/')) {
-    return <AdminPortalNotFound />
+  // The admin portal is a nested react-router app too (see AdminPortalApp.tsx).
+  if (pathname === '/admin-portal' || pathname.startsWith('/admin-portal/')) {
+    return (
+      <Suspense fallback={null}>
+        <AdminPortalApp />
+      </Suspense>
+    )
   }
 
   if (pathname === '/' || pathname === '') {

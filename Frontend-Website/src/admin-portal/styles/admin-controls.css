@@ -1,0 +1,100 @@
+/* Shared seller-collection heading scale and admin list-filter surface. */
+.admin-workspace .leads-list {
+  background: var(--v2-glass-fill);
+  border-color: rgb(255 255 255 / 0.82);
+  backdrop-filter: var(--v2-glass-filter);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 0 -1px 0 rgb(255 255 255 / 0.28),
+    0 8px 28px rgb(18 60 89 / 0.055);
+}
+.admin-workspace .leads-table thead,
+.admin-workspace .inventory-table th {
+  background: rgb(238 246 251 / 0.55);
+}
+.admin-workspace .inventory-view-switch button {
+  position: relative;
+  isolation: isolate;
+  background: var(--v2-glass-fill);
+  border-color: rgb(255 255 255 / 0.82);
+  backdrop-filter: var(--v2-glass-filter);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 0 -1px 0 rgb(255 255 255 / 0.28);
+}
+.admin-workspace .inventory-view-switch button[aria-selected="true"] {
+  background: transparent;
+  border-color: transparent;
+}
+.admin-workspace .inventory-view-switch button[aria-selected="false"] {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.inventory-tab-selection {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgb(255 255 255 / 0.82);
+  border-bottom-color: transparent;
+  border-radius: inherit;
+  background: var(--v2-glass-fill);
+}
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .admin-workspace .leads-list,
+  .inventory-tab-selection {
+    background: #f3f9fd;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .admin-workspace .leads-list,
+  .inventory-tab-selection {
+    background: #f3f9fd;
+    backdrop-filter: none;
+  }
+  .admin-workspace .inventory-view-switch button {
+    backdrop-filter: none;
+  }
+}
+.admin-workspace :is(.admin-page-heading, .leads-heading) h1 {
+  font-size: clamp(var(--v2-type-page), 3vw, var(--v2-type-hero));
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.055em;
+}
+.admin-workspace .admin-collection-filter {
+  width: 190px;
+  flex-shrink: 0;
+}
+.admin-workspace .leads-tools {
+  width: 100%;
+  flex-wrap: wrap;
+  margin-left: 0;
+}
+.admin-workspace .leads-tools .leads-search {
+  flex: 1;
+  min-width: 170px;
+  width: auto;
+}
+.admin-workspace .leads-tools .leads-search input {
+  font-size: var(--v2-type-body);
+}
+@media (max-width: 650px) {
+  .admin-workspace .admin-collection-filter {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .admin-workspace .leads-tools .leads-search {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .admin-workspace :is(.admin-page-heading, .leads-heading) h1 {
+    font-size: var(--v2-type-display);
+  }
+}
+

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import '@fontsource-variable/plus-jakarta-sans'
 import { AuthLoginCarousel } from '../../../seller-portal/components/AuthLoginCarousel'
@@ -9,6 +10,8 @@ import '../../../seller-portal/pages/v2-login.css'
 
 export default function Login() {
   const { login, loading, error, clearError } = useAdminLogin()
+  const navigate = useNavigate()
+  const location = useLocation()
   const reduced = useReducedMotion()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,7 +43,8 @@ export default function Login() {
 
     const admin = await login(email.trim(), password)
     if (admin) {
-      window.location.href = '/admin-portal/dashboard'
+      const from = (location.state as { from?: string } | null)?.from
+      navigate(from && from !== '/login' ? from : '/dashboard', { replace: true })
     }
   }
 
