@@ -1,0 +1,74 @@
+/* Shared current-portal scale. V1 keeps its original component styles. */
+:root {
+  --v2-type-caption: .875rem; /* 14px: minimum visible text */
+  --v2-type-body: 1rem; /* 16px */
+  --v2-type-title-sm: 1.125rem; /* 18px */
+  --v2-type-title: 1.25rem; /* 20px */
+  --v2-type-section: 1.5rem; /* 24px */
+  --v2-type-page: 2rem; /* 32px */
+  --v2-type-display: 2.5rem; /* 40px */
+  --v2-type-hero: 3rem; /* 48px */
+  --v2-type-jumbo: 3.5rem; /* 56px */
+}
+
+html[data-portal-ui="current"] body,
+html[data-portal-ui="current"] :is(.dashboard-v2, .v2-wizard, .v2-settings-layer, .v2-login-page) {
+  font-size: var(--v2-type-body);
+  line-height: 1.5;
+}
+
+/* Shared JSX controls also serve V1, so raise their small utilities only here.
+   The document scope includes portalled menus, dialogs, toasts and galleries. */
+html[data-portal-ui="current"] :is(
+  .text-xs, .text-sm,
+  [class*="text-[8px]"], [class*="text-[9px]"], [class*="text-[10px]"],
+  [class*="text-[11px]"], [class*="text-[12px]"], [class*="text-[13px]"]
+) {
+  font-size: var(--v2-type-caption);
+  line-height: 1.5;
+}
+html[data-portal-ui="current"] [class*="text-[15px]"] { font-size: var(--v2-type-body); }
+html[data-portal-ui="current"] [class*="text-[17px]"] { font-size: var(--v2-type-title-sm); }
+html[data-portal-ui="current"] [class*="text-[19px]"] { font-size: var(--v2-type-title); }
+
+html[data-portal-ui="current"] :is(
+  .v2-settings-input-wrap input, .v2-settings-input-wrap textarea,
+  .v2-settings-select .wizard-input, .v2-wizard .wizard-input,
+  .v2-collection-search input, .leads-search input, .admin-record-search input,
+  .v2-collection-sort .wizard-select > button
+) { font-size: var(--v2-type-body); }
+
+html[data-portal-ui="current"] :is(.v2-detail-panel p, .lead-note) { font-size: var(--v2-type-body); }
+html[data-portal-ui="current"] :is(.v2-panel-header h2, .admin-panel-heading h2, .lead-detail-section h3, .v2-notifications-heading h2, .v2-help-heading h2) { font-size: var(--v2-type-title-sm); }
+.v2-breadcrumb { flex-wrap: wrap; }
+.v2-settings-header { flex-shrink: 0; }
+.v2-unread-count, .v2-notifications-heading h2 span { min-width: 24px; height: 24px; padding-inline: 4px; }
+.v2-wizard-step-number { width: 28px; height: 28px; }
+.v2-boat-title-row, .v2-boat-footer { flex-wrap: wrap; }
+.v2-boat-title-row > div { flex: 1 1 160px; }
+.v2-status-tile { min-height: 148px; }
+.v2-tile-caption { max-width: calc(100% - 44px); }
+.v2-chart-label { white-space: normal; line-height: 1.4; }
+.v2-update-heading, .v2-notification-copy > span:first-child { flex-wrap: wrap; }
+.leads-toolbar { gap: 12px; }
+.leads-tools { width: 100%; order: 1; margin-left: 0; }
+.leads-search { flex: 1; min-width: 0; width: auto; }
+.leads-table { min-width: 860px; }
+.leads-table th, .leads-table td { padding-inline: 14px; }
+.leads-table .lead-row-person button { font-size: var(--v2-type-body); }
+.admin-table { min-width: 860px; }
+.admin-record-toolbar { gap: 16px; }
+
+@media (max-width: 800px) {
+  .admin-nav-link { flex-basis: calc(50% - 6px); min-height: 48px; }
+  .admin-nav-link > span:not(.admin-nav-indicator) { min-width: 0; line-height: 1.4; }
+}
+@media (max-width: 650px) {
+  .v2-header { flex-wrap: wrap; gap: 12px; }
+  .v2-header-actions { margin-left: auto; }
+  .leads-table { min-width: 860px; }
+}
+@media (max-width: 560px) {
+  .v2-header-actions { width: 100%; justify-content: flex-end; }
+  .v2-status-tile { min-height: 148px; }
+}
