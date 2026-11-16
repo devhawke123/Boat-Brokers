@@ -1,0 +1,50 @@
+﻿/* Shared record overlay (drawer/modal), toast layer, info-tooltip trigger and contact-copy rules.
+   Lines are copied verbatim from boat-brokers admin-inventory.css / admin-leads.css so the ported
+   primitives render identically before the feature modules (which re-declare them) are ported. */
+.inventory-drawer { position: fixed; inset: 16px 16px 16px auto; display: flex; flex-direction: column; margin: 0; padding: 0; width: min(560px, calc(100% - 32px)); height: calc(100dvh - 32px); max-width: none; max-height: none; border: 1px solid #edf1f5; border-radius: 22px; background: #fff; color: #19384d; box-shadow: 0 20px 80px #132c4329; font-family: var(--font-sans); overflow: clip; }
+.inventory-drawer::backdrop { background: #182f453b; }
+.inventory-drawer.is-behind { pointer-events: none; }
+.inventory-drawer-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 25px 25px 23px 30px; border-bottom: 1px solid #e4eaf0; flex-shrink: 0; }
+.inventory-drawer-header > div { min-width: 0; }
+.inventory-drawer-header p { margin-bottom: 12px; color: #71899b; font-size: var(--v2-type-caption); }
+.inventory-drawer-header h2 { outline: none; color: #18374d; font-size: var(--v2-type-section); font-weight: 500; line-height: 1.3; letter-spacing: -.045em; overflow-wrap: anywhere; }
+.inventory-drawer-header:has(.inventory-header-statuses) { align-items: flex-start; }
+.inventory-modal-title-line { display: flex; align-items: center; gap: 8px; }
+.inventory-modal-title-line > h2 { min-width: 0; flex: 1; }
+.inventory-modal-title-line .inventory-comment-info { flex-shrink: 0; }
+.inventory-modal-title-line .inventory-comment-info [role=tooltip] { width: 280px; }
+.inventory-modal-title-line .inventory-comment-info button:focus-visible { outline: 2px solid #2584be; outline-offset: -4px; }
+.inventory-drawer-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 25px 30px 30px; }
+.inventory-drawer-footer { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 9px; padding: 17px 25px; flex-shrink: 0; border-top: 1px solid #e1e8ee; background: #fafbfd; }
+.inventory-overlay-toast { position: absolute; bottom: 90px; right: 16px; width: calc(100% - 32px); max-width: 440px; z-index: 5; }
+.inventory-overlay-toast span { font-size: var(--v2-type-caption); }
+.inventory-comment-info { position: relative; display: inline-flex; }
+.inventory-comment-info > button { display: grid; place-items: center; width: 44px; height: 44px; color: #698397; border-radius: 8px; }
+.inventory-comment-info [role=tooltip] { position: absolute; top: 100%; right: -12px; z-index: 2; width: 240px; max-width: calc(100vw - 80px); padding: 11px 14px; border: 1px solid #d8e4ed; border-radius: 9px; background: #fff; box-shadow: 0 6px 20px #193b5317; color: #526c80; font-size: var(--v2-type-caption); line-height: 1.6; }
+dialog.inventory-modal { position: fixed; inset: 0; margin: auto; padding: 0; width: min(560px, calc(100% - 24px)); height: max-content; max-height: calc(100vh - 40px); max-height: calc(100dvh - 40px); color: #123c59; font-family: var(--font-sans); }
+.inventory-modal-footer { justify-content: flex-end; flex-wrap: wrap; }
+.inventory-drawer button:focus-visible, .inventory-list button:focus-visible, .inventory-view-switch button:focus-visible, .inventory-drawer select:focus-visible { outline: 2px solid #39a4d1; outline-offset: 3px; }
+.inventory-drawer button:disabled, .inventory-modal button:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 650px) {
+  .inventory-drawer:has(.inventory-workflow-footer):has(.inventory-footer-sale) .inventory-overlay-toast { bottom: 220px; }
+  .inventory-drawer:has(.inventory-workflow-footer) .inventory-overlay-toast { bottom: 145px; }
+  .inventory-drawer { inset: 8px; width: calc(100% - 16px); height: calc(100dvh - 16px); border-radius: 18px; }
+  .inventory-drawer.is-behind { visibility: hidden; }
+  .inventory-drawer-header { padding: 20px; }
+  .inventory-drawer-body { padding: 23px 20px; }
+  .inventory-drawer-footer { padding: 15px 17px; }
+}
+.inventory-modal-title-line .admin-header-avatar { flex: none; width: 44px; height: 44px; font-size: 16px; font-weight: 400; }
+.inventory-toast-layer { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: visible; pointer-events: none; }
+.inventory-toast-layer::backdrop { background: transparent; pointer-events: none; }
+.inventory-toast-layer > aside { pointer-events: auto; }
+.inventory-toast-layer > aside span { font-size: var(--v2-type-caption); }
+body:has(.inventory-toast-layer:popover-open) .admin-workspace > aside:is([role="status"], [role="alert"]) { display: none; }
+body:has(.inventory-toast-layer:popover-open) .inventory-overlay-toast { display: none; }
+.lead-avatar { display: grid; place-items: center; width: 35px; height: 35px; flex-shrink: 0; border: 1px solid #dfe7ee; border-radius: 50%; color: #315b79; background: #e9f1f7; font-size: var(--v2-type-caption); font-weight: 500; }
+.lead-copy-control { position: relative; display: inline-flex; flex-shrink: 0; }
+.lead-copy-button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 7px; color: #6d8da4; }
+.lead-copy-button:hover { background: #edf5fa; color: #123c59; }
+.lead-copy-button > span { display: inline-flex; }
+.lead-copy-button:focus-visible { outline: 2px solid #39a4d1; outline-offset: 2px; }
+.lead-copy-error { position: absolute; right: 0; top: 100%; z-index: 1; width: 260px; padding: 9px 12px; border: 1px solid #edd7dc; border-radius: 8px; background: #fff6f8; color: #914357; font-size: var(--v2-type-caption); line-height: 1.6; box-shadow: 0 4px 18px #19354913; }

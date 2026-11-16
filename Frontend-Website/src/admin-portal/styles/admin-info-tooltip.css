@@ -1,0 +1,4 @@
+.admin-floating-tooltip[role="tooltip"] { position: fixed; inset: auto; margin: 0; box-sizing: border-box; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow: auto; padding: 11px 14px; border: 1px solid #d8e4ed; border-radius: 9px; background: #fff; box-shadow: 0 6px 20px #193b5317; color: #526c80; font-family: inherit; font-size: 14px; font-weight: 400; line-height: 1.6; white-space: normal; text-align: left; pointer-events: none; z-index: 100; }
+.inventory-feature-tooltip { display: inline-flex; flex: none; }
+.inventory-row-boat .inventory-feature-tooltip > button { width: 44px; min-height: 44px; color: #b47800; }
+.inventory-row-boat .inventory-feature-tooltip > button[aria-pressed="true"] { color: #dc9600; }

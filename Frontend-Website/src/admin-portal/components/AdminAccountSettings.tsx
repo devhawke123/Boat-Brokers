@@ -62,9 +62,10 @@ function AccountButton({ children, kind = 'secondary', arrow, className = '', ..
   )
 }
 
-function AccountCloseButton({ onClick }: { onClick: () => void }) {
+// Exported for AdminRecordOverlay (the prototype imports it from V2AccountSettings).
+export function AccountCloseButton({ label = 'Close account settings', ...props }: Omit<ButtonProps, 'children' | 'kind'> & { label?: string }) {
   return (
-    <AccountButton kind="quiet" className="v2-settings-close" aria-label="Close account settings" onClick={onClick}>
+    <AccountButton kind="quiet" className="v2-settings-close" aria-label={label} {...props}>
       <X size={18} strokeWidth={1.5} />
     </AccountButton>
   )
