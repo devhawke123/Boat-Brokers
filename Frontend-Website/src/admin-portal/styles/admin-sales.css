@@ -1,0 +1,35 @@
+.sales-drawer-status { margin-top: 14px; }
+.sale-stage.is-current { background: #eef0f8; color: #596683; border-color: #dfe3ef; }
+.sale-stage.is-completed { color: #1b6985; background: #e6f5fb; border-color: #cde9f4; }
+.sale-stage.is-cancelled { color: #657583; background: #f2f4f6; border-color: #e2e7eb; }
+.sales-buyer-field { grid-column: 1 / -1; }
+.sales-add-buyer { margin-top: 10px; }
+.sales-balance-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; margin: 24px 0 18px; padding: 16px; border-radius: 10px; background: #eaf3fa; color: #294c65; }
+.sales-balance-summary span, .sales-balance-summary p { font-size: var(--v2-type-caption); }
+.sales-balance-summary p { flex-basis: 100%; color: #63788b; line-height: 1.6; }
+.sales-balance-summary strong { font-size: var(--v2-type-title); font-weight: 500; font-variant-numeric: tabular-nums; }
+.sales-footer-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; width: 100%; }
+.sales-finance-note { margin-top: 18px; font-size: var(--v2-type-caption); line-height: 1.7; color: #63788b; }
+.sales-boat-link { display: inline-flex; align-items: center; min-height: 44px; color: #255876; font-size: var(--v2-type-caption); text-decoration: underline; text-underline-offset: 4px; }
+.inventory-table.is-sales { min-width: 1350px; }
+.inventory-table.is-sales th, .inventory-table.is-sales td { white-space: nowrap; padding-inline: 18px; }
+.inventory-table.is-sales td:first-child { width: auto; min-width: 210px; }
+.inventory-table.is-sales .sales-amount { text-align: right; font-variant-numeric: tabular-nums; }
+.sales-records-list { border-top-left-radius: 19px; }
+.inventory-footer-sale .sales-availability-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+.sales-availability-actions .wizard-select { width: 165px; }
+.sales-column-link { display: inline-block; min-height: 44px; }
+.sales-boat-link:focus-visible { outline: 2px solid #428eb0; outline-offset: 3px; }
+.sales-parties { display: grid; gap: 24px; margin-bottom: 24px; }
+.sales-parties > div > p { margin: 0 0 10px; color: #63788b; font-size: var(--v2-type-caption); }
+.sales-parties .inventory-person > div { min-width: 0; }
+.sales-parties .inventory-person span:not(.lead-avatar) { overflow-wrap: anywhere; }
+.inventory-row-boat .inventory-feature-toggle { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 44px; min-height: 44px; height: 44px; border-radius: 8px; color: #71899b; }
+.inventory-feature-toggle[aria-pressed="true"] { color: #946a22; }
+.inventory-feature-toggle:focus-visible { outline: 2px solid #428eb0; outline-offset: 2px; }
+.inventory-table.is-boats { min-width: 1280px; }
+.inventory-table.is-boats th:first-child { width: 27%; }
+.inventory-table.is-sales .inventory-picture { width: 48px; height: 44px; }
+.sales-confirmation-form { display: grid; gap: 24px; }
+.inventory-header-sale-link { display: inline-flex; align-items: center; min-height: 44px; margin-block: -8px; border-radius: 5px; }
+.inventory-header-sale-link:focus-visible { outline: 2px solid #428eb0; outline-offset: 3px; }

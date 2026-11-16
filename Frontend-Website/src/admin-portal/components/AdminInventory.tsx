@@ -12,10 +12,13 @@ import { deleteBoat, permanentlyDeleteBoat, restoreBoat, updateBoatFeatured, upd
 import { updateSellerStatus } from '../lib/api'
 import type { ApiSale } from '../lib/api'
 import { getStoredAdmin } from '../lib/session'
-import { useSales } from '../data/useSales'
+import { useSales, invalidateSalesCache } from '../data/useSales'
 import { approvalStatuses } from '../lib/adminOverview'
 import { activeSaleFor, boatSpecificationGroups, canRequestListingChanges, canReviewListing, featuredRefusal, publicationStatus, sellerStageValue, sellerStages, toInventoryBoat, toInventorySeller } from '../lib/inventory'
 import type { Availability, InventoryBoat, InventoryComment, InventoryPhoto, InventorySeller, SellerStage } from '../lib/inventory'
+import type { SaleStage } from '../lib/saleRecords'
+import SaleRecordModal from './SaleRecordModal'
+import '../styles/admin-sales.css'
 import { AccountButton, AccountField } from './AdminAccountSettings'
 import AdminInfoTooltip from './AdminInfoTooltip'
 import InventoryActionMenu from './InventoryActionMenu'
@@ -187,9 +190,10 @@ type BoatDrawerProps = {
   onAvailability: (value: Availability) => void
   onComment: (message: string) => Promise<boolean>
   onSale: (id: number) => void
+  onRecordSale?: (stage: SaleStage) => void
 }
 
-export function BoatDrawer({ boat, seller, activeSale, hasSaleHistory, onClose, onSeller, onAction, onAvailability, onComment, onSale, behind = false }: BoatDrawerProps) {
+export function BoatDrawer({ boat, seller, activeSale, hasSaleHistory, onClose, onSeller, onAction, onAvailability, onComment, onSale, onRecordSale, behind = false }: BoatDrawerProps) {
   const navigate = useNavigate()
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
@@ -206,7 +210,7 @@ export function BoatDrawer({ boat, seller, activeSale, hasSaleHistory, onClose, 
     setSending(false)
   }
   return <AdminRecordOverlay behind={behind} title={boat.name} eyebrow={`Boat / ${boat.code}`} headerExtra={<dl className="inventory-header-statuses"><div><dt>Approval</dt><dd><Badge>{boat.approval}</Badge></dd></div><div><dt>Publication</dt><dd><Badge>{publicationStatus(boat)}</Badge></dd></div>{approved && <div><dt>Sale status</dt><dd><Badge>{boat.availability}</Badge></dd></div>}</dl>} onClose={onClose} footer={<div className="inventory-workflow-footer">
-      {!boat.archived && approved && !activeSale && boat.availability !== 'Sold' && <div className="inventory-footer-sale"><span>Sale status</span><div className="sales-availability-actions"><AdminSelectField label="Sale status" labelHidden variant="v2" value={boat.availability} options={boat.published ? ['Available', 'Under offer'] : [boat.availability]} onChange={event => { if (event.target.value !== boat.availability) onAvailability(event.target.value as Availability) }} /></div></div>}
+      {!boat.archived && approved && !activeSale && <div className="inventory-footer-sale"><span>Sale status</span><div className="sales-availability-actions"><AdminSelectField label="Sale status" labelHidden variant="v2" value={boat.availability} options={boat.published && boat.availability !== 'Sold' ? ['Available', 'Under offer'] : boat.availability === 'Sold' ? [] : [boat.availability]} footerAction={onRecordSale ? { label: 'Record sale', onSelect: () => onRecordSale(boat.availability === 'Sold' ? 'Completed' : 'Current') } : undefined} onChange={event => { if (event.target.value !== boat.availability) onAvailability(event.target.value as Availability) }} /></div></div>}
       <InventoryActionMenu items={[
         { label: 'Edit listing', icon: Pencil, disabled: boat.archived, onSelect: () => navigate(`/boats/new/review?draft=${boat.id}`) },
         { label: boat.archived ? 'Restore listing' : 'Archive listing', icon: boat.archived ? RotateCcw : Archive, onSelect: () => onAction(boat.archived ? 'restore' : 'archive') },
@@ -237,7 +241,7 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   const reduced = useReducedMotion()
   const { listings, loading: listingsLoading, error: listingsError, refetch: refetchListings } = useBoatListings()
   const { sellers: apiSellers, loading: sellersLoading, error: sellersError, refetch: refetchSellers } = useSellers()
-  const { sales } = useSales()
+  const { sales, refetch: refetchSales } = useSales()
   const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
@@ -245,6 +249,7 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
   const [sellerForm, setSellerForm] = useState<InventorySeller | Record<string, never> | null>(null)
   const [profileSellerId, setProfileSellerId] = useState<string | null>(null)
   const [action, setAction] = useState<BoatAction | null>(null)
+  const [saleForm, setSaleForm] = useState<SaleStage | null>(null)
   const adminBoats = useMemo(() => listings.map(toInventoryBoat), [listings])
   const sellers = useMemo(() => apiSellers.map(toInventorySeller), [apiSellers])
   const view = params.get('view') === 'sellers' ? 'sellers' : 'boats'
@@ -380,8 +385,8 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
       {!rows.length && (loading || loadError ? <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}>{view === 'boats' ? <Sailboat size={25} /> : <Users size={25} />}<h2>{loading ? `Loading ${view}…` : `Couldn’t load ${view}`}</h2>{loadError && !loading && <><p>{loadError}</p><AccountButton onClick={() => refresh(view === 'boats' ? 'listings' : 'sellers')}>Try again</AccountButton></>}</motion.div> : <motion.div className="leads-empty" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .3 }}><Search size={25} /><h2>No {view} found</h2><p>Try another search or filter.</p><AccountButton onClick={() => { setSearch(''); change({ status: null, publication: null, availability: null, sale: null }) }}>Clear filters</AccountButton></motion.div>)}
       <footer className="leads-pagination"><p role="status">{rows.length ? `${(activePage - 1) * PAGE_SIZE + 1}–${Math.min(activePage * PAGE_SIZE, rows.length)} of ${rows.length} ${view}` : `0 ${view}`}</p><div><AdminActionButton type="button" aria-label="Previous page" disabled={activePage === 1} onClick={() => setPage(activePage - 1)}><ChevronLeft size={16} /></AdminActionButton><span>{activePage} / {pages}</span><AdminActionButton type="button" aria-label="Next page" disabled={activePage === pages} onClick={() => setPage(activePage + 1)}><ChevronRight size={16} /></AdminActionButton></div></footer>
     </section>
-    <AnimatePresence>{seller && <SellerDrawer key={`seller-${seller.id}`} seller={seller} boats={adminBoats.filter(item => item.sellerId === seller.id)} behind={Boolean(boat)} onClose={() => change({ seller: null, boat: null })} onBoat={id => change({ boat: id })} onEdit={() => setSellerForm(seller)} onAddBoat={() => navigate(`/boats/new/basic?seller=${encodeURIComponent(seller.id)}`)} onStatus={stage => setSellerStage(seller, stage)} />}{boat && boatSeller && <BoatDrawer key={`boat-${boat.id}`} behind={Boolean(profileSeller)} boat={boat} seller={boatSeller} activeSale={activeSaleFor(boat, sales)} hasSaleHistory={sales.some(sale => sale.boat.id === boat.boatId)} onClose={() => change({ boat: null })} onSeller={() => setProfileSellerId(boatSeller.id)} onAction={setAction} onAvailability={value => setAvailability(boat, value)} onComment={message => comment(boat, message)} onSale={id => navigate(`/sales?sale=${id}`)} />}</AnimatePresence>
+    <AnimatePresence>{seller && <SellerDrawer key={`seller-${seller.id}`} seller={seller} boats={adminBoats.filter(item => item.sellerId === seller.id)} behind={Boolean(boat)} onClose={() => change({ seller: null, boat: null })} onBoat={id => change({ boat: id })} onEdit={() => setSellerForm(seller)} onAddBoat={() => navigate(`/boats/new/basic?seller=${encodeURIComponent(seller.id)}`)} onStatus={stage => setSellerStage(seller, stage)} />}{boat && boatSeller && <BoatDrawer key={`boat-${boat.id}`} behind={Boolean(profileSeller)} boat={boat} seller={boatSeller} activeSale={activeSaleFor(boat, sales)} hasSaleHistory={sales.some(sale => sale.boat.id === boat.boatId)} onClose={() => change({ boat: null })} onSeller={() => setProfileSellerId(boatSeller.id)} onAction={setAction} onAvailability={value => setAvailability(boat, value)} onComment={message => comment(boat, message)} onSale={id => navigate(`/sales?sale=${id}`)} onRecordSale={setSaleForm} />}</AnimatePresence>
     <AnimatePresence>{boat && profileSeller && <SellerDrawer key={'profile-' + profileSeller.id} seller={profileSeller} boats={adminBoats.filter(item => item.sellerId === profileSeller.id)} onClose={() => setProfileSellerId(null)} onBoat={id => { setProfileSellerId(null); change({ boat: id }) }} onEdit={() => setSellerForm(profileSeller)} onAddBoat={() => navigate('/boats/new/basic?seller=' + encodeURIComponent(profileSeller.id))} onStatus={stage => setSellerStage(profileSeller, stage)} />}</AnimatePresence>
-    <AnimatePresence>{sellerForm && <SellerForm key="seller-form" seller={'id' in sellerForm ? sellerForm as InventorySeller : null} onClose={() => setSellerForm(null)} onSave={saveSeller} />}{action && boat && <BoatActionModal key={action} boat={boat} action={action} onClose={() => setAction(null)} onConfirm={perform} />}</AnimatePresence>
+    <AnimatePresence>{sellerForm && <SellerForm key="seller-form" seller={'id' in sellerForm ? sellerForm as InventorySeller : null} onClose={() => setSellerForm(null)} onSave={saveSeller} />}{action && boat && <BoatActionModal key={action} boat={boat} action={action} onClose={() => setAction(null)} onConfirm={perform} />}{boat && boatSeller && saleForm && <SaleRecordModal key="sale-form" boat={boat} seller={boatSeller} initialStage={saleForm} onClose={() => setSaleForm(null)} onNotice={onNotice} onSaved={record => { setSaleForm(null); invalidateSalesCache(); refetchSales(); refresh('listings'); onNotice({ type: 'success', title: record.status === 'Current' ? 'Sale started' : 'Sale recorded', description: 'The boat and Sales list have been updated together. Publication is unchanged.' }) }} />}</AnimatePresence>
   </InventoryNoticeContext.Provider>
 }
