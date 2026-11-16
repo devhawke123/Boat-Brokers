@@ -12,6 +12,7 @@ import { AdminHeader } from '../components/V2Workspace'
 import AdminOverview from '../components/AdminOverview'
 import AdminInventory from '../components/AdminInventory'
 import AdminLeads from '../components/AdminLeads'
+import AdminBuyers from '../components/AdminBuyers'
 import { AdminProfileMenu } from '../components/AdminProfileMenu'
 import '../styles/dashboard-v2.css'
 import '../styles/admin-workspace.css'
@@ -19,8 +20,8 @@ import '../styles/admin-controls.css'
 import '../styles/portal-typography.css'
 
 // Ported from boat-brokers/src/pages/AdminWorkspace.jsx. Paths are basename
-// relative (the router basename is /admin-portal). Overview, Leads and
-// Boats & Sellers are live; remaining section modules are placeholders.
+// relative (the router basename is /admin-portal). Overview, Leads, Boat
+// Buyers and Boats & Sellers are live; remaining section modules are placeholders.
 
 type NavItem = { slug: string; label: string; Icon: ComponentType<LucideProps> }
 
@@ -163,9 +164,11 @@ export default function AdminWorkspace() {
               ? <AdminOverview onNotice={setNotice} />
               : section === 'leads' && !rest
                 ? <AdminLeads onNotice={setNotice} />
-                : section === 'boats' && !rest
-                  ? <AdminInventory onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
-                  : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
+                : section === 'boat-buyers' && !rest
+                  ? <AdminBuyers onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
+                  : section === 'boats' && !rest
+                    ? <AdminInventory onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
+                    : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
           </motion.div>
         </main>
       </div>
