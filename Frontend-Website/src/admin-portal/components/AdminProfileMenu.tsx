@@ -1,15 +1,17 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { ChevronDown, LogOut, Settings } from 'lucide-react'
 import { EASE, inventoryMotion, quick } from '../../seller-portal/lib/motion'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
-import { clearStoredAdmin, getStoredAdmin } from '../lib/session'
+import { clearStoredAdmin, getStoredAdmin, setStoredAdmin } from '../lib/session'
+import AdminAccountSettings, { type AdminProfileDraft } from './AdminAccountSettings'
 
 // Ported from boat-brokers BackOffice.jsx ProfileMenu (variant="v2" portal="admin").
 // Identity comes from the stored admin session; Log out clears it.
 export function AdminProfileMenu({ onNotice }: { onNotice: (notice: Notice) => void }) {
-  const admin = getStoredAdmin()
+  const [admin, setAdmin] = useState(getStoredAdmin)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const name = admin?.name ?? 'Admin'
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -39,13 +41,22 @@ export function AdminProfileMenu({ onNotice }: { onNotice: (notice: Notice) => v
   function select(label: 'Profile settings' | 'Log out') {
     setOpen(false)
     if (label === 'Profile settings') {
-      // The V2 account-settings modal is not ported yet (no admin profile API).
-      onNotice({ type: 'info', title: 'Profile settings unavailable', description: 'Admin profile editing is not connected yet.' })
-      triggerRef.current?.focus()
+      setSettingsOpen(true)
       return
     }
+    setSettingsOpen(false)
     clearStoredAdmin()
     navigate('/login', { replace: true })
+  }
+
+  // No admin profile API exists: edits are kept in the stored admin session only.
+  function saveProfile(next: AdminProfileDraft) {
+    if (!admin) return
+    const updated = { ...admin, name: next.name, email: next.email, phone: next.phone || null, location: next.location }
+    setStoredAdmin(updated)
+    setAdmin(updated)
+    setSettingsOpen(false)
+    onNotice({ type: 'success', title: 'Profile updated', description: 'Your profile details have been saved on this device.' })
   }
 
   const hover = { backgroundColor: '#eaf4fc', borderColor: '#d9eaf5' }
@@ -123,6 +134,24 @@ export function AdminProfileMenu({ onNotice }: { onNotice: (notice: Notice) => v
           <ChevronDown size={16} />
         </motion.span>
       </motion.button>
+      <AnimatePresence>
+        {settingsOpen && admin && (
+          <AdminAccountSettings
+            key="admin-account-settings"
+            profile={{
+              name: admin.name,
+              email: admin.email,
+              phone: admin.phone ?? '',
+              location: (admin as { location?: string }).location ?? '',
+            }}
+            photo={admin.avatarUrl}
+            adminId={admin.adminId}
+            onSave={saveProfile}
+            onOpenChange={setSettingsOpen}
+            returnFocusRef={triggerRef}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
