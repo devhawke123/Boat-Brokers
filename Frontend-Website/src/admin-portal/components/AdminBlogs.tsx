@@ -5,10 +5,10 @@ import { ChevronLeft, ChevronRight, FileText, ImagePlus, Pencil, Plus, Search, T
 import type { Notice } from '../../seller-portal/components/ToastNotice'
 import { createBlogPost, deleteBlogPost, updateBlogPost } from '../lib/api'
 import {
-  blogViewingNotice,
   BLOG_CONTENT_LIMIT,
   buildBlogFormData,
   formatBlogDate,
+  openPublicBlogPost,
   searchBlogPosts,
   toAdminBlogPost,
   validateBlog,
@@ -318,8 +318,9 @@ export default function AdminBlogs({ notice, onNotice, onDismissNotice }: {
     refetch()
   }
 
-  function view() {
-    onNotice(blogViewingNotice())
+  function view(post: AdminBlogPost) {
+    const result = openPublicBlogPost(post)
+    if (!result.ok) onNotice(result.notice)
   }
 
   function edit(post: AdminBlogPost) {
@@ -408,11 +409,11 @@ export default function AdminBlogs({ notice, onNotice, onDismissNotice }: {
                 </thead>
                 <AdminResultsBody identity={JSON.stringify([query, page, perPage, loading])}>
                   {rows.map(post => (
-                    <motion.tr key={post.id} onClick={view} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ duration: reduced ? 0 : 0.25 }}>
+                    <motion.tr key={post.id} onClick={() => view(post)} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ duration: reduced ? 0 : 0.25 }}>
                       <td>
                         <div className="inventory-row-boat">
                           <BoatPicture fallback={FileText} image={post.image} />
-                          <AdminActionButton className="blogs-post-title" title={post.title} onClick={event => { event.stopPropagation(); view() }}>{post.title}</AdminActionButton>
+                          <AdminActionButton className="blogs-post-title" title={post.title} onClick={event => { event.stopPropagation(); view(post) }}>{post.title}</AdminActionButton>
                         </div>
                       </td>
                       <td><PartyIdentity name={post.author} /></td>

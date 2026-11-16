@@ -30,12 +30,25 @@ export function validBlogDate(value: string | undefined) {
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value
 }
 
-export function blogViewingNotice() {
-  return {
-    type: 'info' as const,
-    title: 'Public blog preview',
-    description: 'This would open the public post in a new tab. Public pages are not connected in this prototype.',
+export function publicBlogPath(post: Pick<AdminBlogPost, 'slug' | 'title'>) {
+  const slug = post.slug?.trim()
+  return slug ? `/blog/${encodeURIComponent(slug)}` : null
+}
+
+export function openPublicBlogPost(post: Pick<AdminBlogPost, 'slug' | 'title'>) {
+  const path = publicBlogPath(post)
+  if (!path) {
+    return {
+      ok: false as const,
+      notice: {
+        type: 'error' as const,
+        title: 'Public page unavailable',
+        description: 'This post has no public slug yet, so it cannot open on the website.',
+      },
+    }
   }
+  window.open(path, '_blank', 'noopener,noreferrer')
+  return { ok: true as const }
 }
 
 export function normaliseReadTime(value: string | undefined) {
