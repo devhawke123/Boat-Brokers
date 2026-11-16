@@ -9,6 +9,7 @@ import { V2Link } from '../../seller-portal/components/V2Workspace'
 import ToastNotice from '../../seller-portal/components/ToastNotice'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
 import { AdminHeader } from '../components/V2Workspace'
+import AdminOverview from '../components/AdminOverview'
 import { AdminProfileMenu } from '../components/AdminProfileMenu'
 import '../styles/dashboard-v2.css'
 import '../styles/admin-workspace.css'
@@ -17,7 +18,7 @@ import '../styles/portal-typography.css'
 
 // Ported from boat-brokers/src/pages/AdminWorkspace.jsx. Paths are basename
 // relative (the router basename is /admin-portal). The section modules
-// (Overview, Leads, …) are placeholders until they are ported.
+// other than Overview (Leads, …) are placeholders until they are ported.
 
 type NavItem = { slug: string; label: string; Icon: ComponentType<LucideProps> }
 
@@ -154,7 +155,9 @@ export default function AdminWorkspace() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...inventoryMotion.interaction, duration: reduced ? 0 : 0.35 }}
           >
-            <SectionPlaceholder label={page.label} Icon={page.Icon} />
+            {section === 'dashboard'
+              ? <AdminOverview onNotice={setNotice} />
+              : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
           </motion.div>
         </main>
       </div>
