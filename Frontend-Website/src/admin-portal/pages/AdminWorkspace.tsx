@@ -10,6 +10,7 @@ import ToastNotice from '../../seller-portal/components/ToastNotice'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
 import { AdminHeader } from '../components/V2Workspace'
 import AdminOverview from '../components/AdminOverview'
+import AdminInventory from '../components/AdminInventory'
 import { AdminProfileMenu } from '../components/AdminProfileMenu'
 import '../styles/dashboard-v2.css'
 import '../styles/admin-workspace.css'
@@ -18,7 +19,8 @@ import '../styles/portal-typography.css'
 
 // Ported from boat-brokers/src/pages/AdminWorkspace.jsx. Paths are basename
 // relative (the router basename is /admin-portal). The section modules
-// other than Overview (Leads, …) are placeholders until they are ported.
+// other than Overview and Boats & Sellers (Leads, …) are placeholders until
+// they are ported.
 
 type NavItem = { slug: string; label: string; Icon: ComponentType<LucideProps> }
 
@@ -95,8 +97,8 @@ function SectionPlaceholder({ label, Icon }: { label: string; Icon: ComponentTyp
 }
 
 export default function AdminWorkspace() {
-  const { section: originalSection = '' } = useParams()
-  const section = ['boat-sellers', 'listings'].includes(originalSection) ? 'boats' : originalSection
+  const { section: originalSection = '', '*': rest = '' } = useParams()
+  const section = ['boat-sellers', 'sellers', 'listings'].includes(originalSection) ? 'boats' : originalSection
   const page = navigation.flatMap((group) => group.items).find((item) => item.slug === section)
   const [today] = useState(() => new Date())
   const location = useLocation()
@@ -119,7 +121,9 @@ export default function AdminWorkspace() {
 
   if (originalSection !== section) {
     const next = new URLSearchParams(location.search)
-    if (originalSection === 'boat-sellers') next.set('view', 'sellers')
+    const legacyId = rest.match(/^\d+/)?.[0]
+    if (['boat-sellers', 'sellers'].includes(originalSection)) next.set('view', 'sellers')
+    if (legacyId) next.set(originalSection === 'listings' ? 'boat' : 'seller', legacyId)
     if (next.get('status') === 'Needs changes') next.set('status', 'Changes required')
     return <Navigate to={`/boats?${next}`} replace />
   }
@@ -157,7 +161,9 @@ export default function AdminWorkspace() {
           >
             {section === 'dashboard'
               ? <AdminOverview onNotice={setNotice} />
-              : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
+              : section === 'boats' && !rest
+                ? <AdminInventory onNotice={setNotice} notice={notice} onDismissNotice={() => setNotice(null)} />
+                : <SectionPlaceholder label={page.label} Icon={page.Icon} />}
           </motion.div>
         </main>
       </div>

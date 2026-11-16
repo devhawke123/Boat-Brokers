@@ -3,12 +3,15 @@ import {
   useId,
   useRef,
   useState,
+  type ChangeEvent,
   type ComponentProps,
   type ElementType,
   type FormEvent,
   type InputHTMLAttributes,
   type ReactNode,
+  type Ref,
   type RefObject,
+  type TextareaHTMLAttributes,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
@@ -29,7 +32,7 @@ type ButtonProps = Omit<ComponentProps<typeof motion.button>, 'children'> & {
   arrow?: 'left' | 'right'
 }
 
-function AccountButton({ children, kind = 'secondary', arrow, className = '', ...props }: ButtonProps) {
+export function AccountButton({ children, kind = 'secondary', arrow, className = '', ...props }: ButtonProps) {
   const reduced = useReducedMotion()
   return (
     <motion.button
@@ -93,9 +96,18 @@ function AccountFieldError({ id, children }: { id: string; children?: string }) 
   )
 }
 
-type FieldProps = InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string; secret?: boolean }
+type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> & {
+  label: string
+  error?: string
+  secret?: boolean
+  multiline?: boolean
+  rows?: number
+  hint?: ReactNode
+  onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  ref?: Ref<HTMLInputElement | HTMLTextAreaElement>
+}
 
-function AccountField({ label, error, secret = false, ...props }: FieldProps) {
+export function AccountField({ label, error, secret = false, multiline = false, rows, hint, ref, ...props }: FieldProps) {
   const id = useId()
   const reduced = useReducedMotion()
   const [visible, setVisible] = useState(false)
@@ -116,14 +128,26 @@ function AccountField({ label, error, secret = false, ...props }: FieldProps) {
         )}
       </label>
       <div className="v2-settings-input-wrap">
-        <input
-          {...props}
-          id={id}
-          type={secret ? (visible ? 'text' : 'password') : props.type || 'text'}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? `${id}-error` : undefined}
-          className={secret ? 'has-action' : ''}
-        />
+        {multiline ? (
+          <textarea
+            {...(props as TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            ref={ref as Ref<HTMLTextAreaElement>}
+            id={id}
+            rows={rows}
+            aria-invalid={Boolean(error)}
+            aria-describedby={[error && `${id}-error`, hint && `${id}-hint`].filter(Boolean).join(' ') || undefined}
+          />
+        ) : (
+          <input
+            {...props}
+            ref={ref as Ref<HTMLInputElement>}
+            id={id}
+            type={secret ? (visible ? 'text' : 'password') : props.type || 'text'}
+            aria-invalid={Boolean(error)}
+            aria-describedby={[error && `${id}-error`, hint && `${id}-hint`].filter(Boolean).join(' ') || undefined}
+            className={secret ? 'has-action' : ''}
+          />
+        )}
         {secret && (
           <motion.button
             className="v2-settings-eye"
@@ -151,6 +175,7 @@ function AccountField({ label, error, secret = false, ...props }: FieldProps) {
         )}
       </div>
       <AccountFieldError id={`${id}-error`}>{error}</AccountFieldError>
+      {hint && <span className="v2-settings-field-hint" id={`${id}-hint`}>{hint}</span>}
     </motion.div>
   )
 }

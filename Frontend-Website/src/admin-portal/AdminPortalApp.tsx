@@ -38,6 +38,9 @@ export default function AdminPortalApp() {
           <Route path="/login" element={<Login />} />
           <Route element={<Access />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/sellers/*" element={<Navigate to="/boats?view=sellers" replace />} />
+            <Route path="/listings/*" element={<Navigate to="/boats" replace />} />
+            <Route path="/boat-sellers/*" element={<Navigate to="/boats?view=sellers" replace />} />
             <Route path="/:section/*" element={<AdminWorkspace />} />
           </Route>
         </Routes>

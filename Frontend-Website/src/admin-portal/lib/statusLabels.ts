@@ -4,6 +4,13 @@ export const listingReviewLabel = {
   APPROVED: 'Approved',
 } as const
 
+export const sellerStatusLabel = {
+  NEW: 'New',
+  CONTACTED: 'Contacted',
+  LISTED: 'Listed',
+  LOST: 'Lost',
+} as const
+
 export const saleStatusLabel = {
   CURRENT: 'In progress',
   COMPLETED: 'Completed',
