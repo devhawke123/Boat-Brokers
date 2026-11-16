@@ -986,32 +986,46 @@ function DetailsStep({ data, onChange, showValidation }: StepProps) {
   )
 }
 
-export default function BoatWizard() {
+export default function BoatWizard({ admin = false }: { admin?: boolean }) {
   const { loading } = useListings()
   // Edit links seed the form from the listing, so wait until it has loaded.
   if (loading) return null
-  return <BoatWizardForm />
+  return <BoatWizardForm admin={admin} />
 }
 
-function BoatWizardForm() {
+function BoatWizardForm({ admin = false }: { admin?: boolean }) {
   const { step: slug } = useParams()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const reducedMotion = useReducedMotion()
-  const { listings, saveDraft: saveListingDraft, submitListing } = useListings()
+  const { listings, saveDraft: saveListingDraft, submitListing, seller } = useListings()
   const activeIndex = steps.findIndex((item) => item.slug === slug)
   const v2Wizard = activeIndex >= 0 && activeIndex < steps.length
   const routeDraftId = searchParams.get('draft')
-  const editingListing = listings.find((item) => item.id === routeDraftId && ['Draft', 'Rejected'].includes(item.status))
+  const editingListing = listings.find(
+    (item) => item.id === routeDraftId && (admin || ['Draft', 'Rejected'].includes(item.status)),
+  )
   const isEditingDraft = Boolean(editingListing)
   // A listing already on the server can't also be parked as a local draft.
   const canSaveDraft = !editingListing?.listingId
+  const boatsReturn = '/boats'
+  const boatsReturnLabel = admin ? 'Back to boats & sellers' : 'Back to my boats'
   const [specIndex, setSpecIndex] = useState(0)
   const [showAdditionalValidation, setShowAdditionalValidation] = useState(false)
   const [showBasicValidation, setShowBasicValidation] = useState(false)
   const [showMediaValidation, setShowMediaValidation] = useState(false)
   const [showDetailsValidation, setShowDetailsValidation] = useState(false)
-  const [data, setData] = useState(() => initialListingData(editingListing))
+  const [data, setData] = useState(() => {
+    const initial = initialListingData(editingListing)
+    if (!admin || editingListing) return initial
+    return {
+      ...initial,
+      contactName: initial.contactName || seller.name,
+      email: initial.email || seller.email,
+      phone: initial.phone || seller.phone || '',
+      city: initial.city || seller.location || '',
+    }
+  })
   const draftId = editingListing?.id || null
   const [photos, setPhotos] = useState<ClientPhoto[]>(() => editingListing?.photos ?? [])
   const [brochure, setBrochure] = useState<File | null>(() => editingListing?.brochureFile ?? null)
@@ -1021,6 +1035,17 @@ function BoatWizardForm() {
   const railRef = useRef<HTMLElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
+
+  function stepQuery() {
+    if (draftId) return `?draft=${encodeURIComponent(draftId)}`
+    if (admin) return `?seller=${encodeURIComponent(String(seller.id))}`
+    return ''
+  }
+
+  function afterSavePath() {
+    if (!admin) return '/boats'
+    return editingListing ? `/boats?boat=${encodeURIComponent(editingListing.id)}` : '/boats'
+  }
 
   useEffect(() => {
     document.title = `${isEditingDraft ? 'Edit listing' : 'New boat listing'} · The Boat Brokers`
@@ -1061,8 +1086,10 @@ function BoatWizardForm() {
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [mobileOpen])
-  if (activeIndex < 0) return <Navigate to="/boats/new/basic" replace />
-  if (routeDraftId && !editingListing) return <Navigate to="/boats" replace />
+  if (activeIndex < 0) {
+    return <Navigate to={`/boats/new/basic${admin ? `?seller=${encodeURIComponent(String(seller.id))}` : ''}`} replace />
+  }
+  if (routeDraftId && !editingListing) return <Navigate to={boatsReturn} replace />
 
   function onChange(event: WizardChange) {
     setData((current) => ({ ...current, [event.target.name]: event.target.value }) as WizardData)
@@ -1097,8 +1124,7 @@ function BoatWizardForm() {
       focusFirstInvalidField(reducedMotion)
       return false
     }
-    const draftQuery = draftId ? `?draft=${encodeURIComponent(draftId)}` : ''
-    navigate(`/boats/new/${steps[index].slug}${draftQuery}`)
+    navigate(`/boats/new/${steps[index].slug}${stepQuery()}`)
     return true
   }
   function closeMobileMenu() {
@@ -1111,12 +1137,14 @@ function BoatWizardForm() {
     setSubmitting(true)
     try {
       await saveListingDraft({ data, photos, brochure, existing: editingListing })
-      navigate('/boats', {
+      navigate(afterSavePath(), {
         state: {
           notice: {
             type: 'success',
             title: 'Draft saved',
-            description: 'Your draft is in My Boats on this device and ready to continue editing.',
+            description: admin
+              ? 'The draft is saved in Boats & Sellers.'
+              : 'Your draft is in My Boats on this device and ready to continue editing.',
           },
         },
       })
@@ -1179,12 +1207,14 @@ function BoatWizardForm() {
     setSubmitting(true)
     try {
       await submitListing({ data, photos, brochure, existing: editingListing })
-      navigate('/boats', {
+      navigate(afterSavePath(), {
         state: {
           notice: {
             type: 'success',
             title: 'Listing submitted for review',
-            description: 'Your listing is in My Boats while the broker team reviews it.',
+            description: admin
+              ? 'The listing is awaiting review in Boats & Sellers.'
+              : 'Your listing is in My Boats while the broker team reviews it.',
           },
         },
       })
@@ -1234,6 +1264,8 @@ function BoatWizardForm() {
           onClose={closeMobileMenu}
           railRef={railRef}
           closeRef={closeRef}
+          returnTo={boatsReturn}
+          returnLabel={boatsReturnLabel}
         />
         <div className="flex min-w-0 flex-1 flex-col">
           <motion.main
@@ -1243,9 +1275,9 @@ function BoatWizardForm() {
             className="wizard-main mx-auto w-full max-w-[1070px] flex-1 px-5 pb-36 pt-8 sm:px-8 lg:pt-16 xl:px-10"
           >
             <div className="v2-wizard-context">
-              <Link to="/boats">
+              <Link to={boatsReturn}>
                 <ChevronLeft size={13} strokeWidth={1.5} />
-                My boats
+                {admin ? 'Boats & Sellers' : 'My boats'}
               </Link>
               <ChevronRight size={10} aria-hidden="true" />
               <span>{isEditingDraft ? 'Edit listing' : 'New listing'}</span>
@@ -1351,7 +1383,7 @@ function BoatWizardForm() {
                     <span />
                   )}
                   <div>
-                    <AccountButton onClick={activeIndex === 0 ? () => navigate('/dashboard') : backFlow}>
+                    <AccountButton onClick={activeIndex === 0 ? () => navigate(admin ? boatsReturn : '/dashboard') : backFlow}>
                       {activeIndex === 0 ? 'Cancel' : 'Back'}
                     </AccountButton>
                     <AccountButton kind="primary" arrow="right" onClick={continueFlow} disabled={submitting}>

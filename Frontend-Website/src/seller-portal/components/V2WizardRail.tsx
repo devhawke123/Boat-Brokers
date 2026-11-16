@@ -17,6 +17,8 @@ export default function V2WizardRail({
   onClose,
   railRef,
   closeRef,
+  returnTo = '/boats',
+  returnLabel = 'Back to my boats',
 }: {
   steps: { slug: string; title: string }[]
   sections: { key: string; title: string }[]
@@ -29,6 +31,8 @@ export default function V2WizardRail({
   onClose: () => void
   railRef: RefObject<HTMLElement | null>
   closeRef: RefObject<HTMLButtonElement | null>
+  returnTo?: string
+  returnLabel?: string
 }) {
   const reduced = useReducedMotion()
   const layoutId = useId()
@@ -48,7 +52,7 @@ export default function V2WizardRail({
         transition={{ duration: reduced ? 0 : 0.5, ease: EASE }}
       >
         <div className="v2-wizard-brand-row">
-          <Link to="/boats" aria-label="The Boat Brokers — return to My boats">
+          <Link to={returnTo} aria-label={`The Boat Brokers — ${returnLabel}`}>
             <img src="/seller-portal-assets/boat-brokers-wordmark-blue.png" alt="The Boat Brokers" />
           </Link>
           <motion.button
@@ -140,9 +144,9 @@ export default function V2WizardRail({
           </nav>
         </LayoutGroup>
         <div className="v2-wizard-rail-bottom">
-          <Link to="/boats" className="v2-wizard-exit">
+          <Link to={returnTo} className="v2-wizard-exit">
             <ArrowLeft size={13} strokeWidth={1.5} />
-            Back to my boats
+            {returnLabel}
           </Link>
         </div>
       </motion.div>

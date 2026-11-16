@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import '@fontsource-variable/plus-jakarta-sans'
 import { AuthLoginCarousel } from '../../../seller-portal/components/AuthLoginCarousel'
 import { AccountButton, AccountField } from '../../../seller-portal/components/V2AccountSettings'
 import { EASE } from '../../../seller-portal/lib/motion'
 import { useAdminLogin } from '../../data/useAdminLogin'
+import { getStoredAdmin } from '../../lib/session'
 import '../../../seller-portal/pages/v2-login.css'
 
 export default function Login() {
@@ -17,10 +18,16 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const formRef = useRef<HTMLFormElement>(null)
+  const from = (location.state as { from?: string } | null)?.from
+  const signedInDestination = from && from !== '/login' ? from : '/dashboard'
 
   useEffect(() => {
     document.title = 'Admin sign in · The Boat Brokers'
   }, [])
+
+  if (getStoredAdmin()) {
+    return <Navigate to={signedInDestination} replace />
+  }
 
   function update(field: string, setter: (value: string) => void) {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -43,8 +50,7 @@ export default function Login() {
 
     const admin = await login(email.trim(), password)
     if (admin) {
-      const from = (location.state as { from?: string } | null)?.from
-      navigate(from && from !== '/login' ? from : '/dashboard', { replace: true })
+      navigate(signedInDestination, { replace: true })
     }
   }
 
@@ -52,9 +58,8 @@ export default function Login() {
     <main className="v2-login-page">
       <div className="v2-login-shell">
         <AuthLoginCarousel
-          brandTo="/admin-portal/login"
+          brandTo="/login"
           brandLabel="The Boat Brokers admin sign in"
-          brandAsAnchor
         />
         <section className="v2-login-form-side" aria-labelledby="v2-login-title">
           <motion.div

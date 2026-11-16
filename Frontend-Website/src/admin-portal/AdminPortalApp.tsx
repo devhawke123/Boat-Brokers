@@ -1,10 +1,11 @@
 import '../seller-portal/seller-portal.css'
 import { useEffect } from 'react'
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { MotionConfig } from 'framer-motion'
 import { quick } from '../seller-portal/lib/motion'
 import { getStoredAdmin } from './lib/session'
 import AdminWorkspace from './pages/AdminWorkspace'
+import AdminBoatWizard from './pages/AdminBoatWizard'
 import Login from './pages/Login/Login'
 // The admin portal runs its own react-router app, same as the seller portal:
 // App.tsx hands every /admin-portal/* URL to this component. Links inside use
@@ -16,6 +17,12 @@ function Access() {
     return <Navigate to="/login" replace state={{ from: `${location.pathname}${location.search}${location.hash}` }} />
   }
   return <Outlet />
+}
+
+function NewBoatRedirect() {
+  const [params] = useSearchParams()
+  const query = params.toString()
+  return <Navigate to={`/boats/new/basic${query ? `?${query}` : ''}`} replace />
 }
 
 export default function AdminPortalApp() {
@@ -38,6 +45,8 @@ export default function AdminPortalApp() {
           <Route path="/login" element={<Login />} />
           <Route element={<Access />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/boats/new" element={<NewBoatRedirect />} />
+            <Route path="/boats/new/:step" element={<AdminBoatWizard />} />
             <Route path="/sellers/*" element={<Navigate to="/boats?view=sellers" replace />} />
             <Route path="/listings/*" element={<Navigate to="/boats" replace />} />
             <Route path="/boat-sellers/*" element={<Navigate to="/boats?view=sellers" replace />} />
