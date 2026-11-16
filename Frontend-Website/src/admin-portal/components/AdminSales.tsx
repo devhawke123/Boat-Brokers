@@ -65,11 +65,14 @@ export default function AdminSales({ onNotice, notice, onDismissNotice }: {
   }, [listings])
 
   const records = useMemo(
-    () => apiSales.map(sale => toAdminSale(sale, {
-      boatListingId: boatsByBoatId.get(sale.boat.id)?.id ?? null,
-      reason: sessionExtras[String(sale.id)]?.reason,
-      activity: sessionExtras[String(sale.id)]?.activity,
-    })),
+    () => apiSales.flatMap(sale => {
+      const record = toAdminSale(sale, {
+        boatListingId: sale.boat?.id != null ? boatsByBoatId.get(sale.boat.id)?.id ?? null : null,
+        reason: sessionExtras[String(sale.id)]?.reason,
+        activity: sessionExtras[String(sale.id)]?.activity,
+      })
+      return record ? [record] : []
+    }),
     [apiSales, boatsByBoatId, sessionExtras],
   )
 

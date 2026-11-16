@@ -8,7 +8,7 @@ import { addListingComment, updateListingStatus } from '../../seller-portal/lib/
 import { deleteBoat, permanentlyDeleteBoat, restoreBoat, updateBoatSaleStatus } from '../../lib/api'
 import { useSales } from '../data/useSales'
 import { getStoredAdmin } from '../lib/session'
-import { activeSaleFor, toInventoryBoat, toInventorySeller } from '../lib/inventory'
+import { activeSaleFor, saleMatchesBoat, toInventoryBoat, toInventorySeller } from '../lib/inventory'
 import type { Availability, InventoryBoat } from '../lib/inventory'
 import type { SaleStage } from '../lib/saleRecords'
 import { BoatDrawer, BoatActionModal, SellerDrawer, SellerForm } from './AdminInventory'
@@ -102,7 +102,7 @@ export default function AdminBoatOverlay({
         boat={boat}
         seller={seller}
         activeSale={activeSale}
-        hasSaleHistory={sales.some(sale => sale.boat.id === boat.boatId)}
+        hasSaleHistory={sales.some(sale => saleMatchesBoat(sale, boat.boatId))}
         onClose={onClose}
         onSeller={() => setSellerOpen(true)}
         onAction={setAction}

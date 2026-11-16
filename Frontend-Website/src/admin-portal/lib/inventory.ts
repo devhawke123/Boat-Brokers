@@ -117,8 +117,15 @@ export const canReviewListing = (boat: InventoryBoat) => !boat.archived && boat.
 export const canRequestListingChanges = (boat: InventoryBoat) => !boat.archived && boat.status !== 'REJECTED'
 
 // The newest sale that has not been cancelled is the boat's live transaction.
+// Some API rows can omit nested boat/buyer/seller when a related record was deleted.
 export function activeSaleFor(boat: InventoryBoat, sales: ApiSale[]) {
-  return sales.filter(sale => sale.boat.id === boat.boatId && sale.status !== 'CANCELLED').sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
+  return sales
+    .filter(sale => sale.boat?.id === boat.boatId && sale.status !== 'CANCELLED')
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null
+}
+
+export function saleMatchesBoat(sale: ApiSale, boatId: number) {
+  return sale.boat?.id === boatId
 }
 
 // Mirrors the backend's updateBoatHandler rules so the toast explains a refusal before the request.

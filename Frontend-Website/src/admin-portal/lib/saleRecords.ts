@@ -102,7 +102,9 @@ export function saleAmountsForApi(values: Pick<SaleFormValues, 'price' | 'deposi
 export function toAdminSale(
   sale: ApiSale,
   extras: { boatListingId?: string | null; reason?: string | null; activity?: SaleActivity[] } = {},
-): AdminSale {
+): AdminSale | null {
+  // Skip orphaned sale rows (deleted boat/buyer/seller) so list pages don't crash.
+  if (!sale.boat?.id || !sale.seller?.id || !sale.buyer?.id) return null
   const status = saleStageFromApi(sale.status)
   const buyerName = [sale.buyer.firstName, sale.buyer.surname].filter(Boolean).join(' ')
   const baseActivity: SaleActivity[] = [
