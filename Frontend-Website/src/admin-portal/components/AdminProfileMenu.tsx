@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
 import { ChevronDown, LogOut, Settings } from 'lucide-react'
 import { EASE, inventoryMotion, quick } from '../../seller-portal/lib/motion'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
@@ -13,7 +12,6 @@ export function AdminProfileMenu({ onNotice }: { onNotice: (notice: Notice) => v
   const [admin, setAdmin] = useState(getStoredAdmin)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const name = admin?.name ?? 'Admin'
-  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -46,7 +44,9 @@ export function AdminProfileMenu({ onNotice }: { onNotice: (notice: Notice) => v
     }
     setSettingsOpen(false)
     clearStoredAdmin()
-    navigate('/login', { replace: true })
+    // Hard navigate so App.tsx remounts under /admin-portal/* (nested
+    // react-router navigate('/login') can leave the public site shell).
+    window.location.replace('/admin-portal/login')
   }
 
   // No admin profile API exists: edits are kept in the stored admin session only.

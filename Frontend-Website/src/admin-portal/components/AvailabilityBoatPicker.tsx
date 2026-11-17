@@ -211,7 +211,6 @@ export default function AvailabilityBoatPicker({
             <motion.div
               ref={menu}
               id={id}
-              // @ts-expect-error popover is supported in Chromium; types lag behind.
               popover="manual"
               role="dialog"
               aria-label="Choose boats"

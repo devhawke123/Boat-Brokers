@@ -58,8 +58,9 @@ export default function Login() {
     <main className="v2-login-page">
       <div className="v2-login-shell">
         <AuthLoginCarousel
-          brandTo="/login"
+          brandTo="/admin-portal/login"
           brandLabel="The Boat Brokers admin sign in"
+          brandAsAnchor
         />
         <section className="v2-login-form-side" aria-labelledby="v2-login-title">
           <motion.div
