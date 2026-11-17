@@ -4,18 +4,28 @@ import { bookingStatusLabel } from './statusLabels'
 
 // Calendar helpers ported from boat-brokers/src/lib/availability.js (+ calendar
 // lane allocation). Dates are 'YYYY-MM-DD' keys and times are 'HH:mm', both
-// interpreted in UK time. Live slots are single-day 2-hour windows (no boat
-// scope / multi-day ranges on the API).
+// interpreted in UK time. Live slots support editable duration, optional boat
+// scope, and multi-day daily windows via repeatsUntil.
 
-export type DateRangeSlot = { date: string; endDate?: string; start?: string; end?: string; id?: string | number }
+export type DateRangeSlot = {
+  date: string
+  endDate?: string
+  start?: string
+  end?: string
+  id?: string | number
+  boatIds?: number[] | null
+}
 
 export type CalendarSlot = {
   id: number
+  // When a multi-day create is merged for display, every member day id lives here.
+  ids?: number[]
   date: string
   endDate?: string
   start: string
   end: string
   available: boolean
+  boatIds: number[] | null
 }
 
 export type CalendarBooking = {
@@ -33,10 +43,13 @@ export type CalendarBooking = {
   notes: string | null
 }
 
-export const SLOT_DURATION_HOURS = 2
+// Half-hour starts from 00:00 through 23:30 (end may be 24:00).
+export const slotStarts = Array.from(
+  { length: 48 },
+  (_, index) => String(Math.floor(index / 2)).padStart(2, '0') + (index % 2 ? ':30' : ':00'),
+)
 
-// Even-hour starts matching the live CreateSlotForm (clean 2-hour boundaries).
-export const slotStarts = Array.from({ length: 12 }, (_, index) => String(index * 2).padStart(2, '0') + ':00')
+export const slotEndOptions = [...slotStarts, '24:00']
 
 export const dateKey = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -78,20 +91,35 @@ export function slotDayCount(slot: DateRangeSlot) {
   return Math.max(0, Math.round((Date.parse(slotLastDate(slot) + 'T00:00:00Z') - Date.parse(slot.date + 'T00:00:00Z')) / 86400000) + 1)
 }
 
-export function slotEndTwoHours(start: string) {
-  const hour = Number(start.slice(0, 2)) + SLOT_DURATION_HOURS
-  return hour >= 24 ? '24:00' : String(hour).padStart(2, '0') + start.slice(2)
+function toMinutes(time: string) {
+  if (time === '24:00') return 24 * 60
+  const [hours, minutes] = time.split(':').map(Number)
+  return hours * 60 + minutes
+}
+
+export function durationHoursFromRange(start: string, end: string) {
+  return (toMinutes(end) - toMinutes(start)) / 60
+}
+
+export function defaultEndAfter(start: string) {
+  const index = slotStarts.indexOf(start)
+  if (index < 0) return ''
+  return slotEndOptions[Math.min(index + 4, slotEndOptions.length - 1)]
 }
 
 export function availabilityFieldErrors(
-  { date, start }: { date: string; start: string },
+  { date, endDate, start, end }: { date: string; endDate: string; start: string; end: string },
   today = ukToday(),
   now = new Date(),
 ) {
   const errors: Record<string, string> = {}
   if (!validDate(date)) errors.date = 'Choose a start date.'
   else if (date < today) errors.date = 'Choose today or a future date.'
+  if (!validDate(endDate)) errors.endDate = 'Choose an end date.'
+  else if (validDate(date) && endDate < date) errors.endDate = 'End date must be on or after the start date.'
   if (!slotStarts.includes(start)) errors.start = 'Choose a start time.'
+  if (!slotEndOptions.includes(end)) errors.end = 'Choose an end time.'
+  else if (slotStarts.includes(start) && end <= start) errors.end = 'End time must be later than the start time.'
   const clock = ukTime(now)
   if (!errors.start && date === today && start <= clock) {
     errors.start = 'This time has passed. Choose a time after ' + clock + ' (UK time), or a future date.'
@@ -158,10 +186,74 @@ export function toCalendarSlot(slot: ApiAvailabilitySlot): CalendarSlot {
   return {
     id: slot.id,
     date: start.date,
+    endDate: slot.repeatsUntil || undefined,
     start: start.time,
     end: end.date > start.date ? '24:00' : end.time,
     available: slot.available,
+    boatIds: slot.boatIds ?? null,
   }
+}
+
+function boatScopeKey(boatIds: number[] | null) {
+  return boatIds == null ? '*' : [...boatIds].sort((a, b) => a - b).join(',')
+}
+
+function nextUkDate(date: string) {
+  const next = new Date(date + 'T12:00:00')
+  next.setDate(next.getDate() + 1)
+  return dateKey(next)
+}
+
+// Live API creates one row per day for multi-day ranges (so each day stays
+// independently bookable). Merge consecutive same-window / same-boat days into
+// one calendar range so the month view can draw the prototype spanning bars.
+export function mergeAvailabilityRanges(slots: CalendarSlot[]): CalendarSlot[] {
+  const buckets = new Map<string, CalendarSlot[]>()
+  for (const slot of slots) {
+    // Already a multi-day record (legacy repeatsUntil) — keep as-is.
+    if (slot.endDate && slot.endDate > slot.date) {
+      buckets.set('solo-' + slot.id, [slot])
+      continue
+    }
+    const key = slot.start + '|' + slot.end + '|' + boatScopeKey(slot.boatIds)
+    const list = buckets.get(key)
+    if (list) list.push(slot)
+    else buckets.set(key, [slot])
+  }
+
+  const merged: CalendarSlot[] = []
+  for (const group of buckets.values()) {
+    if (group.length === 1) {
+      merged.push(group[0])
+      continue
+    }
+    const ordered = [...group].sort((a, b) => a.date.localeCompare(b.date) || a.id - b.id)
+    let run: CalendarSlot[] = [ordered[0]]
+    const flush = () => {
+      if (run.length === 1) {
+        merged.push(run[0])
+      } else {
+        merged.push({
+          ...run[0],
+          endDate: run[run.length - 1].date,
+          ids: run.map((item) => item.id),
+        })
+      }
+      run = []
+    }
+    for (let index = 1; index < ordered.length; index++) {
+      const slot = ordered[index]
+      const previous = run[run.length - 1]
+      if (slot.date === nextUkDate(previous.date)) {
+        run.push(slot)
+      } else {
+        flush()
+        run = [slot]
+      }
+    }
+    flush()
+  }
+  return merged.sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start) || a.id - b.id)
 }
 
 export function toCalendarBooking(booking: ApiAdminBooking): CalendarBooking {

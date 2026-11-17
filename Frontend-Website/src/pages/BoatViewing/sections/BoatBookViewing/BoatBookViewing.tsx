@@ -73,7 +73,12 @@ export default function BoatBookViewing({ boatId, boatName, boatSlug }: BoatBook
   // during render.
   const mountedAt = useMemo(() => Date.now(), [])
   const openSlots = slots
-    .filter((slot) => slot.available && new Date(slot.startsAt).getTime() > mountedAt)
+    .filter((slot) => {
+      if (!slot.available || new Date(slot.startsAt).getTime() <= mountedAt) return false
+      // null/undefined boatIds = brokerage-wide; otherwise only listed boats.
+      if (slot.boatIds == null || slot.boatIds.length === 0) return true
+      return slot.boatIds.includes(boatId)
+    })
     .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {

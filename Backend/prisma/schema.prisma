@@ -290,17 +290,22 @@ model ListingComment {
   @@index([parentId])
 }
 
-// Admin's bookable time — a fixed 2-hour block. Global, not per-boat: since
-// it's the same admin's time either way, a slot can only ever back one
-// active (PENDING/APPROVED) booking regardless of which boat it's for.
+// Admin's bookable viewing window. Capacity is still brokerage-wide (one
+// active PENDING/APPROVED booking per slot) — boatIds only controls which
+// boat pages offer the slot. Null/empty boatIds = all boats. repeatsUntil
+// set means the same daily window applies through that calendar date.
 model AvailabilitySlot {
-  id        Int       @id @default(autoincrement())
-  startsAt  DateTime
-  endsAt    DateTime
-  bookings  Booking[]
-  createdAt DateTime  @default(now())
+  id           Int       @id @default(autoincrement())
+  startsAt     DateTime
+  endsAt       DateTime
+  // Last calendar day (date part) the daily window repeats; null = single day.
+  repeatsUntil DateTime?
+  // JSON number array. Null or [] = brokerage-wide; otherwise scoped boat ids.
+  boatIds      Json?
+  bookings     Booking[]
+  createdAt    DateTime  @default(now())
 
-  // No two slots may start at the same instant — one slot per day+hour.
+  // Anchor start must be unique; overlapping series days are checked in app code.
   @@unique([startsAt])
 }
 

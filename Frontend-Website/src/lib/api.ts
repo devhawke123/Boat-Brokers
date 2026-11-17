@@ -292,6 +292,10 @@ export type ApiAvailabilitySlot = {
   id: number
   startsAt: string
   endsAt: string
+  // YYYY-MM-DD UK calendar last day when the daily window repeats; null = single day.
+  repeatsUntil?: string | null
+  // null = brokerage-wide; otherwise only these boat ids may book the slot.
+  boatIds?: number[] | null
   available: boolean
 }
 

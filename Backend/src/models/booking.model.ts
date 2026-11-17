@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma";
+import { parseSlotBoatIds } from "../lib/slotBoats";
 import { findOrCreateBuyer } from "./buyer.model";
 
 const bookingInclude = {
@@ -41,6 +42,11 @@ export async function createBooking(data: CreateBookingData) {
     });
     if (!slot) throw new SlotUnavailableError();
     if (slot.bookings.length > 0) throw new SlotUnavailableError();
+    // Scoped slots only accept bookings for their listed boats.
+    const scoped = parseSlotBoatIds(slot.boatIds);
+    if (scoped.length > 0 && !scoped.includes(data.boatId)) {
+      throw new SlotUnavailableError();
+    }
 
     const buyer = await findOrCreateBuyer(
       {

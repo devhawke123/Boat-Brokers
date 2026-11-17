@@ -126,11 +126,29 @@ export function updateSellerStatus(id: number, status: SellerStatus): Promise<Ap
 // this file only adds the admin-only mutations and the PII-carrying booking
 // view, which the public endpoint deliberately never returns.)
 
+export type CreateAvailabilitySlotPayload = {
+  startsAt: string
+  durationHours: number
+  endDate?: string
+  boatIds?: number[] | null
+}
+
 export function createAvailabilitySlot(
   startsAt: string,
   durationHours: number,
-): Promise<{ id: number; startsAt: string; endsAt: string; available: boolean }> {
-  return apiPost('/availability-slots', { startsAt, durationHours })
+  options: { endDate?: string; boatIds?: number[] | null } = {},
+): Promise<{
+  id: number
+  startsAt: string
+  endsAt: string
+  repeatsUntil: string | null
+  boatIds: number[] | null
+  available: boolean
+}> {
+  const payload: CreateAvailabilitySlotPayload = { startsAt, durationHours }
+  if (options.endDate) payload.endDate = options.endDate
+  if (options.boatIds != null) payload.boatIds = options.boatIds
+  return apiPost('/availability-slots', payload)
 }
 
 export function deleteAvailabilitySlot(id: number): Promise<void> {

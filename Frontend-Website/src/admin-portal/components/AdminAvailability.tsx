@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { CalendarDays, ChevronLeft, ChevronRight, Clock3, Plus, Sailboat, Trash2 } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight, Clock3, Plus, Trash2 } from 'lucide-react'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
-import { fetchAvailabilitySlots } from '../../lib/api'
+import { fetchAvailabilitySlots, fetchBoats } from '../../lib/api'
 import {
   createAvailabilitySlot,
   deleteAvailabilitySlot,
@@ -11,14 +11,16 @@ import {
   updateBookingStatus,
 } from '../lib/api'
 import {
-  SLOT_DURATION_HOURS,
   availabilityFieldErrors,
   availabilityWeekRanges,
   dateKey,
+  defaultEndAfter,
+  durationHoursFromRange,
+  mergeAvailabilityRanges,
   monthDays,
   overlaps,
   slotDayCount,
-  slotEndTwoHours,
+  slotEndOptions,
   slotLastDate,
   slotOccursOn,
   slotStarts,
@@ -32,19 +34,21 @@ import {
   type CalendarBooking,
   type CalendarSlot,
 } from '../lib/availability'
+import {
+  availabilityBoatOptions,
+  normaliseSlotBoatIds,
+  slotBoatLabel,
+  type AvailabilityBoatOption,
+} from '../lib/availabilityBoats'
 import { InventoryNoticeContext } from '../context/InventoryNoticeContext'
 import { AccountButton, AccountField } from './AdminAccountSettings'
 import AdminSelectField from './AdminSelectField'
 import { BoatPicture } from './BoatPicture'
 import { AdminActionButton } from './AdminInteraction'
 import AdminRecordOverlay from './AdminRecordOverlay'
+import AvailabilityBoatPicker, { SlotBoatScope } from './AvailabilityBoatPicker'
 import '../styles/admin-leads.css'
 import '../styles/admin-availability.css'
-
-// Ported from boat-brokers/src/components/AdminAvailability.jsx. Month calendar
-// markup matches the prototype; slots/bookings come from the live APIs. Live
-// slots are single-day 2-hour windows with no boat scope — the add form is
-// adapted accordingly. APPROVED displays as Booked via bookingStatusLabel.
 
 const fullDate = (key: string) =>
   new Date(key + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
@@ -71,23 +75,28 @@ function PartyIdentity({ name, children }: { name: string; children?: ReactNode 
 
 function AvailabilityForm({
   date,
+  boats,
   slots,
   bookings,
   onClose,
   onAdd,
 }: {
   date: string
+  boats: AvailabilityBoatOption[]
   slots: CalendarSlot[]
   bookings: CalendarBooking[]
   onClose: () => void
-  onAdd: (date: string, start: string) => Promise<void>
+  onAdd: (date: string, endDate: string, start: string, end: string, boatIds: number[] | null) => Promise<void>
 }) {
+  const [boatIds, setBoatIds] = useState<number[] | null>(null)
   const [start, setStart] = useState('')
+  const [end, setEnd] = useState('')
   const [startDate, setStartDate] = useState(date)
+  const [endDate, setEndDate] = useState(date)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
-  const end = start ? slotEndTwoHours(start) : ''
+  const days = slotDayCount({ date: startDate, endDate })
 
   function clear(...fields: string[]) {
     setErrors((current) => Object.fromEntries(Object.entries(current).filter(([key]) => !fields.includes(key))))
@@ -100,12 +109,14 @@ function AvailabilityForm({
   async function save(event: FormEvent) {
     event.preventDefault()
     if (busy) return
-    const next = availabilityFieldErrors({ date: startDate, start })
+    const next = availabilityFieldErrors({ date: startDate, endDate, start, end })
+    if (boatIds?.length === 0) next.boats = 'Choose at least one boat, or select All boats.'
+    else if (boatIds?.some((id) => !boats.some((boat) => boat.id === id))) next.boats = 'A selected boat is no longer available. Update your selection.'
     if (Object.keys(next).length) {
       showErrors(next)
       return
     }
-    const candidate = { date: startDate, start, end: slotEndTwoHours(start) }
+    const candidate = { date: startDate, endDate, start, end }
     const occupied = [
       ...slots.map((item) => ({ date: item.date, endDate: item.endDate, start: item.start, end: item.end, kind: 'slot' as const })),
       ...bookings
@@ -114,7 +125,8 @@ function AvailabilityForm({
     ]
     const conflict = occupied.find((item) => overlaps(candidate, item))
     if (conflict) {
-      const label = shortDate(conflict.date)
+      const day = conflict.date > startDate ? conflict.date : startDate
+      const label = shortDate(day)
       const message =
         label +
         ' already has ' +
@@ -123,13 +135,13 @@ function AvailabilityForm({
         conflict.start +
         '–' +
         conflict.end +
-        '. Choose a different time.'
+        '. Choose a different time or adjust your dates.'
       showErrors({ start: message })
       return
     }
     setBusy(true)
     try {
-      await onAdd(startDate, start)
+      await onAdd(startDate, endDate, start, end, normaliseSlotBoatIds(boatIds))
     } catch (problem) {
       showErrors({ form: problem instanceof Error ? problem.message : 'Availability not added.' })
     } finally {
@@ -153,10 +165,15 @@ function AvailabilityForm({
       }
     >
       <form ref={formRef} id="availability-form" className="availability-time-form" onSubmit={save} noValidate>
-        <p className="availability-range-summary">
-          <Sailboat size={18} aria-hidden="true" />
-          <span><strong>All boats</strong> · Viewing slots are open brokerage-wide for {SLOT_DURATION_HOURS} hours.</span>
-        </p>
+        <AvailabilityBoatPicker
+          error={errors.boats}
+          boats={boats}
+          value={boatIds}
+          onChange={(value) => {
+            setBoatIds(value)
+            clear('boats', 'form')
+          }}
+        />
         <div className="availability-time-pair">
           <AdminSelectField
             label="Start time"
@@ -169,28 +186,67 @@ function AvailabilityForm({
             value={start}
             options={slotStarts}
             onChange={(event) => {
-              setStart(event.target.value)
-              clear('start', 'form')
+              const value = event.target.value
+              setStart(value)
+              if (!end || end <= value) setEnd(defaultEndAfter(value))
+              clear('start', 'end', 'form')
             }}
           />
-          <AccountField label="End time" value={end || '—'} readOnly hint={start ? `${SLOT_DURATION_HOURS}-hour viewing window` : 'Choose a start time'} />
+          <AdminSelectField
+            label="End time"
+            error={errors.end}
+            name="end"
+            variant="v2"
+            collection
+            required
+            placeholder="Until"
+            value={end}
+            options={slotEndOptions.filter((time) => !start || time > start)}
+            onChange={(event) => {
+              setEnd(event.target.value)
+              clear('end', 'form')
+            }}
+          />
         </div>
-        <AccountField
-          label="Date"
-          error={errors.date}
-          type="date"
-          required
-          min={ukToday()}
-          value={startDate}
-          onChange={(event) => {
-            setStartDate(event.target.value)
-            clear('date', 'start', 'form')
-          }}
-        />
-        {start && end && (
+        <div className="availability-time-pair">
+          <AccountField
+            label="Start date"
+            error={errors.date}
+            type="date"
+            required
+            min={ukToday()}
+            value={startDate}
+            onChange={(event) => {
+              const value = event.target.value
+              setStartDate(value)
+              if (value > endDate) setEndDate(value)
+              clear('date', 'endDate', 'start', 'form')
+            }}
+          />
+          <AccountField
+            label="End date"
+            error={errors.endDate}
+            type="date"
+            required
+            min={startDate || ukToday()}
+            value={endDate}
+            onChange={(event) => {
+              setEndDate(event.target.value)
+              clear('endDate', 'form')
+            }}
+          />
+        </div>
+        {days > 0 && (
           <div className="availability-range-summary">
             <CalendarDays size={18} aria-hidden="true" />
-            <span><strong>1 day</strong>{' · ' + range({ start, end })}</span>
+            <span>
+              <strong>{days === 1 ? '1 day' : days + ' days'}</strong>
+              {start && end
+                ? ' · ' + range({ start, end }) + (days > 1 ? ' each day' : '')
+                : days > 1
+                  ? ' · Same time window each day'
+                  : ' · Single-day availability'}
+            </span>
           </div>
         )}
         {errors.form && (
@@ -205,24 +261,27 @@ function AvailabilityForm({
 
 function AvailabilityDetails({
   slot,
+  boats,
   onClose,
   onRemove,
 }: {
   slot: CalendarSlot
+  boats: AvailabilityBoatOption[]
   onClose: () => void
-  onRemove: (id: number) => Promise<void>
+  onRemove: (ids: number[]) => Promise<void>
 }) {
   const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
   const cancel = useRef<HTMLButtonElement>(null)
   const remove = useRef<HTMLButtonElement>(null)
   const days = slotDayCount(slot)
+  const memberIds = slot.ids?.length ? slot.ids : [slot.id]
 
   async function removeSlot() {
     if (busy) return
     setBusy(true)
     try {
-      await onRemove(slot.id)
+      await onRemove(memberIds)
     } finally {
       setBusy(false)
     }
@@ -270,10 +329,7 @@ function AvailabilityDetails({
       <div className="availability-day-content">
         <section className="availability-day-section availability-detail-card">
           <h3>Boats</h3>
-          <span className="availability-boat-scope">
-            <Sailboat size={15} aria-hidden="true" />
-            <span>All boats</span>
-          </span>
+          <SlotBoatScope slot={slot} boats={boats} />
         </section>
         <section className="availability-day-section availability-detail-card">
           <h3>{days > 1 ? 'Daily availability' : 'Time'}</h3>
@@ -392,6 +448,7 @@ export default function AdminAvailability({
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const [slots, setSlots] = useState<CalendarSlot[]>([])
   const [bookings, setBookings] = useState<CalendarBooking[]>([])
+  const [boats, setBoats] = useState<AvailabilityBoatOption[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const reduced = useReducedMotion()
@@ -401,14 +458,16 @@ export default function AdminAvailability({
   const load = useCallback(() => {
     setLoading(true)
     setLoadError(null)
-    return Promise.all([fetchAvailabilitySlots(), fetchBookings()])
-      .then(([slotData, bookingData]) => {
+    return Promise.all([fetchAvailabilitySlots(), fetchBookings(), fetchBoats()])
+      .then(([slotData, bookingData, boatData]) => {
         setSlots(slotData.map(toCalendarSlot))
         setBookings(bookingData.map(toCalendarBooking))
+        setBoats(availabilityBoatOptions(boatData))
       })
       .catch((err: unknown) => {
         setSlots([])
         setBookings([])
+        setBoats([])
         setLoadError(err instanceof Error ? err.message : 'Failed to load availability')
       })
       .finally(() => setLoading(false))
@@ -427,7 +486,9 @@ export default function AdminAvailability({
     }
   }, [bookings, loading, viewingParam, today])
 
-  const openSlots = useMemo(() => slots.filter((slot) => slot.available), [slots])
+  // Raw open days (for conflict checks) vs merged ranges (for spanning bars).
+  const openDays = useMemo(() => slots.filter((slot) => slot.available), [slots])
+  const openSlots = useMemo(() => mergeAvailabilityRanges(openDays), [openDays])
   const days = monthDays(month.getFullYear(), month.getMonth())
   const monthLabel = month.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
 
@@ -438,7 +499,6 @@ export default function AdminAvailability({
       setBookings((current) => current.map((item) => (item.id === id ? next : item)))
       setViewing(next)
       onNotice({ type: 'success', title: status === 'APPROVED' ? 'Viewing approved' : 'Viewing rejected' })
-      // Held slot availability can change after a decision — refresh open slots.
       const slotData = await fetchAvailabilitySlots()
       setSlots(slotData.map(toCalendarSlot))
     } catch (problem) {
@@ -451,27 +511,39 @@ export default function AdminAvailability({
     setMonth((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1))
   }
 
-  async function add(date: string, start: string) {
+  async function add(date: string, endDate: string, start: string, end: string, boatIds: number[] | null) {
     const startsAt = ukDateTimeToIso(date, start)
-    await createAvailabilitySlot(startsAt, SLOT_DURATION_HOURS)
+    const durationHours = durationHoursFromRange(start, end)
+    await createAvailabilitySlot(startsAt, durationHours, {
+      endDate: endDate > date ? endDate : undefined,
+      boatIds,
+    })
     const slotData = await fetchAvailabilitySlots()
     const nextSlots = slotData.map(toCalendarSlot)
     setSlots(nextSlots)
-    const saved = nextSlots.find((slot) => slot.available && slot.date === date && slot.start === start) || nextSlots.at(-1)
+    const daysAdded = slotDayCount({ date, endDate })
+    const scopeLabel = slotBoatLabel({ boatIds }, boats)
     setSelected(null)
     setMonth(new Date(date + 'T12:00:00'))
     setExpanded((current) => ({ ...current, [date]: true }))
     onNotice({
       type: 'success',
       title: 'Availability added',
-      description: saved ? datesLabel(saved) + ' · ' + range(saved) + ' · All boats' : undefined,
+      description:
+        (daysAdded > 1 ? shortDate(date) + ' – ' + shortDate(endDate) : fullDate(date)) +
+        ' · ' +
+        range({ start, end }) +
+        (daysAdded > 1 ? ' each day' : '') +
+        ' · ' +
+        scopeLabel,
     })
   }
 
-  async function remove(id: number) {
+  async function remove(ids: number[]) {
     try {
-      await deleteAvailabilitySlot(id)
-      setSlots((current) => current.filter((slot) => slot.id !== id))
+      await Promise.all(ids.map((id) => deleteAvailabilitySlot(id)))
+      const removed = new Set(ids)
+      setSlots((current) => current.filter((slot) => !removed.has(slot.id)))
       setOpenSlot(null)
       onNotice({ type: 'success', title: 'Availability removed' })
     } catch (problem) {
@@ -591,14 +663,15 @@ export default function AdminAvailability({
                                   <AdminActionButton
                                     key={'slot-' + entry.id}
                                     disabled={past}
-                                    title={datesLabel(entry) + ' · All boats'}
+                                    title={datesLabel(entry) + ' · ' + slotBoatLabel(entry, boats)}
                                     className={'availability-entry is-open' + (slotDayCount(entry) > 1 ? ' is-date-range' : '')}
                                     aria-label={
                                       'Available ' +
                                       range(entry) +
                                       ' on ' +
                                       fullDate(key) +
-                                      ', All boats' +
+                                      ', ' +
+                                      slotBoatLabel(entry, boats) +
                                       (slotDayCount(entry) > 1 ? ', daily ' + datesLabel(entry) : '')
                                     }
                                     onClick={() => setOpenSlot(entry.id)}
@@ -617,10 +690,7 @@ export default function AdminAvailability({
                                         'Available'
                                       )}
                                     </span>
-                                    <span className="availability-boat-scope is-compact">
-                                      <Sailboat size={15} aria-hidden="true" />
-                                      <span>All boats</span>
-                                    </span>
+                                    <SlotBoatScope slot={entry} boats={boats} compact />
                                   </AdminActionButton>
                                 ) : (
                                   <AdminActionButton
@@ -665,7 +735,7 @@ export default function AdminAvailability({
                     <div className="availability-week-ranges" role="presentation">
                       {segments.map((segment) => {
                         const { slot, lane, from, to, past, continuesBefore, continuesAfter } = segment
-                        const label = 'All boats · ' + range(slot) + ' each day · ' + datesLabel(slot)
+                        const label = slotBoatLabel(slot, boats) + ' · ' + range(slot) + ' each day · ' + datesLabel(slot)
                         return (
                           <AdminActionButton
                             key={slot.id + '-' + from}
@@ -690,10 +760,7 @@ export default function AdminAvailability({
                           >
                             {continuesBefore && <ChevronLeft size={14} aria-hidden="true" />}
                             <span className="availability-range-bar-copy">
-                              <span className="availability-boat-scope is-compact">
-                                <Sailboat size={15} aria-hidden="true" />
-                                <span>All boats</span>
-                              </span>
+                              <SlotBoatScope slot={slot} boats={boats} compact />
                               <span>{range(slot)} daily</span>
                             </span>
                             {continuesAfter && <ChevronRight size={14} aria-hidden="true" />}
@@ -721,7 +788,8 @@ export default function AdminAvailability({
           <AvailabilityForm
             key={selected}
             date={selected}
-            slots={openSlots}
+            boats={boats}
+            slots={openDays}
             bookings={bookings}
             onAdd={add}
             onClose={() => setSelected(null)}
@@ -729,10 +797,11 @@ export default function AdminAvailability({
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {openSlot != null && openSlots.some((slot) => slot.id === openSlot) && (
+        {openSlot != null && openSlots.some((slot) => slot.id === openSlot || slot.ids?.includes(openSlot)) && (
           <AvailabilityDetails
             key={openSlot}
-            slot={openSlots.find((slot) => slot.id === openSlot)!}
+            slot={openSlots.find((slot) => slot.id === openSlot || slot.ids?.includes(openSlot))!}
+            boats={boats}
             onRemove={remove}
             onClose={() => setOpenSlot(null)}
           />
