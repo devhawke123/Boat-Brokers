@@ -58,7 +58,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
   function handleLogout() {
     clearStoredAdmin()
-    window.location.href = '/'
+    window.location.replace('/admin-portal/login')
   }
 
   return (
