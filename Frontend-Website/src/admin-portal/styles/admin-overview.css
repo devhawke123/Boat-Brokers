@@ -114,7 +114,14 @@
 .overview-stage-key i { width: 9px; height: 9px; border-radius: 50%; }
 .overview-stage-key strong { margin-left: auto; font-size: 16px; }
 @media (max-width: 550px) { .overview-mini-calendar .overview-mini-day { min-height: 50px; } .overview-stage-key { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; } }
-.overview-chart-tooltip[role="tooltip"] { display: grid; gap: 3px; width: max-content; max-width: min(280px, calc(100vw - 24px)); }
+.overview-chart-tooltip[role="tooltip"] {
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  width: max-content;
+  height: fit-content;
+  max-width: min(280px, calc(100vw - 24px));
+}
 .overview-chart-tooltip strong { color: #214760; font-size: 14px; font-weight: 500; }
 .overview-chart-tooltip span { font-size: 14px; }
 .overview-stage-strip { overflow: visible; height: 44px; }

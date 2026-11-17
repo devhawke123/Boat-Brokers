@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, FileText, ImagePlus, Pencil, Plus, Search, Trash2, X } from 'lucide-react'
 import type { Notice } from '../../seller-portal/components/ToastNotice'
 import { createBlogPost, deleteBlogPost, updateBlogPost } from '../lib/api'
@@ -284,7 +284,6 @@ export default function AdminBlogs({ notice, onNotice, onDismissNotice }: {
   const [busy, setBusy] = useState(false)
   const heading = useRef<HTMLHeadingElement>(null)
   const restoreHeading = useRef(false)
-  const reduced = useReducedMotion()
   const query = params.get('q') || ''
   const perPage = [10, 20, 50].includes(Number(params.get('size'))) ? Number(params.get('size')) : 10
   const matches = searchBlogPosts(blogPosts, query)
@@ -409,7 +408,7 @@ export default function AdminBlogs({ notice, onNotice, onDismissNotice }: {
                 </thead>
                 <AdminResultsBody identity={JSON.stringify([query, page, perPage, loading])}>
                   {rows.map(post => (
-                    <motion.tr key={post.id} onClick={() => view(post)} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ duration: reduced ? 0 : 0.25 }}>
+                    <motion.tr key={post.id} onClick={() => view(post)}>
                       <td>
                         <div className="inventory-row-boat">
                           <BoatPicture fallback={FileText} image={post.image} />

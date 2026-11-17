@@ -66,6 +66,37 @@ export default function AdminInfoTooltip({ children, label = 'About this action'
   }, [open])
   return <span className={'inventory-comment-info ' + className} onMouseEnter={show} onMouseLeave={() => { if (document.activeElement !== trigger.current) setOpen(false) }}>
     <AdminActionButton ref={trigger} type="button" aria-label={label} aria-pressed={pressed} aria-describedby={open ? id : undefined} onFocus={show} onBlur={() => setOpen(false)} onClick={event => { show(); action?.(event) }}><Icon size={17} strokeWidth={1.6} fill={pressed ? 'currentColor' : 'none'} aria-hidden="true" /></AdminActionButton>
-    {createPortal(<AnimatePresence>{open && <motion.span ref={bubble} popover="manual" role="tooltip" id={id} className="admin-floating-tooltip" style={{ ...position, visibility: position ? 'visible' : 'hidden' }} initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduced ? 0 : .18, ease: EASE }}>{children}</motion.span>}</AnimatePresence>, target)}
+    {createPortal(
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            ref={bubble}
+            popover="manual"
+            role="tooltip"
+            id={id}
+            className="admin-floating-tooltip"
+            style={{
+              position: 'fixed',
+              inset: 'auto',
+              right: 'auto',
+              bottom: 'auto',
+              margin: 0,
+              height: 'fit-content',
+              width: position?.width,
+              left: position?.left,
+              top: position?.top,
+              visibility: position ? 'visible' : 'hidden',
+            }}
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 0.18, ease: EASE }}
+          >
+            {children}
+          </motion.span>
+        )}
+      </AnimatePresence>,
+      target,
+    )}
   </span>
 }

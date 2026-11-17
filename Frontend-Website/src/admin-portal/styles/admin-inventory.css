@@ -14,6 +14,9 @@
 .inventory-table td { padding: 20px 24px; border-bottom: 1px solid #e8edf1; font-size: var(--v2-type-caption); color: #4d6577; line-height: 1.6; }
 .inventory-table tr:last-child td { border: 0; }
 .inventory-table tbody tr { cursor: pointer; }
+/* Paint hover on cells — Safari mishandles Framer/background-color on <tr>. */
+.inventory-table tbody tr > td { transition: background-color 0.2s ease; }
+.inventory-table tbody tr:hover > td { background-color: #f1f6fa; }
 .inventory-table td:first-child { width: 33%; }
 .inventory-table button { min-height: 44px; text-align: left; color: #16384f; font-size: var(--v2-type-body); font-weight: 600; }
 .inventory-row-boat { display: flex; align-items: center; gap: 13px; }

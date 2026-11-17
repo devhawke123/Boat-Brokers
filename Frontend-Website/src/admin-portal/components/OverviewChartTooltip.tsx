@@ -52,5 +52,44 @@ export function OverviewChartTooltipProvider({ children }: { children: ReactNode
       document.removeEventListener('keydown', dismiss)
     }
   }, [tip, hide, show])
-  return <OverviewTooltipContext.Provider value={api}>{children}{createPortal(<AnimatePresence>{tip && <motion.div ref={bubble} id={id} role="tooltip" popover="manual" className="admin-floating-tooltip overview-chart-tooltip" style={{ ...position, visibility: position ? 'visible' : 'hidden' }} initial={reduced ? false : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ ...inventoryMotion.exit, duration: reduced ? 0 : .12 }}><strong>{tip.label}</strong><span>{tip.value}</span></motion.div>}</AnimatePresence>, document.body)}</OverviewTooltipContext.Provider>
+  return (
+    <OverviewTooltipContext.Provider value={api}>
+      {children}
+      {createPortal(
+        <AnimatePresence>
+          {tip && (
+            <motion.div
+              ref={bubble}
+              id={id}
+              role="tooltip"
+              popover="manual"
+              className="admin-floating-tooltip overview-chart-tooltip"
+              style={{
+                // Explicit edges beat Safari's [popover] { inset: 0 } so the
+                // tip stays content-sized instead of a full-height strip.
+                position: 'fixed',
+                inset: 'auto',
+                right: 'auto',
+                bottom: 'auto',
+                margin: 0,
+                width: 'max-content',
+                height: 'fit-content',
+                left: position?.left,
+                top: position?.top,
+                visibility: position ? 'visible' : 'hidden',
+              }}
+              initial={reduced ? false : { opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ ...inventoryMotion.exit, duration: reduced ? 0 : 0.12 }}
+            >
+              <strong>{tip.label}</strong>
+              <span>{tip.value}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
+    </OverviewTooltipContext.Provider>
+  )
 }

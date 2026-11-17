@@ -175,8 +175,6 @@ export default function AdminSales({ onNotice, notice, onDismissNotice }: {
                 <motion.tr
                   key={sale.id}
                   onClick={event => open(sale, event)}
-                  whileHover={{ backgroundColor: '#f1f6fa' }}
-                  transition={{ duration: reduced ? 0 : 0.3 }}
                 >
                   <td>
                     <div className="inventory-row-boat">

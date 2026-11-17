@@ -80,7 +80,28 @@
 .availability-boat-picker > span { display: block; margin-bottom: 8px; color: #425a69; font-size: 14px; font-weight: 600; }
 .availability-boat-trigger { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 10px 14px; background: #f7fbff; border: 1px solid #cbdfea; border-radius: 10px; color: #315773; font-size: 14px; text-align: left; }
 .availability-boat-trigger > span:nth-child(2) { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.availability-boat-menu { position: fixed; inset: auto; margin: 0; padding: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #cfdee7; border-radius: 10px; background: #fff; box-shadow: 0 16px 38px #0b3a5824; color: #315773; font-family: inherit; font-size: 14px; z-index: 100; }
+.availability-boat-menu {
+  position: fixed;
+  inset: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  margin: 0;
+  height: fit-content;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #cfdee7;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 16px 38px #0b3a5824;
+  color: #315773;
+  font-family: inherit;
+  font-size: 14px;
+  z-index: 100;
+}
 .availability-boat-search { display: flex; align-items: center; gap: 10px; flex-shrink: 0; padding: 14px; border-bottom: 1px solid #e0e9ef; }
 .availability-boat-search input { min-width: 0; width: 100%; min-height: 32px; outline: none; background: transparent; font: inherit; }
 .availability-boat-options { padding: 6px; overflow: auto; overscroll-behavior: contain; min-height: 0; }

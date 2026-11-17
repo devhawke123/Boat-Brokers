@@ -402,13 +402,13 @@ export default function AdminInventory({ onNotice, notice, onDismissNotice }: { 
       <div className="inventory-table-scroll" role="region" aria-label={`${view} results`} tabIndex={0}>
         <table className={`inventory-table is-${view}`}>
           <thead><tr>{(view === 'boats' ? ['Boat', 'Seller', 'Asking price', 'Approval', 'Publication', 'Sale status'] : ['Seller', 'Boats', 'Stage']).map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
-          <AdminResultsBody identity={JSON.stringify([view, status, publication, saleFilter, search, activePage, loading])}>{view === 'boats' ? visibleBoats.map(item => <motion.tr key={item.id} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ ...inventoryMotion.row, duration: reduced ? 0 : inventoryMotion.row.duration }} onClick={event => { if (!(event.target as Element).closest('[data-sale-status]')) open('boat', item.id) }}>
+          <AdminResultsBody identity={JSON.stringify([view, status, publication, saleFilter, search, activePage, loading])}>{view === 'boats' ? visibleBoats.map(item => <motion.tr key={item.id} onClick={event => { if (!(event.target as Element).closest('[data-sale-status]')) open('boat', item.id) }}>
             <td><div className="inventory-row-boat"><AdminInfoTooltip className="inventory-feature-tooltip" icon={Star} label={(item.featured ? 'Remove featured: ' : 'Mark as featured: ') + item.name} pressed={item.featured} action={event => { event.stopPropagation(); toggleFeatured(item) }}>{item.featured ? 'Remove from featured boats.' : 'Mark this boat as featured.'}</AdminInfoTooltip><Picture image={item.photos[0]?.src} /><div><AdminActionButton type="button" aria-label={`View boat ${item.name}`} onClick={event => { event.stopPropagation(); open('boat', item.id) }}>{item.name}</AdminActionButton><span>{item.type}</span></div></div></td>
             <td><SellerIdentity seller={sellerFor(item)} /></td>
             <td className="inventory-price">{money(item.price)}</td>
             <td><Badge>{item.approval}</Badge></td>
             <td><Badge>{publicationStatus(item)}</Badge></td><td data-sale-status style={{ cursor: 'default' }}><Badge>{item.listingId == null || item.status === 'APPROVED' ? item.availability : 'Not available'}</Badge></td>
-          </motion.tr>) : visibleSellers.map(item => <motion.tr key={item.id} whileHover={{ backgroundColor: '#f1f6fa' }} transition={{ ...inventoryMotion.row, duration: reduced ? 0 : inventoryMotion.row.duration }} onClick={() => open('seller', item.id)}>
+          </motion.tr>) : visibleSellers.map(item => <motion.tr key={item.id} onClick={() => open('seller', item.id)}>
             <td><SellerIdentity seller={item} email><AdminActionButton type="button" className="inventory-seller-name" aria-label={`View seller ${item.name}`} onClick={event => { event.stopPropagation(); open('seller', item.id) }}>{item.name}</AdminActionButton></SellerIdentity></td>
             <td>{adminBoats.filter(boat => boat.sellerId === item.id).length}</td><td><Badge>{item.status}</Badge></td>
           </motion.tr>)}</AdminResultsBody>
